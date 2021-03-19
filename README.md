@@ -1,0 +1,2 @@
+# redispike
+Redis-flavored Aerospike
