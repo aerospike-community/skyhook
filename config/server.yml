@@ -1,0 +1,9 @@
+---
+# The server configuration
+hostList: localhost:3300
+namespase: test
+set: redis
+bin: b
+redisPort: 6379
+workerThreads: 2
+bossThreads: 1
