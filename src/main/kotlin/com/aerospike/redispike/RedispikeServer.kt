@@ -31,7 +31,7 @@ class RedispikeServer @Inject constructor(
     private val bossGroup: EventLoopGroup,
 
     /**
-     * The event loop group to read, parse incoming XDR records and write
+     * The event loop group to read and parse incoming requests and write
      * responses.
      */
     @Named(NETTY_WORKER_GROUP)
