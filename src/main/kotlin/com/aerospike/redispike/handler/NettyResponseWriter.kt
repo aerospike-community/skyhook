@@ -17,10 +17,6 @@ open class NettyResponseWriter {
         writeArrayHeader(ctx, valueAry.size.toLong())
     }
 
-    fun writeList(ctx: ChannelHandlerContext?, valueArray: ListValue?) {
-        throw NotImplementedError()
-    }
-
     @Throws(IOException::class)
     fun writeObject(ctx: ChannelHandlerContext, value: Any?) {
         when (value) {
@@ -144,14 +140,6 @@ open class NettyResponseWriter {
     @Throws(IOException::class)
     fun writeOK(ctx: ChannelHandlerContext) {
         writeSimpleString(ctx, "OK")
-    }
-
-    fun encodeError(ctx: ChannelHandlerContext?, errorMessage: String?) {
-        throw NotImplementedError()
-    }
-
-    fun encodeMap(ctx: ChannelHandlerContext?, mapValue: MapValue?) {
-        throw NotImplementedError()
     }
 
     @Throws(IOException::class)
