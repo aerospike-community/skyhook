@@ -9,7 +9,6 @@ import io.netty.handler.codec.redis.*
 import io.netty.util.CharsetUtil
 import io.netty.util.ReferenceCountUtil
 import mu.KotlinLogging
-import java.io.IOException
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,22 +40,13 @@ class AerospikeChannelHandler @Inject constructor(
                 }
 
                 val cmd = RequestCommand(arguments)
-                try {
-                    nettyAerospikeHandler.handleCommand(cmd, ctx)
-                } catch (e: IOException) {
-                    log.warn(e) { "Exception on channelRead" }
-                }
+                nettyAerospikeHandler.handleCommand(cmd, ctx)
             } else if (redisMessage is InlineCommandRedisMessage) {
                 val cmd = RequestCommand(
                     (redisMessage.content().split(" ")
                         .map { it.encodeToByteArray() }).toMutableList()
                 )
-
-                try {
-                    nettyAerospikeHandler.handleCommand(cmd, ctx)
-                } catch (e: IOException) {
-                    log.warn(e) { "Exception on channelRead" }
-                }
+                nettyAerospikeHandler.handleCommand(cmd, ctx)
             }
         } finally {
             ReferenceCountUtil.release(redisMessage)

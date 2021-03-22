@@ -1,6 +1,6 @@
 package com.aerospike.redispike.command
 
-import java.util.*
+import com.aerospike.client.Value
 
 data class RequestCommand(
     val args: MutableList<ByteArray>? = null,
@@ -15,8 +15,11 @@ data class RequestCommand(
         argCount++
     }
 
-    @Throws(IllegalArgumentException::class)
-    fun getCommand(): RedisCommand {
-        return RedisCommand.valueOf(String(args!![0]).toUpperCase(Locale.ENGLISH))
+    val key: Value by lazy {
+        Value.get(args!![1])
+    }
+
+    val command: RedisCommand by lazy {
+        RedisCommand.getValue(String(args!![0]))
     }
 }

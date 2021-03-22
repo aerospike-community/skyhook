@@ -7,7 +7,7 @@ import com.aerospike.redispike.command.RequestCommand
 import com.aerospike.redispike.config.AerospikeContext
 import io.netty.channel.ChannelHandlerContext
 
-class GetCommandListener(
+class StrlenCommandListener(
     aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
 ) : BaseListener(aeroCtx, ctx), RecordListener {
@@ -21,15 +21,33 @@ class GetCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
+            writeLong(ctx, 0L)
             ctx.flush()
         } else {
             try {
-                writeResponse(record.bins[aeroCtx.bin]!!)
+                writeResponse(getValueStrLen(record.bins[aeroCtx.bin]!!))
                 ctx.flush()
             } catch (e: Exception) {
                 closeCtx(e)
             }
         }
+    }
+
+    private fun getValueStrLen(value: Any?): Long {
+        if (value == null) {
+            return 0
+        }
+        if (value is String) {
+            return value.length.toLong()
+        }
+        if (value is ByteArray) {
+            return value.size.toLong()
+        }
+        if (value is Long) {
+            return value.toString().length.toLong()
+        }
+        return if (value is Double) {
+            ((value as Double?)!!).toString().length.toLong()
+        } else 0
     }
 }

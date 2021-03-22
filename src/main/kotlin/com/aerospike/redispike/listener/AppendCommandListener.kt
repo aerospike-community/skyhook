@@ -1,22 +1,25 @@
 package com.aerospike.redispike.listener
 
-import com.aerospike.client.Key
-import com.aerospike.client.Record
+import com.aerospike.client.*
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.redispike.command.RequestCommand
 import com.aerospike.redispike.config.AerospikeContext
 import io.netty.channel.ChannelHandlerContext
 
-class GetCommandListener(
+class AppendCommandListener(
     aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
 ) : BaseListener(aeroCtx, ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount == 2) { "${this.javaClass.simpleName} argCount" }
+        require(cmd.argCount == 3) { "${this.javaClass.simpleName} argCount" }
 
         val key = createKey(cmd.key)
-        aeroCtx.client.get(null, this, null, key)
+        val ops = arrayOf(
+            Operation.append(Bin(aeroCtx.bin, Value.StringValue(String(cmd.args!![2])))),
+            Operation.get(aeroCtx.bin)
+        )
+        aeroCtx.client.operate(null, this, null, key, *ops)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
@@ -25,7 +28,8 @@ class GetCommandListener(
             ctx.flush()
         } else {
             try {
-                writeResponse(record.bins[aeroCtx.bin]!!)
+                val value: String = (record.bins[aeroCtx.bin] as String)
+                writeLong(ctx, value.length)
                 ctx.flush()
             } catch (e: Exception) {
                 closeCtx(e)
