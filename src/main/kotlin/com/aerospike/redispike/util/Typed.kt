@@ -15,4 +15,16 @@ object Typed {
         }
         return Value.StringValue(wireVal.toString(Charsets.UTF_8))
     }
+
+    fun getInteger(wireVal: ByteArray?): Int {
+        return String(wireVal!!).toInt()
+    }
+
+    fun getLong(wireVal: ByteArray?): Long {
+        return String(wireVal!!).toLong()
+    }
+
+    fun getDouble(wireVal: ByteArray?): Double {
+        return String(wireVal!!).toDouble()
+    }
 }
