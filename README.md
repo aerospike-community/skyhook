@@ -1,4 +1,6 @@
 # redispike
+[![Build](https://github.com/aerospike/redispike/actions/workflows/build.yml/badge.svg)](https://github.com/aerospike/redispike/actions/workflows/build.yml)
+
 The [Redis](https://redis.io/) server interface to the [Aerospike](https://www.aerospike.com/) database.
 
 `redispike` is a standalone server application written in Kotlin which projects Redis protocol commands
@@ -40,6 +42,28 @@ If no configuration file is specified, the default settings will be applied.
 ```
 
 Now the server is listening to the `config.redisPort` (default: 6379) and is ready to serve.
+
+## Implemented Commands
+Operation | Description
+----------|------------
+[GET](https://redis.io/commands/get) *key* | Get the value of key.
+[MGET](https://redis.io/commands/mget) *key [key ...]* | Returns the values of all specified keys.
+[GETSET](https://redis.io/commands/getset) *key value* | Atomically sets key to value and returns the old value stored at key.
+[SET](https://redis.io/commands/set) *key value* | Set key to hold the string value. If key already holds a value, it is overwritten, regardless of its type.
+[SETEX](https://redis.io/commands/setex) *key seconds value* | Set key to hold the string value and set key to timeout after a given number of seconds.
+[PSETEX](https://redis.io/commands/psetex) *key milliseconds value* | PSETEX works exactly like SETEX with the sole difference that the expire time is specified in milliseconds instead of seconds.
+[SETNX](https://redis.io/commands/setnx) *key value* | Set key to hold string value if key does not exist.
+[EXISTS](https://redis.io/commands/exists) *key [key ...]* | Returns if key exists.
+[EXPIRE](https://redis.io/commands/expire) *key seconds* | Set a timeout on key. After the timeout has expired, the key will automatically be deleted.
+[PEXPIRE](https://redis.io/commands/pexpire) *key milliseconds* | This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.
+[APPEND](https://redis.io/commands/append) *key value* | If key already exists and is a string, this command appends the value at the end of the string. If key does not exist it is created and set as an empty string.
+[INCR](https://redis.io/commands/incr) *key* | Increments the number stored at key by one.
+[INCRBY](https://redis.io/commands/incrby) *key increment* | Increments the number stored at key by increment.
+[INCRBYFLOAT](https://redis.io/commands/incrbyfloat) *key increment* | Increment the string representing a floating point number stored at key by the specified increment.
+[STRLEN](https://redis.io/commands/strlen) *key* | Returns the length of the string value stored at key. An error is returned when key holds a non-string value.
+[TTL](https://redis.io/commands/ttl) *key* | Returns the remaining time to live of a key that has a timeout.
+[PTTL](https://redis.io/commands/pttl) *key* | Returns the amount of remaining time in milliseconds.
+[DEL](https://redis.io/commands/del) *key* | Removes the specified key.
 
 ## Connectivity
 Any Redis client can connect to `redispike` as if it were a regular Redis server.
