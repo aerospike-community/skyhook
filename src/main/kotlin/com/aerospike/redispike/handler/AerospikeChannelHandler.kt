@@ -25,7 +25,7 @@ class AerospikeChannelHandler @Inject constructor(
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any?) {
         val redisMessage = msg as RedisMessage?
-        printAggregatedRedisResponse(redisMessage!!)
+        //printAggregatedRedisResponse(redisMessage!!)
 
         try {
             if (redisMessage is ArrayRedisMessage) {
