@@ -19,7 +19,7 @@ class AppendCommandListener(
             Operation.append(Bin(aeroCtx.bin, Value.StringValue(String(cmd.args!![2])))),
             Operation.get(aeroCtx.bin)
         )
-        aeroCtx.client.operate(null, this, null, key, *ops)
+        aeroCtx.client.operate(null, this, defaultWritePolicy, key, *ops)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {

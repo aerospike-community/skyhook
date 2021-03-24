@@ -42,7 +42,7 @@ class SetCommandListener(
     }
 
     private fun parse(cmd: RequestCommand): Params {
-        val writePolicy = WritePolicy()
+        val writePolicy = getWritePolicy()
         return when (cmd.command) {
             RedisCommand.SET -> {
                 Params(writePolicy, Typed.getValue(cmd.args!![2]))

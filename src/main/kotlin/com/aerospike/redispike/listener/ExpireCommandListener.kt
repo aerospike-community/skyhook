@@ -32,7 +32,7 @@ class ExpireCommandListener(
     }
 
     private fun getPolicy(cmd: RequestCommand): WritePolicy {
-        val writePolicy = WritePolicy()
+        val writePolicy = getWritePolicy()
         when (cmd.command) {
             RedisCommand.EXPIRE -> {
                 writePolicy.expiration = Typed.getInteger(cmd.args!![2])
