@@ -2,10 +2,10 @@ package com.aerospike.redispike.listener
 
 import com.aerospike.client.AerospikeException
 import com.aerospike.client.Key
-import com.aerospike.client.Record
 import com.aerospike.client.Value
 import com.aerospike.client.policy.RecordExistsAction
 import com.aerospike.client.policy.WritePolicy
+import com.aerospike.redispike.command.RequestCommand
 import com.aerospike.redispike.config.AerospikeContext
 import com.aerospike.redispike.handler.CommandHandler
 import com.aerospike.redispike.handler.NettyResponseWriter
@@ -20,6 +20,11 @@ abstract class BaseListener(
 
     companion object {
         protected val log = KotlinLogging.logger {}
+
+        @JvmStatic
+        fun argValidationErrorMsg(cmd: RequestCommand): String {
+            return "${cmd.command} arguments"
+        }
 
         @JvmStatic
         internal val updateOnlyPolicy = run {
@@ -45,17 +50,13 @@ abstract class BaseListener(
     }
 
     @Throws(IOException::class)
-    protected open fun writeFailedMapping(rec: Record?, e: Exception?) {
-        writeErrorString(ctx, "Incorrect bin type")
-    }
-
-    @Throws(IOException::class)
     protected open fun writeError(e: AerospikeException?) {
-        writeErrorString(ctx, e?.message)
+        writeErrorString(ctx, "internal error")
     }
 
     open fun onFailure(exception: AerospikeException?) {
         try {
+            log.warn { exception }
             writeError(exception)
             ctx.flush()
         } catch (e: IOException) {

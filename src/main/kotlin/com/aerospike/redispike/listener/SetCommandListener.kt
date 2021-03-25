@@ -21,7 +21,7 @@ class SetCommandListener(
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 3 || cmd.argCount == 4) {
-            "${this.javaClass.simpleName} argCount"
+            argValidationErrorMsg(cmd)
         }
 
         val key = createKey(cmd.key)
@@ -60,7 +60,7 @@ class SetCommandListener(
                 Params(writePolicy, Typed.getValue(cmd.args[3]))
             }
             else -> {
-                throw IllegalArgumentException(cmd.toString())
+                throw IllegalArgumentException(cmd.command.toString())
             }
         }
     }

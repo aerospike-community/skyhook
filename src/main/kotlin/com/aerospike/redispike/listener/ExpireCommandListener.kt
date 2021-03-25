@@ -15,7 +15,7 @@ class ExpireCommandListener(
 ) : BaseListener(aeroCtx, ctx), WriteListener {
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount == 3) { "${this.javaClass.simpleName} argCount" }
+        require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
         val writePolicy = getPolicy(cmd)
@@ -41,7 +41,7 @@ class ExpireCommandListener(
                 writePolicy.expiration = Typed.getInteger(cmd.args!![2]) / 1000
             }
             else -> {
-                throw IllegalArgumentException(cmd.toString())
+                throw IllegalArgumentException(cmd.command.toString())
             }
         }
         return writePolicy

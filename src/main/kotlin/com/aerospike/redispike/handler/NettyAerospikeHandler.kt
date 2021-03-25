@@ -1,5 +1,6 @@
 package com.aerospike.redispike.handler
 
+import com.aerospike.client.AerospikeException
 import com.aerospike.client.IAerospikeClient
 import com.aerospike.redispike.command.RedisCommand
 import com.aerospike.redispike.command.RequestCommand
@@ -66,15 +67,16 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.LRANGE -> LrangeCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 else -> {
-                    val errorString = "Unsupported RedisCommand: " + cmd.command
-                    log.warn { errorString }
-                    writeErrorString(ctx, errorString)
-                    ctx.flush()
+                    throw IllegalArgumentException("${cmd.command} unsupported command")
                 }
             }
         } catch (e: Exception) {
-            log.warn(e) { "Exception on handleCommand" }
-            writeErrorString(ctx, e.message)
+            val msg = when (e) {
+                is AerospikeException -> "internal error"
+                else -> e.message
+            }
+            log.warn { e }
+            writeErrorString(ctx, msg)
             ctx.flush()
         }
     }

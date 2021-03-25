@@ -22,7 +22,7 @@ class ListPushCommandListener(
     private data class OpWritePolicy(val writePolicy: WritePolicy, val op: Operation)
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount >= 3) { "${this.javaClass.simpleName} argCount" }
+        require(cmd.argCount >= 3) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
         val opPolicy = getOpWritePolicy(cmd)
@@ -63,7 +63,7 @@ class ListPushCommandListener(
                 )
             }
             else -> {
-                throw IllegalArgumentException(cmd.toString())
+                throw IllegalArgumentException(cmd.command.toString())
             }
         }
     }

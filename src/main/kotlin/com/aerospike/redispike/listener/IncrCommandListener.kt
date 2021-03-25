@@ -18,7 +18,7 @@ class IncrCommandListener(
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2 || cmd.argCount == 3) {
-            "${this.javaClass.simpleName} argCount"
+            argValidationErrorMsg(cmd)
         }
 
         val key = createKey(cmd.key)
@@ -55,7 +55,7 @@ class IncrCommandListener(
                 Operation.add(Bin(aeroCtx.bin, Typed.getDouble(cmd.args!![2])))
             }
             else -> {
-                throw IllegalArgumentException(cmd.toString())
+                throw IllegalArgumentException(cmd.command.toString())
             }
         }
     }

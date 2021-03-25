@@ -13,7 +13,7 @@ class StrlenCommandListener(
 ) : BaseListener(aeroCtx, ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount == 2) { "${this.javaClass.simpleName} argCount" }
+        require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
         aeroCtx.client.get(null, this, null, key)

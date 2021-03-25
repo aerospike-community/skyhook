@@ -17,7 +17,7 @@ class LrangeCommandListener(
 ) : BaseListener(aeroCtx, ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount == 4) { "${this.javaClass.simpleName} argCount" }
+        require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
         val from = Typed.getInteger(cmd.args!![2])

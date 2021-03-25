@@ -12,7 +12,7 @@ class DelCommandListener(
 ) : BaseListener(aeroCtx, ctx), DeleteListener {
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount == 2) { "${this.javaClass.simpleName} argCount" }
+        require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
         aeroCtx.client.delete(null, this, null, key)

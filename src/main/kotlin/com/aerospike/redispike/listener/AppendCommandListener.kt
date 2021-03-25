@@ -12,7 +12,7 @@ class AppendCommandListener(
 ) : BaseListener(aeroCtx, ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount == 3) { "${this.javaClass.simpleName} argCount" }
+        require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
         val ops = arrayOf(

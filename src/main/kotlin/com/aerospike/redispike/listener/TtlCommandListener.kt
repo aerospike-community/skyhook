@@ -17,7 +17,7 @@ class TtlCommandListener(
     private var m: Long = 1L
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount == 2) { "${this.javaClass.simpleName} argCount" }
+        require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
         if (cmd.command == RedisCommand.PTTL) m = 1000L

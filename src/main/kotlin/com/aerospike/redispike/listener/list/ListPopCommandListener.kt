@@ -19,7 +19,7 @@ class ListPopCommandListener(
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2 || cmd.argCount == 3) {
-            "${this.javaClass.simpleName} argCount"
+            argValidationErrorMsg(cmd)
         }
 
         val key = createKey(cmd.key)
@@ -42,7 +42,7 @@ class ListPopCommandListener(
                 ListOperation.popRange(aeroCtx.bin, -1, count)
             }
             else -> {
-                throw IllegalArgumentException(cmd.toString())
+                throw IllegalArgumentException(cmd.command.toString())
             }
         }
     }
