@@ -22,17 +22,17 @@ abstract class BaseListener(
         protected val log = KotlinLogging.logger {}
 
         @JvmStatic
-        protected val updateOnlyPolicy = run {
+        internal val updateOnlyPolicy = run {
             val updateOnlyPolicy = getWritePolicy()
             updateOnlyPolicy.recordExistsAction = RecordExistsAction.UPDATE_ONLY
             updateOnlyPolicy
         }
 
         @JvmStatic
-        protected val defaultWritePolicy = getWritePolicy()
+        internal val defaultWritePolicy: WritePolicy = getWritePolicy()
 
         @JvmStatic
-        protected fun getWritePolicy(): WritePolicy {
+        internal fun getWritePolicy(): WritePolicy {
             val writePolicy = WritePolicy()
             writePolicy.sendKey = true
             return writePolicy
