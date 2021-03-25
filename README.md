@@ -44,7 +44,7 @@ If no configuration file is specified, the default settings will be applied.
 Now the server is listening to the `config.redisPort` (default: 6379) and is ready to serve.
 
 ## Implemented Commands
-<details><summary><u>List of supported Redis commands</u></summary>
+<details><summary>List of the supported Redis commands</summary>
 
 Operation | Description
 ----------|------------
@@ -66,7 +66,6 @@ Operation | Description
 [TTL](https://redis.io/commands/ttl) *key* | Returns the remaining time to live of a key that has a timeout.
 [PTTL](https://redis.io/commands/pttl) *key* | Returns the amount of remaining time in milliseconds.
 [DEL](https://redis.io/commands/del) *key* | Removes the specified key.
-|
 [LPUSH](https://redis.io/commands/lpush) *key element [element ...]* | Insert all the specified values at the head of the list stored at key.
 [LPUSHX](https://redis.io/commands/lpushx) *key element [element ...]* | Inserts specified values at the head of the list stored at key, only if key already exists and holds a list.
 [RPUSH](https://redis.io/commands/rpush) *key element [element ...]* | Insert all the specified values at the tail of the list stored at key.
