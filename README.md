@@ -44,6 +44,8 @@ If no configuration file is specified, the default settings will be applied.
 Now the server is listening to the `config.redisPort` (default: 6379) and is ready to serve.
 
 ## Implemented Commands
+<details><summary><u>List of supported Redis commands</u></summary>
+
 Operation | Description
 ----------|------------
 [GET](https://redis.io/commands/get) *key* | Get the value of key.
@@ -64,6 +66,18 @@ Operation | Description
 [TTL](https://redis.io/commands/ttl) *key* | Returns the remaining time to live of a key that has a timeout.
 [PTTL](https://redis.io/commands/pttl) *key* | Returns the amount of remaining time in milliseconds.
 [DEL](https://redis.io/commands/del) *key* | Removes the specified key.
+|
+[LPUSH](https://redis.io/commands/lpush) *key element [element ...]* | Insert all the specified values at the head of the list stored at key.
+[LPUSHX](https://redis.io/commands/lpushx) *key element [element ...]* | Inserts specified values at the head of the list stored at key, only if key already exists and holds a list.
+[RPUSH](https://redis.io/commands/rpush) *key element [element ...]* | Insert all the specified values at the tail of the list stored at key.
+[RPUSHX](https://redis.io/commands/rpushx) *key element [element ...]* | Inserts specified values at the tail of the list stored at key, only if key already exists and holds a list.
+[LINDEX](https://redis.io/commands/lindex) *key index* | Returns the element at index index in the list stored at key.
+[LLEN](https://redis.io/commands/llen) *key* | Returns the length of the list stored at key.
+[LPOP](https://redis.io/commands/lpop) *key [count]* | Removes and returns the first elements of the list stored at key.
+[RPOP](https://redis.io/commands/rpop) *key [count]* | Removes and returns the last elements of the list stored at key.
+[LRANGE](https://redis.io/commands/lrange) *key start stop* | Returns the specified elements of the list stored at key.
+
+</details>
 
 ## Connectivity
 Any Redis client can connect to `redispike` as if it were a regular Redis server.
