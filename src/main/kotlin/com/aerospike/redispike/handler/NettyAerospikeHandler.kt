@@ -6,6 +6,7 @@ import com.aerospike.redispike.command.RequestCommand
 import com.aerospike.redispike.config.AerospikeContext
 import com.aerospike.redispike.config.ServerConfiguration
 import com.aerospike.redispike.listener.*
+import com.aerospike.redispike.listener.list.*
 import io.netty.channel.ChannelHandlerContext
 import mu.KotlinLogging
 import javax.inject.Inject
@@ -53,6 +54,16 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.STRLEN -> StrlenCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.TTL,
                 RedisCommand.PTTL -> TtlCommandListener(aerospikeCtx, ctx).handle(cmd)
+
+                RedisCommand.LPUSH,
+                RedisCommand.LPUSHX,
+                RedisCommand.RPUSH,
+                RedisCommand.RPUSHX -> ListPushCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.LINDEX -> LindexCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.LLEN -> LlenCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.LPOP,
+                RedisCommand.RPOP -> ListPopCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.LRANGE -> LrangeCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 else -> {
                     val errorString = "Unsupported RedisCommand: " + cmd.command

@@ -22,6 +22,16 @@ enum class RedisCommand {
     PTTL,
     DEL,
 
+    LPUSH,
+    LPUSHX,
+    RPUSH,
+    RPUSHX,
+    LINDEX,
+    LLEN,
+    LPOP,
+    RPOP,
+    LRANGE,
+
     UNKNOWN;
 
     companion object {
