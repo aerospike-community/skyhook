@@ -75,6 +75,27 @@ Operation | Description
 [LPOP](https://redis.io/commands/lpop) *key [count]* | Removes and returns the first elements of the list stored at key.
 [RPOP](https://redis.io/commands/rpop) *key [count]* | Removes and returns the last elements of the list stored at key.
 [LRANGE](https://redis.io/commands/lrange) *key start stop* | Returns the specified elements of the list stored at key.
+[HSET](https://redis.io/commands/hset) *key field value [field value ...]* | Sets field in the hash stored at key to value.
+[HSETNX](https://redis.io/commands/hsetnx) *key field value* | Sets field in the hash stored at key to value, only if field does not yet exist.
+[HMSET](https://redis.io/commands/hmset) *key field value [field value ...]* | Sets the specified fields to their respective values in the hash stored at key.
+[SADD](https://redis.io/commands/sadd) *key member [member ...]* | Add the specified members to the set stored at key.
+[HEXISTS](https://redis.io/commands/hexists) *key field* | Returns if field is an existing field in the hash stored at key.
+[SISMEMBER](https://redis.io/commands/sismember) *key member* | Returns if member is a member of the set stored at key.
+[HGET](https://redis.io/commands/hget) *key field* | Returns the value associated with field in the hash stored at key.
+[HMGET](https://redis.io/commands/hmget) *key field [field ...]* | Returns the values associated with the specified fields in the hash stored at key.
+[HGETALL](https://redis.io/commands/hgetall) *key* | Returns all fields and values of the hash stored at key.
+[HVALS](https://redis.io/commands/hvals) *key* | Returns all values in the hash stored at key.
+[HKEYS](https://redis.io/commands/hkeys) *key* | Returns all field names in the hash stored at key.
+[SMEMBERS](https://redis.io/commands/smembers) *key* | Returns all the members of the set value stored at key.
+[HINCRBY](https://redis.io/commands/hincrby) *key field increment* | Increments the number stored at field in the hash stored at key by increment.
+[HINCRBYFLOAT](https://redis.io/commands/hincrbyfloat) *key field increment* | Increment the specified field of a hash stored at key, and representing a floating point number, by the specified increment.
+[HSTRLEN](https://redis.io/commands/hstrlen) *key field* | Returns the string length of the value associated with field in the hash stored at key.
+[HLEN](https://redis.io/commands/hlen) *key* | Returns the number of fields contained in the hash stored at key.
+[SCARD](https://redis.io/commands/scard) *key* | Returns the set cardinality (number of elements) of the set stored at key.
+[ZCARD](https://redis.io/commands/zcard) *key* | Returns the sorted set cardinality (number of elements) of the sorted set stored at key.
+[HDEL](https://redis.io/commands/hdel) *key field [field ...]* | Removes the specified fields from the hash stored at key.
+[SREM](https://redis.io/commands/srem) *key member [member ...]* | Remove the specified members from the set stored at key.
+[ZREM](https://redis.io/commands/zrem) *key member [member ...]* | Removes the specified members from the sorted set stored at key.
 
 </details>
 
