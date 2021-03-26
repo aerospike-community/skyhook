@@ -18,10 +18,11 @@ class LlenCommandListener(
         require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
-        val operations = arrayOf(
-            ListOperation.size(aeroCtx.bin)
+        val operation = ListOperation.size(aeroCtx.bin)
+        aeroCtx.client.operate(
+            null, this, null,
+            key, operation
         )
-        aeroCtx.client.operate(null, this, null, key, *operations)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
@@ -30,7 +31,7 @@ class LlenCommandListener(
             ctx.flush()
         } else {
             try {
-                writeResponse(record.bins[aeroCtx.bin]!!)
+                writeResponse(record.bins[aeroCtx.bin])
                 ctx.flush()
             } catch (e: Exception) {
                 closeCtx(e)

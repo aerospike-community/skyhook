@@ -28,10 +28,14 @@ class LrangeCommandListener(
         require(from <= to) { "${cmd.command} invalid indexes" }
         val count = (to - from) + 1
 
-        val operations = arrayOf(
-            ListOperation.getByIndexRange(aeroCtx.bin, from, count, ListReturnType.VALUE)
+        val operation = ListOperation.getByIndexRange(
+            aeroCtx.bin, from,
+            count, ListReturnType.VALUE
         )
-        aeroCtx.client.operate(null, this, defaultWritePolicy, key, *operations)
+        aeroCtx.client.operate(
+            null, this, defaultWritePolicy,
+            key, operation
+        )
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
@@ -40,7 +44,7 @@ class LrangeCommandListener(
             ctx.flush()
         } else {
             try {
-                writeResponse(record.bins[aeroCtx.bin]!!)
+                writeResponse(record.bins[aeroCtx.bin])
                 ctx.flush()
             } catch (e: Exception) {
                 closeCtx(e)

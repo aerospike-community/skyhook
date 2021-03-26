@@ -22,10 +22,14 @@ class LindexCommandListener(
         val key = createKey(cmd.key)
         val index = Typed.getInteger(cmd.args!![2])
 
-        val operations = arrayOf(
-            ListOperation.getByIndex(aeroCtx.bin, index, ListReturnType.VALUE)
+        val operation = ListOperation.getByIndex(
+            aeroCtx.bin, index,
+            ListReturnType.VALUE
         )
-        aeroCtx.client.operate(null, this, defaultWritePolicy, key, *operations)
+        aeroCtx.client.operate(
+            null, this, defaultWritePolicy,
+            key, operation
+        )
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
@@ -34,7 +38,7 @@ class LindexCommandListener(
             ctx.flush()
         } else {
             try {
-                writeResponse(record.bins[aeroCtx.bin]!!)
+                writeResponse(record.bins[aeroCtx.bin])
                 ctx.flush()
             } catch (e: Exception) {
                 closeCtx(e)

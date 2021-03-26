@@ -26,12 +26,9 @@ class ListPushCommandListener(
 
         val key = createKey(cmd.key)
         val opPolicy = getOpWritePolicy(cmd)
-        val operations = arrayOf(
-            opPolicy.op
-        )
         aeroCtx.client.operate(
             null, this, opPolicy.writePolicy,
-            key, *operations
+            key, opPolicy.op
         )
     }
 
@@ -80,7 +77,7 @@ class ListPushCommandListener(
             ctx.flush()
         } else {
             try {
-                writeResponse(record.bins[aeroCtx.bin]!!)
+                writeResponse(record.bins[aeroCtx.bin])
                 ctx.flush()
             } catch (e: Exception) {
                 closeCtx(e)

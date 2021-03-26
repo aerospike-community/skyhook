@@ -23,12 +23,9 @@ class ListPopCommandListener(
         }
 
         val key = createKey(cmd.key)
-        val operations = arrayOf(
-            getListOperation(cmd)
-        )
         aeroCtx.client.operate(
             null, this, defaultWritePolicy,
-            key, *operations
+            key, getListOperation(cmd)
         )
     }
 
@@ -53,7 +50,7 @@ class ListPopCommandListener(
             ctx.flush()
         } else {
             try {
-                writeResponse(record.bins[aeroCtx.bin]!!)
+                writeResponse(record.bins[aeroCtx.bin])
                 ctx.flush()
             } catch (e: Exception) {
                 closeCtx(e)
