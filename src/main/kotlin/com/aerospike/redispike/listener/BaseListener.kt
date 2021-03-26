@@ -19,7 +19,9 @@ abstract class BaseListener(
 ) : NettyResponseWriter(), CommandHandler {
 
     companion object {
-        protected val log = KotlinLogging.logger {}
+
+        @JvmStatic
+        val log = KotlinLogging.logger {}
 
         @JvmStatic
         fun argValidationErrorMsg(cmd: RequestCommand): String {
@@ -56,7 +58,7 @@ abstract class BaseListener(
 
     open fun onFailure(exception: AerospikeException?) {
         try {
-            log.warn { exception }
+            log.debug { exception }
             writeError(exception)
             ctx.flush()
         } catch (e: IOException) {
