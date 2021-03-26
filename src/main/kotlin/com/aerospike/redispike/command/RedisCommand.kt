@@ -32,6 +32,28 @@ enum class RedisCommand {
     RPOP,
     LRANGE,
 
+    HSET,
+    HSETNX,
+    HMSET,
+    SADD,
+    HEXISTS,
+    SISMEMBER,
+    HGET,
+    HMGET,
+    HGETALL,
+    HVALS,
+    HKEYS,
+    SMEMBERS,
+    HINCRBY,
+    HINCRBYFLOAT,
+    HSTRLEN,
+    HLEN,
+    SCARD,
+    ZCARD,
+    HDEL,
+    SREM,
+    ZREM,
+
     UNKNOWN;
 
     companion object {

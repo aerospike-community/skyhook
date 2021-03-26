@@ -8,6 +8,7 @@ import com.aerospike.redispike.config.AerospikeContext
 import com.aerospike.redispike.config.ServerConfiguration
 import com.aerospike.redispike.listener.*
 import com.aerospike.redispike.listener.list.*
+import com.aerospike.redispike.listener.map.*
 import io.netty.channel.ChannelHandlerContext
 import mu.KotlinLogging
 import javax.inject.Inject
@@ -65,6 +66,28 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.LPOP,
                 RedisCommand.RPOP -> ListPopCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.LRANGE -> LrangeCommandListener(aerospikeCtx, ctx).handle(cmd)
+
+                RedisCommand.HSET,
+                RedisCommand.HSETNX -> HsetCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HMSET -> HmsetCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.SADD -> SaddCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HEXISTS,
+                RedisCommand.SISMEMBER -> HexistsCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HGET,
+                RedisCommand.HMGET,
+                RedisCommand.HGETALL,
+                RedisCommand.HVALS,
+                RedisCommand.HKEYS,
+                RedisCommand.SMEMBERS -> MapGetCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HINCRBY,
+                RedisCommand.HINCRBYFLOAT -> HincrbyCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HSTRLEN -> HstrlenCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HLEN,
+                RedisCommand.SCARD,
+                RedisCommand.ZCARD -> MapSizeCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HDEL,
+                RedisCommand.SREM,
+                RedisCommand.ZREM -> MapDelCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 else -> {
                     throw IllegalArgumentException("${cmd.command} unsupported command")
