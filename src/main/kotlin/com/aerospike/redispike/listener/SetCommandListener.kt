@@ -20,10 +20,6 @@ class SetCommandListener(
     private data class Params(val writePolicy: WritePolicy, val value: Value)
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount == 3 || cmd.argCount == 4) {
-            argValidationErrorMsg(cmd)
-        }
-
         val key = createKey(cmd.key)
         val params = parse(cmd)
         aeroCtx.client.put(
@@ -45,17 +41,25 @@ class SetCommandListener(
         val writePolicy = getWritePolicy()
         return when (cmd.command) {
             RedisCommand.SET -> {
+                require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
+
                 Params(writePolicy, Typed.getValue(cmd.args!![2]))
             }
             RedisCommand.SETNX -> {
+                require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
+
                 writePolicy.recordExistsAction = RecordExistsAction.CREATE_ONLY
                 Params(writePolicy, Typed.getValue(cmd.args!![2]))
             }
             RedisCommand.SETEX -> {
+                require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
+
                 writePolicy.expiration = Typed.getInteger(cmd.args!![2])
                 Params(writePolicy, Typed.getValue(cmd.args[3]))
             }
             RedisCommand.PSETEX -> {
+                require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
+
                 writePolicy.expiration = Typed.getInteger(cmd.args!![2]) / 1000
                 Params(writePolicy, Typed.getValue(cmd.args[3]))
             }
