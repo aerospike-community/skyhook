@@ -6,7 +6,7 @@ import com.aerospike.redispike.command.RedisCommand
 import com.aerospike.redispike.command.RequestCommand
 import com.aerospike.redispike.config.AerospikeContext
 import com.aerospike.redispike.config.ServerConfiguration
-import com.aerospike.redispike.listener.*
+import com.aerospike.redispike.listener.key.*
 import com.aerospike.redispike.listener.list.*
 import com.aerospike.redispike.listener.map.*
 import io.netty.channel.ChannelHandlerContext
@@ -90,7 +90,8 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.ZREM -> MapDelCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 else -> {
-                    throw IllegalArgumentException("${cmd.command} unsupported command")
+                    writeErrorString(ctx, "${cmd.command} unsupported command")
+                    ctx.flush()
                 }
             }
         } catch (e: Exception) {
