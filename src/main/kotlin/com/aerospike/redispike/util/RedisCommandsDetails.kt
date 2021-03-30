@@ -1,0 +1,62 @@
+package com.aerospike.redispike.util
+
+import com.aerospike.redispike.command.RedisCommandDetails
+
+object RedisCommandsDetails {
+
+    val getCommand = RedisCommandDetails("get", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val mgetCommand = RedisCommandDetails("mget", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
+    val getsetCommand = RedisCommandDetails("getset", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val setCommand = RedisCommandDetails("set", -3, arrayListOf("write", "denyoom"), 1, 1, 1)
+    val setexCommand = RedisCommandDetails("setex", 4, arrayListOf("write", "denyoom"), 1, 1, 1)
+    val psetexCommand = RedisCommandDetails("psetex", 4, arrayListOf("write", "denyoom"), 1, 1, 1)
+    val setnxCommand = RedisCommandDetails("setnx", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val existsCommand = RedisCommandDetails("exists", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
+    val expireCommand = RedisCommandDetails("expire", 3, arrayListOf("write", "fast"), 1, 1, 1)
+    val pexpireCommand = RedisCommandDetails("pexpire", 3, arrayListOf("write", "fast"), 1, 1, 1)
+    val appendCommand = RedisCommandDetails("append", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val incrCommand = RedisCommandDetails("incr", 2, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val incrbyCommand = RedisCommandDetails("incrby", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val incrbyfloatCommand = RedisCommandDetails("incrbyfloat", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val strlenCommand = RedisCommandDetails("strlen", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val ttlCommand = RedisCommandDetails("ttl", 2, arrayListOf("readonly", "random" ,"fast"), 1, 1, 1)
+    val pttlCommand = RedisCommandDetails("pttl", 2, arrayListOf("readonly", "random" ,"fast"), 1, 1, 1)
+    val delCommand = RedisCommandDetails("del", -2, arrayListOf("write"), 1, -1, 1)
+
+    val lpushCommand = RedisCommandDetails("lpush", -3, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val lpushxCommand = RedisCommandDetails("lpushx", -3, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val rpushCommand = RedisCommandDetails("rpush", -3, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val rpushxCommand = RedisCommandDetails("rpushx", -3, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val lindexCommand = RedisCommandDetails("lindex", 3, arrayListOf("readonly"), 1, 1, 1)
+    val llenCommand = RedisCommandDetails("llen", 2, arrayListOf("readonly" ,"fast"), 1, 1, 1)
+    val lpopCommand = RedisCommandDetails("lpop", -2, arrayListOf("write" ,"fast"), 1, 1, 1)
+    val rpopCommand = RedisCommandDetails("rpop", -2, arrayListOf("write" ,"fast"), 1, 1, 1)
+    val lrangeCommand = RedisCommandDetails("lrange", 4, arrayListOf("readonly"), 1, 1, 1)
+
+    val hsetCommand = RedisCommandDetails("hset", -4, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val hsetnxCommand = RedisCommandDetails("hsetnx", 4, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val hmsetCommand = RedisCommandDetails("hmset", -4, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val saddCommand = RedisCommandDetails("sadd", -3, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val hexistsCommand = RedisCommandDetails("hexists", 3, arrayListOf("readonly" ,"fast"), 1, 1, 1)
+    val sismemberCommand = RedisCommandDetails("sismember", 3, arrayListOf("readonly" ,"fast"), 1, 1, 1)
+    val hgetCommand = RedisCommandDetails("hget", 3, arrayListOf("readonly" ,"fast"), 1, 1, 1)
+    val hmgetCommand = RedisCommandDetails("hmget", -3, arrayListOf("readonly" ,"fast"), 1, 1, 1)
+    val hgetallCommand = RedisCommandDetails("hgetall", 2, arrayListOf("readonly" ,"random"), 1, 1, 1)
+    val hvalsCommand = RedisCommandDetails("hvals", 2, arrayListOf("readonly" ,"sort_for_script"), 1, 1, 1)
+    val hkeysCommand = RedisCommandDetails("hkeys", 2, arrayListOf("readonly" ,"sort_for_script"), 1, 1, 1)
+    val smembersCommand = RedisCommandDetails("smembers", 2, arrayListOf("readonly" ,"sort_for_script"), 1, 1, 1)
+    val hincrbyCommand = RedisCommandDetails("hincrby", 4, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val hincrbyfloatCommand = RedisCommandDetails("hincrbyfloat", 4, arrayListOf("write", "denyoom" ,"fast"), 1, 1, 1)
+    val hstrlenCommand = RedisCommandDetails("hstrlen", 3, arrayListOf("readonly" ,"fast"), 1, 1, 1)
+    val hlenCommand = RedisCommandDetails("hlen", 2, arrayListOf("readonly" ,"fast"), 1, 1, 1)
+    val scardCommand = RedisCommandDetails("scard", 2, arrayListOf("readonly" ,"fast"), 1, 1, 1)
+    val zcardCommand = RedisCommandDetails("zcard", 2, arrayListOf("readonly" ,"fast"), 1, 1, 1)
+    val hdelCommand = RedisCommandDetails("hdel", -3, arrayListOf("write", "fast"), 1, 1, 1)
+    val sremCommand = RedisCommandDetails("srem", -3, arrayListOf("write", "fast"), 1, 1, 1)
+    val zremCommand = RedisCommandDetails("zrem", -3, arrayListOf("write", "fast"), 1, 1, 1)
+
+    val pingCommand = RedisCommandDetails("ping", -1, arrayListOf("stale" ,"fast"), 0, 0, 0)
+    val timeCommand = RedisCommandDetails("time", 1, arrayListOf("random", "loading" ,"stale", "fast"), 0, 0, 0)
+    val commandCommand = RedisCommandDetails("command", -1, arrayListOf("random", "loading" ,"stale"), 0, 0, 0)
+
+}
