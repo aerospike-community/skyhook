@@ -35,6 +35,23 @@ java -jar redispike-[version]-all.jar -f config/server.yml
 ```
 The configuration file carries all the settings the server needs and is in YAML format.
 An example configuration file can be found in the `config` folder.
+
+### Configuration properties
+
+| Property name | Description | Default value |
+| ------------- | ----------- | ------------- |
+| hostList | The host list to seed the Aerospike cluster. | localhost:3000 |
+| namespase | The Aerospike namespace. | test |
+| set | The Aerospike set name. | redis |
+| bin | The Aerospike bin name to set values. | b |
+| redisPort | The server port to bind to. | 6379 |
+| workerThreads | The Netty worker group size. | number of available cores<sup>[1](#worker-threads)</sup> |
+| bossThreads | The Netty acceptor group size. | 2 |
+
+<sup name="worker-threads">1</sup> Used to configure the [Aerospike EventLoops](https://www.aerospike.com/docs/client/java/usage/async/eventloop.html) as well.
+
+Fine-tune `workerThreads` and `bossThreads` for optimal performance.
+
 If no configuration file is specified, the default settings will be applied.
 
 ```text
