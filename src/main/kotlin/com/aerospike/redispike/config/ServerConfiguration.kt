@@ -3,7 +3,7 @@ package com.aerospike.redispike.config
 data class ServerConfiguration(
 
     /**
-     * The hostList to seed the Aerospike cluster.
+     * The host list to seed the Aerospike cluster.
      */
     val hostList: String = "localhost:3000",
 
@@ -18,12 +18,12 @@ data class ServerConfiguration(
     val set: String? = "redis",
 
     /**
-     * The bin name to set values.
+     * The Aerospike bin name to set values.
      */
     val bin: String = "b",
 
     /**
-     * The Redis port to bind to.
+     * The server port to bind to.
      */
     val redisPort: Int = 6379,
 
@@ -33,7 +33,7 @@ data class ServerConfiguration(
     val workerThreads: Int = Runtime.getRuntime().availableProcessors(),
 
     /**
-     * The Netty boss group size.
+     * The Netty acceptor group size.
      */
     val bossThreads: Int = 2,
 )

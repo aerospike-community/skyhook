@@ -1,7 +1,7 @@
 package com.aerospike.redispike
 
 /**
- * The Server interface
+ * The Server interface.
  */
 interface Server {
     /**
