@@ -49,6 +49,9 @@ Now the server is listening to the `config.redisPort` (default: 6379) and is rea
 Operation | Description
 ----------|------------
 [APPEND](https://redis.io/commands/append) *key value* | If key already exists and is a string, this command appends the value at the end of the string. If key does not exist it is created and set as an empty string.
+[COMMAND](https://redis.io/commands/command) | Returns Array reply of details about all Redis commands.
+[COMMAND COUNT](https://redis.io/commands/command-count) | Returns Integer reply of number of total commands in this Redis server.
+[COMMAND INFO](https://redis.io/commands/command-info) *command-name [command-name ...]* | Returns Array reply of details about multiple Redis commands.
 [DEL](https://redis.io/commands/del) *key* | Removes the specified key.
 [EXISTS](https://redis.io/commands/exists) *key [key ...]* | Returns if key exists.
 [EXPIRE](https://redis.io/commands/expire) *key seconds* | Set a timeout on key. After the timeout has expired, the key will automatically be deleted.
@@ -79,6 +82,7 @@ Operation | Description
 [LRANGE](https://redis.io/commands/lrange) *key start stop* | Returns the specified elements of the list stored at key.
 [MGET](https://redis.io/commands/mget) *key [key ...]* | Returns the values of all specified keys.
 [PEXPIRE](https://redis.io/commands/pexpire) *key milliseconds* | This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.
+[PING](https://redis.io/commands/ping) *[message]* | Returns PONG if no argument is provided, otherwise return a copy of the argument as a bulk.
 [PSETEX](https://redis.io/commands/psetex) *key milliseconds value* | PSETEX works exactly like SETEX with the sole difference that the expire time is specified in milliseconds instead of seconds.
 [PTTL](https://redis.io/commands/pttl) *key* | Returns the amount of remaining time in milliseconds.
 [RPOP](https://redis.io/commands/rpop) *key [count]* | Removes and returns the last elements of the list stored at key.
@@ -93,6 +97,7 @@ Operation | Description
 [SMEMBERS](https://redis.io/commands/smembers) *key* | Returns all the members of the set value stored at key.
 [SREM](https://redis.io/commands/srem) *key member [member ...]* | Remove the specified members from the set stored at key.
 [STRLEN](https://redis.io/commands/strlen) *key* | Returns the length of the string value stored at key. An error is returned when key holds a non-string value.
+[TIME](https://redis.io/commands/time) | Returns the current server time.
 [TTL](https://redis.io/commands/ttl) *key* | Returns the remaining time to live of a key that has a timeout.
 [ZCARD](https://redis.io/commands/zcard) *key* | Returns the sorted set cardinality (number of elements) of the sorted set stored at key.
 [ZREM](https://redis.io/commands/zrem) *key member [member ...]* | Removes the specified members from the sorted set stored at key.
@@ -106,3 +111,6 @@ For tests purposes use [redis-cli](https://redis.io/topics/rediscli) or even the
 ```sh
 echo "GET key1\r\n" | nc localhost 6379
 ```
+
+## License
+Licensed under the Apache 2.0 License.
