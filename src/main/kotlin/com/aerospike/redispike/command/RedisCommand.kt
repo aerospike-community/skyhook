@@ -3,6 +3,7 @@ package com.aerospike.redispike.command
 import com.aerospike.redispike.util.RedisCommandsDetails.appendCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.commandCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.delCommand
+import com.aerospike.redispike.util.RedisCommandsDetails.echoCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.existsCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.expireCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.getCommand
@@ -109,6 +110,7 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     ZREM(zremCommand),
 
     PING(pingCommand),
+    ECHO(echoCommand),
     TIME(timeCommand),
 
     COMMAND(commandCommand),

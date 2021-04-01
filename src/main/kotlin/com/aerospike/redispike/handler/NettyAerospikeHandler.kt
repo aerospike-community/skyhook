@@ -7,6 +7,7 @@ import com.aerospike.redispike.command.RequestCommand
 import com.aerospike.redispike.config.AerospikeContext
 import com.aerospike.redispike.config.ServerConfiguration
 import com.aerospike.redispike.handler.redis.CommandCommandHandler
+import com.aerospike.redispike.handler.redis.EchoCommandHandler
 import com.aerospike.redispike.handler.redis.PingCommandHandler
 import com.aerospike.redispike.handler.redis.TimeCommandHandler
 import com.aerospike.redispike.listener.key.*
@@ -93,6 +94,7 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.ZREM -> MapDelCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.PING -> PingCommandHandler(ctx).handle(cmd)
+                RedisCommand.ECHO -> EchoCommandHandler(ctx).handle(cmd)
                 RedisCommand.TIME -> TimeCommandHandler(ctx).handle(cmd)
                 RedisCommand.COMMAND -> CommandCommandHandler(ctx).handle(cmd)
 
