@@ -34,6 +34,8 @@ import com.aerospike.redispike.util.RedisCommandsDetails.lpushCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.lpushxCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.lrangeCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.mgetCommand
+import com.aerospike.redispike.util.RedisCommandsDetails.msetCommand
+import com.aerospike.redispike.util.RedisCommandsDetails.msetnxCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.pexpireCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.pingCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.psetexCommand
@@ -68,6 +70,8 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     SETEX(setexCommand),
     PSETEX(psetexCommand),
     SETNX(setnxCommand),
+    MSET(msetCommand),
+    MSETNX(msetnxCommand),
     EXISTS(existsCommand),
     EXPIRE(expireCommand),
     PEXPIRE(pexpireCommand),
