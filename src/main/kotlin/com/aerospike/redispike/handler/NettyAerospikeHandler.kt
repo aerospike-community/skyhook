@@ -60,6 +60,7 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.STRLEN -> StrlenCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.TTL,
                 RedisCommand.PTTL -> TtlCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.RANDOMKEY -> RandomkeyCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.LPUSH,
                 RedisCommand.LPUSHX,

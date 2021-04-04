@@ -36,6 +36,7 @@ import com.aerospike.redispike.util.RedisCommandsDetails.pexpireCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.pingCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.psetexCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.pttlCommand
+import com.aerospike.redispike.util.RedisCommandsDetails.randomkeyCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.rpopCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.rpushCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.rpushxCommand
@@ -76,6 +77,7 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     TTL(ttlCommand),
     PTTL(pttlCommand),
     DEL(delCommand),
+    RANDOMKEY(randomkeyCommand),
 
     LPUSH(lpushCommand),
     LPUSHX(lpushxCommand),
