@@ -45,12 +45,10 @@ An example configuration file can be found in the `config` folder.
 | set | The Aerospike set name. | redis |
 | bin | The Aerospike bin name to set values. | b |
 | redisPort | The server port to bind to. | 6379 |
-| workerThreads | The Netty worker group size. | number of available cores<sup>[1](#worker-threads)</sup> |
+| workerThreads<sup>[1](#worker-threads)</sup> | The Netty worker group size. | number of available cores |
 | bossThreads | The Netty acceptor group size. | 2 |
 
-<sup name="worker-threads">1</sup> Used to configure the [Aerospike EventLoops](https://www.aerospike.com/docs/client/java/usage/async/eventloop.html) as well.
-
-Fine-tune `workerThreads` and `bossThreads` for optimal performance.
+<sup name="worker-threads">1</sup> Used to configure the size of the [Aerospike Java Client EventLoops](https://www.aerospike.com/docs/client/java/usage/async/eventloop.html) as well.
 
 If no configuration file is specified, the default settings will be applied.
 
@@ -70,8 +68,11 @@ Operation | Description
 [COMMAND COUNT](https://redis.io/commands/command-count) | Returns Integer reply of number of total commands in this Redis server.
 [COMMAND INFO](https://redis.io/commands/command-info) *command-name [command-name ...]* | Returns Array reply of details about multiple Redis commands.
 [DEL](https://redis.io/commands/del) *key* | Removes the specified key.
+[ECHO](https://redis.io/commands/echo) *message* | Returns message.
 [EXISTS](https://redis.io/commands/exists) *key [key ...]* | Returns if key exists.
 [EXPIRE](https://redis.io/commands/expire) *key seconds* | Set a timeout on key. After the timeout has expired, the key will automatically be deleted.
+[FLUSHALL](https://redis.io/commands/flushall) | Delete all the keys of all the existing databases, not just the currently selected one.
+[FLUSHDB](https://redis.io/commands/flushdb) | Delete all the keys of the currently selected DB.
 [GETSET](https://redis.io/commands/getset) *key value* | Atomically sets key to value and returns the old value stored at key.
 [GET](https://redis.io/commands/get) *key* | Get the value of key.
 [HDEL](https://redis.io/commands/hdel) *key field [field ...]* | Removes the specified fields from the hash stored at key.
@@ -98,10 +99,13 @@ Operation | Description
 [LPUSH](https://redis.io/commands/lpush) *key element [element ...]* | Insert all the specified values at the head of the list stored at key.
 [LRANGE](https://redis.io/commands/lrange) *key start stop* | Returns the specified elements of the list stored at key.
 [MGET](https://redis.io/commands/mget) *key [key ...]* | Returns the values of all specified keys.
+[MSET](https://redis.io/commands/mset) *key value [key value ...]* | Sets the given keys to their respective values.
+[MSETNX](https://redis.io/commands/msetnx) *key value [key value ...]* | Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.
 [PEXPIRE](https://redis.io/commands/pexpire) *key milliseconds* | This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.
 [PING](https://redis.io/commands/ping) *[message]* | Returns PONG if no argument is provided, otherwise return a copy of the argument as a bulk.
 [PSETEX](https://redis.io/commands/psetex) *key milliseconds value* | PSETEX works exactly like SETEX with the sole difference that the expire time is specified in milliseconds instead of seconds.
 [PTTL](https://redis.io/commands/pttl) *key* | Returns the amount of remaining time in milliseconds.
+[RANDOMKEY](https://redis.io/commands/randomkey) | Return a random key from the currently selected database.
 [RPOP](https://redis.io/commands/rpop) *key [count]* | Removes and returns the last elements of the list stored at key.
 [RPUSHX](https://redis.io/commands/rpushx) *key element [element ...]* | Inserts specified values at the tail of the list stored at key, only if key already exists and holds a list.
 [RPUSH](https://redis.io/commands/rpush) *key element [element ...]* | Insert all the specified values at the tail of the list stored at key.
@@ -115,6 +119,7 @@ Operation | Description
 [SREM](https://redis.io/commands/srem) *key member [member ...]* | Remove the specified members from the set stored at key.
 [STRLEN](https://redis.io/commands/strlen) *key* | Returns the length of the string value stored at key. An error is returned when key holds a non-string value.
 [TIME](https://redis.io/commands/time) | Returns the current server time.
+[TOUCH](https://redis.io/commands/touch) *key [key ...]* | Alters the last access time of a key(s). A key is ignored if it does not exist.
 [TTL](https://redis.io/commands/ttl) *key* | Returns the remaining time to live of a key that has a timeout.
 [ZCARD](https://redis.io/commands/zcard) *key* | Returns the sorted set cardinality (number of elements) of the sorted set stored at key.
 [ZREM](https://redis.io/commands/zrem) *key member [member ...]* | Removes the specified members from the sorted set stored at key.
