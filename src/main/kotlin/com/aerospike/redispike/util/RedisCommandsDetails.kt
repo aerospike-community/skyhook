@@ -56,6 +56,9 @@ object RedisCommandsDetails {
     val sremCommand = RedisCommandDetails("srem", -3, arrayListOf("write", "fast"), 1, 1, 1)
     val zremCommand = RedisCommandDetails("zrem", -3, arrayListOf("write", "fast"), 1, 1, 1)
 
+    val flushdbCommand = RedisCommandDetails("flushdb", -1, arrayListOf("write"), 0, 0, 0)
+    val flushallCommand = RedisCommandDetails("flushall", -1, arrayListOf("write"), 0, 0, 0)
+
     val pingCommand = RedisCommandDetails("ping", -1, arrayListOf("stale" ,"fast"), 0, 0, 0)
     val echoCommand = RedisCommandDetails("echo", 2, arrayListOf("fast"), 0, 0, 0)
     val timeCommand = RedisCommandDetails("time", 1, arrayListOf("random", "loading" ,"stale", "fast"), 0, 0, 0)

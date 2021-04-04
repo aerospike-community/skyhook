@@ -6,6 +6,8 @@ import com.aerospike.redispike.util.RedisCommandsDetails.delCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.echoCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.existsCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.expireCommand
+import com.aerospike.redispike.util.RedisCommandsDetails.flushallCommand
+import com.aerospike.redispike.util.RedisCommandsDetails.flushdbCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.getCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.getsetCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.hdelCommand
@@ -110,6 +112,9 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     HDEL(hdelCommand),
     SREM(sremCommand),
     ZREM(zremCommand),
+
+    FLUSHDB(flushdbCommand),
+    FLUSHALL(flushallCommand),
 
     PING(pingCommand),
     ECHO(echoCommand),

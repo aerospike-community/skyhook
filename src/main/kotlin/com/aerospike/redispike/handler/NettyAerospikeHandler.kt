@@ -6,6 +6,7 @@ import com.aerospike.redispike.command.RedisCommand
 import com.aerospike.redispike.command.RequestCommand
 import com.aerospike.redispike.config.AerospikeContext
 import com.aerospike.redispike.config.ServerConfiguration
+import com.aerospike.redispike.handler.aerospike.FlushCommandHandler
 import com.aerospike.redispike.handler.redis.CommandCommandHandler
 import com.aerospike.redispike.handler.redis.EchoCommandHandler
 import com.aerospike.redispike.handler.redis.PingCommandHandler
@@ -93,6 +94,9 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.HDEL,
                 RedisCommand.SREM,
                 RedisCommand.ZREM -> MapDelCommandListener(aerospikeCtx, ctx).handle(cmd)
+
+                RedisCommand.FLUSHDB,
+                RedisCommand.FLUSHALL -> FlushCommandHandler(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.PING -> PingCommandHandler(ctx).handle(cmd)
                 RedisCommand.ECHO -> EchoCommandHandler(ctx).handle(cmd)
