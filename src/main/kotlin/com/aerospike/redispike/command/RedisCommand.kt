@@ -54,6 +54,7 @@ import com.aerospike.redispike.util.RedisCommandsDetails.smembersCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.sremCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.strlenCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.timeCommand
+import com.aerospike.redispike.util.RedisCommandsDetails.touchCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.ttlCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.zcardCommand
 import com.aerospike.redispike.util.RedisCommandsDetails.zremCommand
@@ -84,6 +85,14 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     PTTL(pttlCommand),
     DEL(delCommand),
     RANDOMKEY(randomkeyCommand),
+
+    /**
+     * The Redis TOUCH command changes the last_access_time of the key (used for LRU eviction).
+     * Aerospike (currently) doesn't have such metadata on the record.
+     * The actual implementation returns the number of records that were 'touched' using
+     * [com.aerospike.client.AerospikeClient.exists].
+     */
+    TOUCH(touchCommand),
 
     LPUSH(lpushCommand),
     LPUSHX(lpushxCommand),

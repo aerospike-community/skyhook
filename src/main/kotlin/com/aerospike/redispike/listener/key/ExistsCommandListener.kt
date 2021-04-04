@@ -16,16 +16,23 @@ class ExistsCommandListener(
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount >= 2) { argValidationErrorMsg(cmd) }
 
-        val keys = cmd.args!!.drop(1)
-            .map { Key(aeroCtx.namespace, aeroCtx.set, Value.get(it)) }
-            .toTypedArray()
-        aeroCtx.client.exists(null, this, null, keys)
+        val keys = getKeys(cmd)
+        aeroCtx.client.exists(
+            null, this,
+            null, keys.toTypedArray()
+        )
+    }
+
+    private fun getKeys(cmd: RequestCommand): Set<Key> {
+        return cmd.args!!.drop(1)
+            .map { createKey(Value.get(it)) }
+            .toSet()
     }
 
     override fun onSuccess(keys: Array<out Key>?, exists: BooleanArray?) {
         try {
-            val count = exists?.count { it }
-            writeLong(ctx, count!!)
+            val count = exists?.count { it } ?: 0
+            writeLong(ctx, count)
             ctx.flush()
         } catch (e: Exception) {
             closeCtx(e)

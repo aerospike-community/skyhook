@@ -53,7 +53,8 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.DEL -> DelCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.MGET -> MgetCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.GETSET -> GetsetCommandListener(aerospikeCtx, ctx).handle(cmd)
-                RedisCommand.EXISTS -> ExistsCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.EXISTS,
+                RedisCommand.TOUCH -> ExistsCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.EXPIRE,
                 RedisCommand.PEXPIRE -> ExpireCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.APPEND -> AppendCommandListener(aerospikeCtx, ctx).handle(cmd)
