@@ -27,7 +27,7 @@ class HsetCommandListener(
         val operation = MapOperation.put(
             getMapPolicy(cmd),
             aeroCtx.bin,
-            Typed.getValue(cmd.args!![2]),
+            Typed.getValue(cmd.args[2]),
             Typed.getValue(cmd.args[3])
         )
         aeroCtx.client.operate(

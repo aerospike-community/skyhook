@@ -30,7 +30,7 @@ class ListPopCommandListener(
     }
 
     private fun getListOperation(cmd: RequestCommand): Operation {
-        val count = if (cmd.argCount == 2) 1 else Typed.getInteger(cmd.args!![2])
+        val count = if (cmd.argCount == 2) 1 else Typed.getInteger(cmd.args[2])
         return when (cmd.command) {
             RedisCommand.LPOP -> {
                 ListOperation.popRange(aeroCtx.bin, 0, count)

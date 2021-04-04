@@ -20,7 +20,7 @@ class LindexCommandListener(
         require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
-        val index = Typed.getInteger(cmd.args!![2])
+        val index = Typed.getInteger(cmd.args[2])
 
         val operation = ListOperation.getByIndex(
             aeroCtx.bin, index,

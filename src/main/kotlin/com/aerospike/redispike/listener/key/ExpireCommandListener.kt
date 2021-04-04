@@ -36,10 +36,10 @@ class ExpireCommandListener(
         val writePolicy = getWritePolicy()
         when (cmd.command) {
             RedisCommand.EXPIRE -> {
-                writePolicy.expiration = Typed.getInteger(cmd.args!![2])
+                writePolicy.expiration = Typed.getInteger(cmd.args[2])
             }
             RedisCommand.PEXPIRE -> {
-                writePolicy.expiration = Typed.getInteger(cmd.args!![2]) / 1000
+                writePolicy.expiration = Typed.getInteger(cmd.args[2]) / 1000
             }
             else -> {
                 throw IllegalArgumentException(cmd.command.toString())

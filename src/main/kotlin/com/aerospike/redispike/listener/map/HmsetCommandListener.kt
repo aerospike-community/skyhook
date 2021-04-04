@@ -35,7 +35,7 @@ class HmsetCommandListener(
     }
 
     private fun getValues(cmd: RequestCommand): Map<Value, Value> {
-        return cmd.args!!.drop(2).chunked(2)
+        return cmd.args.drop(2).chunked(2)
             .map { (it1, it2) -> Typed.getValue(it1) to Typed.getValue(it2) }
             .toMap()
     }

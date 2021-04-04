@@ -24,7 +24,7 @@ class ExistsCommandListener(
     }
 
     private fun getKeys(cmd: RequestCommand): Set<Key> {
-        return cmd.args!!.drop(1)
+        return cmd.args.drop(1)
             .map { createKey(Value.get(it)) }
             .toSet()
     }

@@ -21,7 +21,7 @@ class HexistsCommandListener(
 
         val key = createKey(cmd.key)
         val operation = MapOperation.getByKey(
-            aeroCtx.bin, Typed.getValue(cmd.args!![2]),
+            aeroCtx.bin, Typed.getValue(cmd.args[2]),
             MapReturnType.COUNT
         )
         aeroCtx.client.operate(

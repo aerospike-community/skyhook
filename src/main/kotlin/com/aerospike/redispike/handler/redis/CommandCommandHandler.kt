@@ -18,7 +18,7 @@ class CommandCommandHandler(
         if (cmd.argCount == 1) {
             RedisCommand.writeCommand(ctx)
         } else {
-            when (String(cmd.args!![1]).toUpperCase(Locale.ENGLISH)) {
+            when (String(cmd.args[1]).toUpperCase(Locale.ENGLISH)) {
                 "COUNT" -> {
                     writeLong(ctx, RedisCommand.totalCommands)
                 }

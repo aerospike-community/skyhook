@@ -20,7 +20,7 @@ class GetsetCommandListener(
         require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
-        val value = Typed.getValue(cmd.args!![2])
+        val value = Typed.getValue(cmd.args[2])
         val ops = arrayOf(
             Operation.get(aeroCtx.bin),
             Operation.put(Bin(aeroCtx.bin, value))

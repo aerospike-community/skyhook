@@ -21,7 +21,7 @@ class HincrbyCommandListener(
         require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
-        val mapKey: Value = Typed.getValue(cmd.args!![2])
+        val mapKey: Value = Typed.getValue(cmd.args[2])
         val incrValue: Value = Typed.getValue(cmd.args[3])
         val operation = MapOperation.increment(
             MapPolicy(), aeroCtx.bin,

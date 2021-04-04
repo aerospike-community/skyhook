@@ -50,10 +50,10 @@ class IncrCommandListener(
                 Operation.add(Bin(aeroCtx.bin, 1))
             }
             RedisCommand.INCRBY -> {
-                Operation.add(Bin(aeroCtx.bin, Typed.getInteger(cmd.args!![2])))
+                Operation.add(Bin(aeroCtx.bin, Typed.getInteger(cmd.args[2])))
             }
             RedisCommand.INCRBYFLOAT -> {
-                Operation.add(Bin(aeroCtx.bin, Typed.getDouble(cmd.args!![2])))
+                Operation.add(Bin(aeroCtx.bin, Typed.getDouble(cmd.args[2])))
             }
             else -> {
                 throw IllegalArgumentException(cmd.command.toString())

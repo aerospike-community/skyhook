@@ -21,7 +21,7 @@ class HstrlenCommandListener(
         require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
-        val mapKey: Value = Typed.getValue(cmd.args!![2])
+        val mapKey: Value = Typed.getValue(cmd.args[2])
         val operation = MapOperation.getByKey(
             aeroCtx.bin, mapKey,
             MapReturnType.VALUE

@@ -31,7 +31,7 @@ class MapDelCommandListener(
     }
 
     private fun getValues(cmd: RequestCommand): List<Value> {
-        return cmd.args!!.drop(2)
+        return cmd.args.drop(2)
             .map { Typed.getValue(it) }
     }
 

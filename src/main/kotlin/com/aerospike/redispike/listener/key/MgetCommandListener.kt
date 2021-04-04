@@ -17,7 +17,7 @@ class MgetCommandListener(
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount >= 2) { argValidationErrorMsg(cmd) }
 
-        val keys = cmd.args!!.drop(1)
+        val keys = cmd.args.drop(1)
             .map { Key(aeroCtx.namespace, aeroCtx.set, Value.get(it)) }
             .map { BatchRead(it, true) }
         aeroCtx.client.get(null, this, null, keys)

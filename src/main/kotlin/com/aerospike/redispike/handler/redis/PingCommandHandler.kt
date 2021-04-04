@@ -14,7 +14,7 @@ class PingCommandHandler(
         require(cmd.argCount < 3) { BaseListener.argValidationErrorMsg(cmd) }
 
         val responseString = if (cmd.argCount == 2) {
-            String(cmd.args!![1])
+            String(cmd.args[1])
         } else {
             "PONG"
         }

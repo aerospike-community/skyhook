@@ -29,7 +29,7 @@ class MapGetCommandListener(
     }
 
     private fun getValues(cmd: RequestCommand): List<Value> {
-        return cmd.args!!.drop(2)
+        return cmd.args.drop(2)
             .map { Typed.getValue(it) }
     }
 
@@ -38,7 +38,7 @@ class MapGetCommandListener(
             RedisCommand.HGET -> {
                 require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
 
-                val mapKey = Typed.getValue(cmd.args!![2])
+                val mapKey = Typed.getValue(cmd.args[2])
                 MapOperation.getByKey(
                     aeroCtx.bin, mapKey,
                     MapReturnType.VALUE

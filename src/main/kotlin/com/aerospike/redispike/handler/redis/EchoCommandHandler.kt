@@ -13,7 +13,7 @@ class EchoCommandHandler(
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2) { BaseListener.argValidationErrorMsg(cmd) }
 
-        writeSimpleString(ctx, String(cmd.args!![1]))
+        writeSimpleString(ctx, String(cmd.args[1]))
         ctx.flush()
     }
 }

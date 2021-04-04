@@ -20,7 +20,7 @@ class LrangeCommandListener(
         require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
-        val from = Typed.getInteger(cmd.args!![2])
+        val from = Typed.getInteger(cmd.args[2])
         val to = Typed.getInteger(cmd.args[3])
 
         // TODO support negative indexes

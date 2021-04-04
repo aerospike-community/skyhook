@@ -36,7 +36,7 @@ class SaddCommandListener(
     }
 
     private fun getValues(cmd: RequestCommand): Map<Value, Value> {
-        return cmd.args!!.drop(2)
+        return cmd.args.drop(2)
             .map { Typed.getValue(it) to Value.getAsNull() }
             .toMap()
     }
