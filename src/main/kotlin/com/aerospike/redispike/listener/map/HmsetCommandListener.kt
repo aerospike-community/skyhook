@@ -46,7 +46,7 @@ class HmsetCommandListener(
             ctx.flush()
         } else {
             try {
-                writeSimpleString(ctx, "OK")
+                writeOK(ctx)
                 ctx.flush()
             } catch (e: Exception) {
                 closeCtx(e)

@@ -16,7 +16,7 @@ class FlushCommandHandler(
         require(cmd.argCount <= 2) { BaseListener.argValidationErrorMsg(cmd) }
 
         aeroCtx.client.truncate(null, aeroCtx.namespace, aeroCtx.set, null)
-        writeSimpleString(ctx, "OK")
+        writeOK(ctx)
         ctx.flush()
     }
 }
