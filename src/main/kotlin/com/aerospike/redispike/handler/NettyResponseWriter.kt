@@ -9,12 +9,8 @@ import java.io.IOException
 
 open class NettyResponseWriter {
 
-    private val pool: RedisMessagePool = FixedRedisMessagePool.INSTANCE
-
-    @Throws(IOException::class)
-    fun writeArray(ctx: ChannelHandlerContext, valueArray: ValueArray) {
-        val valueAry = valueArray.getObject() as Array<*>
-        writeArrayHeader(ctx, valueAry.size.toLong())
+    companion object {
+        private val pool: RedisMessagePool = FixedRedisMessagePool.INSTANCE
     }
 
     @Throws(IOException::class)
@@ -35,8 +31,14 @@ open class NettyResponseWriter {
             is Long -> {
                 writeLong(ctx, value as Long?)
             }
+            is Int -> {
+                writeLong(ctx, value as Int?)
+            }
             is Double -> {
                 writeFloat(ctx, value as Double?)
+            }
+            else -> {
+                throw IllegalArgumentException("Unsupported value type")
             }
         }
     }
@@ -53,7 +55,7 @@ open class NettyResponseWriter {
             is String -> {
                 writeBulkString(ctx, value as String?)
             }
-            is Long -> {
+            is Long, is Int -> {
                 writeBulkString(ctx, value.toString())
             }
             is Double -> {
@@ -73,17 +75,17 @@ open class NettyResponseWriter {
         ctx.write(ArrayHeaderRedisMessage(length))
     }
 
-    /*
-	 * Writes a zero length list: "*0\r\n"
-	 */
+    /**
+     * Writes a zero length list: "*0\r\n".
+     */
     @Throws(IOException::class)
     fun writeEmptyList(ctx: ChannelHandlerContext) {
         writeArrayHeader(ctx, 0)
     }
 
-    /*
-	 * Like WriteObjectList but every item is written as a bulkstring
-	 */
+    /**
+     * Like WriteObjectList but every item is written as a bulkstring.
+     */
     @Throws(IOException::class)
     fun writeObjectListStr(ctx: ChannelHandlerContext, objectCollection: Collection<*>?) {
         if (objectCollection == null) {
@@ -121,19 +123,14 @@ open class NettyResponseWriter {
 
     @Throws(IOException::class)
     fun writeSimpleString(ctx: ChannelHandlerContext, sString: String?) {
-        var simpleStringRedisMessage = pool.getSimpleString(sString)
-        if (simpleStringRedisMessage == null) {
-            simpleStringRedisMessage = SimpleStringRedisMessage(sString)
-        }
+        val simpleStringRedisMessage = pool.getSimpleString(sString)
+            ?: SimpleStringRedisMessage(sString)
         ctx.write(simpleStringRedisMessage)
     }
 
     @Throws(IOException::class)
     fun writeErrorString(ctx: ChannelHandlerContext, eString: String?) {
-        var errorRedisMessage = pool.getError(eString)
-        if (errorRedisMessage == null) {
-            errorRedisMessage = ErrorRedisMessage(eString)
-        }
+        val errorRedisMessage = pool.getError(eString) ?: ErrorRedisMessage(eString)
         ctx.write(errorRedisMessage)
     }
 
@@ -144,18 +141,19 @@ open class NettyResponseWriter {
 
     @Throws(IOException::class)
     fun writeLongStr(ctx: ChannelHandlerContext, longValue: Long) {
-        var longBytes = pool.getByteBufOfInteger(longValue)
-        if (longBytes == null) {
-            val longString = String.format(":%d\r\n", longValue)
-            longBytes = longString.toByteArray()
-        }
+        val longBytes = pool.getByteBufOfInteger(longValue)
+            ?: String.format(":%d\r\n", longValue).toByteArray()
         ctx.write(FullBulkStringRedisMessage(Unpooled.wrappedBuffer(longBytes)))
     }
 
     @Throws(IOException::class)
     fun writeFloat(ctx: ChannelHandlerContext, floatValue: Double?) {
         val floatString = String.format("%f", floatValue)
-        ctx.write(FullBulkStringRedisMessage(Unpooled.wrappedBuffer(floatString.toByteArray())))
+        ctx.write(
+            FullBulkStringRedisMessage(
+                Unpooled.wrappedBuffer(floatString.toByteArray())
+            )
+        )
     }
 
     @Throws(IOException::class)
@@ -176,7 +174,9 @@ open class NettyResponseWriter {
     @Throws(IOException::class)
     fun writeBytesValue(ctx: ChannelHandlerContext, bytesValue: BytesValue) {
         ctx.write(
-            FullBulkStringRedisMessage(Unpooled.wrappedBuffer(bytesValue.getObject() as ByteArray))
+            FullBulkStringRedisMessage(
+                Unpooled.wrappedBuffer(bytesValue.getObject() as ByteArray)
+            )
         )
     }
 
@@ -197,24 +197,24 @@ open class NettyResponseWriter {
 
     @Throws(IOException::class)
     fun writeLong(ctx: ChannelHandlerContext, longValue: Long?) {
-        var integerRedisMessage = pool.getInteger(longValue!!)
-        if (integerRedisMessage == null) {
-            integerRedisMessage = IntegerRedisMessage(longValue)
+        if (longValue == null) {
+            ctx.write(FullBulkStringRedisMessage.NULL_INSTANCE)
+            return
         }
+        val integerRedisMessage = pool.getInteger(longValue)
+            ?: IntegerRedisMessage(longValue)
         ctx.write(integerRedisMessage)
     }
 
     @Throws(IOException::class)
-    fun writeLong(ctx: ChannelHandlerContext, longValue: Int) {
-        writeLong(ctx, longValue.toLong())
+    fun writeLong(ctx: ChannelHandlerContext, longValue: Int?) {
+        writeLong(ctx, longValue?.toLong())
     }
 
     @Throws(IOException::class)
     fun writeLongValue(ctx: ChannelHandlerContext, longValue: LongValue) {
-        var integerRedisMessage = pool.getInteger((longValue.getObject() as Long))
-        if (integerRedisMessage == null) {
-            integerRedisMessage = IntegerRedisMessage((longValue.getObject() as Long))
-        }
+        val integerRedisMessage = pool.getInteger((longValue.getObject() as Long))
+            ?: IntegerRedisMessage((longValue.getObject() as Long))
         ctx.write(integerRedisMessage)
     }
 
