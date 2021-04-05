@@ -3,17 +3,10 @@ package com.aerospike.redispike.command
 import com.aerospike.client.Value
 
 data class RequestCommand(
-    val args: MutableList<ByteArray> = mutableListOf(),
-    var argCount: Int = 0,
+    val args: List<ByteArray>
 ) {
 
-    constructor(args: MutableList<ByteArray>) :
-            this(args, args.size)
-
-    fun addArgument(arg: ByteArray) {
-        args.add(arg)
-        argCount++
-    }
+    val argCount: Int = args.size
 
     val key: Value by lazy {
         Value.get(args[1])

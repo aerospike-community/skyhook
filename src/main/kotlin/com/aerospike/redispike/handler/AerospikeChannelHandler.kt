@@ -44,7 +44,7 @@ class AerospikeChannelHandler @Inject constructor(
             } else if (redisMessage is InlineCommandRedisMessage) {
                 val cmd = RequestCommand(
                     (redisMessage.content().split(" ")
-                        .map { it.encodeToByteArray() }).toMutableList()
+                        .map { it.encodeToByteArray() }).toList()
                 )
                 nettyAerospikeHandler.handleCommand(cmd, ctx)
             }
