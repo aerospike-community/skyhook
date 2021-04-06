@@ -1,3 +1,3 @@
 
-rootProject.name = "redispike"
+rootProject.name = "skyhook"
 

@@ -15,7 +15,7 @@ repositories {
 }
 
 application {
-    mainClassName = "com.aerospike.redispike.MainKt"
+    mainClassName = "com.aerospike.skyhook.MainKt"
 }
 
 tasks.withType<Jar> {
