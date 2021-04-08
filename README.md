@@ -1,65 +1,36 @@
 # Skyhook
 [![Build](https://github.com/aerospike/skyhook/actions/workflows/build.yml/badge.svg)](https://github.com/aerospike/skyhook/actions/workflows/build.yml)
 
-The [Redis](https://redis.io/) server interface to the [Aerospike](https://www.aerospike.com/) database.
+Skyhook is a Redis API compatible gateway to [Aerospike](https://www.aerospike.com/) Database.
 
-`Skyhook` is a standalone server application written in Kotlin which projects Redis protocol commands
-to an Aerospike cluster using the Aerospike Java client under the hood.
-The server supports a single namespace and set configuration where the incoming commands will be applied.
-This project uses [Netty](https://netty.io/) as a non-blocking I/O client-server framework.
+  * [Overview](#overview)
+  * [Connecting a Redis Client to Skyhook](#connectivity)
+  * [Redis Command Coverage](#redis-command-coverage)
+  * [Known Limitations](#known-limitations)
+  * [Deploying Skyhook](#deploying-skyhook)
+    * [Prerequisites](#prerequisites)
+    * [Installing](#installing)
+      * [Building from Source](#building-from-source)
+    * [Running the Server](#running)
+      * [Configuring Skyhook](#configuration-properties)
+  * [License](#license)
 
-## Prerequisites
-* Java 8 or later
-* Aerospike Server version 4.9+
+## Overview
 
-## Installation
-To build the project:
+Skyhook is designed as a standalone server application written in Kotlin, which
+accepts Redis protocol commands and projects them to an Aerospike cluster using
+the Aerospike Java client under the hood. It uses [Netty](https://netty.io/) as
+a non-blocking I/O client-server framework.
+
+## Connectivity
+Any Redis client can connect to Skyhook as if it were a regular Redis server.
+
+For tests purposes use [redis-cli](https://redis.io/topics/rediscli) or even the [nc](https://www.commandlinux.com/man-page/man1/nc.1.html) (or netcat) utility:
 ```sh
-./gradlew clean build 
-```
-A fat executable jar will be created under the `build/libs` folder.
-
-Usage:
-```text
-% java -jar skyhook-[version]-all.jar -h
-               
-Usage: skyhook [-h] [-f=<configFile>]
-Redis to Aerospike proxy server
-  -f, --config-file=<configFile>
-               yaml formatted configuration file
-  -h, --help   display this help and exit
+echo "GET key1\r\n" | nc localhost 6379
 ```
 
-To run the server:
-```sh
-java -jar skyhook-[version]-all.jar -f config/server.yml
-```
-The configuration file carries all the settings the server needs and is in YAML format.
-An example configuration file can be found in the `config` folder.
-
-### Configuration properties
-
-| Property name | Description | Default value |
-| ------------- | ----------- | ------------- |
-| hostList | The host list to seed the Aerospike cluster. | localhost:3000 |
-| namespase | The Aerospike namespace. | test |
-| set | The Aerospike set name. | redis |
-| bin | The Aerospike bin name to set values. | b |
-| redisPort | The server port to bind to. | 6379 |
-| workerThreads<sup>[1](#worker-threads)</sup> | The Netty worker group size. | number of available cores |
-| bossThreads | The Netty acceptor group size. | 2 |
-
-<sup name="worker-threads">1</sup> Used to configure the size of the [Aerospike Java Client EventLoops](https://www.aerospike.com/docs/client/java/usage/async/eventloop.html) as well.
-
-If no configuration file is specified, the default settings will be applied.
-
-```text
-[main] INFO  c.a.skyhook.SkyhookServer$Companion - Starting the Server...
-```
-
-Now the server is listening to the `config.redisPort` (default: 6379) and is ready to serve.
-
-## Implemented Commands
+## Redis Command Coverage
 <details><summary>List of the supported Redis commands</summary>
 
 Operation | Description
@@ -127,13 +98,73 @@ Operation | Description
 
 </details>
 
-## Connectivity
-Any Redis client can connect to `Skyhook` as if it were a regular Redis server.
+## Known Limitations
+ * A partial but growing list of Redis commands. See [Redis Command Coverage](#redis-command-coverage).
+ * Like Redis Cluster, Skyhook supports a single Redis 'database 0', which maps to a single namespace and set in the Aerospike Database.
+ * Will not try try to implement the cluster operations sub-commands of `CLUSTER`, `CLIENT`, `CONFIG`,  `MEMORY`, `MONITOR`, `LATENCY`.
+ * No support for Pub/Sub commands.
+ * No support for Lua scripts.
 
-For tests purposes use [redis-cli](https://redis.io/topics/rediscli) or even the [nc](https://www.commandlinux.com/man-page/man1/nc.1.html) (or netcat) utility:
+## Deploying Skyhook
+
+### Prerequisites
+* Java 8 or later
+* Aerospike Server version 4.9+
+
+### Installing
+
+#### Building from Source
+To build the project:
 ```sh
-echo "GET key1\r\n" | nc localhost 6379
+./gradlew clean build
+```
+A fat executable jar will be created under the `build/libs` folder.
+
+### Running
+Usage:
+```text
+% java -jar skyhook-[version]-all.jar -h
+
+Usage: skyhook [-h] [-f=<configFile>]
+Redis to Aerospike proxy server
+  -f, --config-file=<configFile>
+               yaml formatted configuration file
+  -h, --help   display this help and exit
 ```
 
+To run the server:
+```sh
+java -jar skyhook-[version]-all.jar -f config/server.yml
+```
+
+The configuration file carries all the settings the server needs and is in YAML
+format. An example configuration file can be found in the `config` folder.
+If no configuration file is specified, the default settings will be applied.
+
+```text
+[main] INFO  c.a.skyhook.SkyhookServer$Companion - Starting the Server...
+```
+
+Now the server is listening to the `config.redisPort` (default: 6379) and is ready to serve.
+
+#### Configuration Properties
+
+| Property name | Description | Default value |
+| ------------- | ----------- | ------------- |
+| hostList | The host list to seed the Aerospike cluster. | localhost:3000 |
+| namespase | The Aerospike namespace. | test |
+| set | The Aerospike set name. | redis |
+| bin | The Aerospike bin name to set values. | b |
+| redisPort | The server port to bind to. | 6379 |
+| workerThreads<sup>[1](#worker-threads)</sup> | The Netty worker group size. | number of available cores |
+| bossThreads | The Netty acceptor group size. | 2 |
+
+<sup name="worker-threads">1</sup> Used to configure the size of the [Aerospike Java Client EventLoops](https://www.aerospike.com/docs/client/java/usage/async/eventloop.html) as well.
+
 ## License
-Licensed under the Apache 2.0 License.
+Licensed under an Apache 2.0 License.
+
+This is an active open source project. You can contribute to it by trying
+Skyhook, providing feedback, reporting bugs, and implementing more Redis
+commands.
+
