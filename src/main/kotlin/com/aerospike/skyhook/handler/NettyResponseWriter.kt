@@ -22,6 +22,9 @@ open class NettyResponseWriter {
             is List<*> -> {
                 writeObjectList(ctx, value as List<*>?)
             }
+            is Set<*> -> {
+                writeObjectList(ctx, value.toList())
+            }
             is ByteArray -> {
                 writeByteArray(ctx, value as ByteArray?)
             }
