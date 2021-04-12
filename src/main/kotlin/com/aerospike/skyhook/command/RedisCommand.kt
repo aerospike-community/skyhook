@@ -49,10 +49,14 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.scardCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.setCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.setexCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.setnxCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.sinterCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.sinterstoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.sismemberCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.smembersCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.sremCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.strlenCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.sunionCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.sunionstoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.timeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.touchCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.ttlCommand
@@ -125,6 +129,10 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     HDEL(hdelCommand),
     SREM(sremCommand),
     ZREM(zremCommand),
+    SUNION(sunionCommand),
+    SINTER(sinterCommand),
+    SUNIONSTORE(sunionstoreCommand),
+    SINTERSTORE(sinterstoreCommand),
 
     FLUSHDB(flushdbCommand),
     FLUSHALL(flushallCommand),

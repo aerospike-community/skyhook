@@ -58,6 +58,10 @@ object RedisCommandsDetails {
     val hdelCommand = RedisCommandDetails("hdel", -3, arrayListOf("write", "fast"), 1, 1, 1)
     val sremCommand = RedisCommandDetails("srem", -3, arrayListOf("write", "fast"), 1, 1, 1)
     val zremCommand = RedisCommandDetails("zrem", -3, arrayListOf("write", "fast"), 1, 1, 1)
+    val sunionCommand = RedisCommandDetails("sunion", -2, arrayListOf("readonly", "sort_for_script"), 1, -1, 1)
+    val sinterCommand = RedisCommandDetails("sinter", -2, arrayListOf("readonly", "sort_for_script"), 1, -1, 1)
+    val sunionstoreCommand = RedisCommandDetails("sunionstore", -3, arrayListOf("write", "denyoom"), 1, -1, 1)
+    val sinterstoreCommand = RedisCommandDetails("sinterstore", -3, arrayListOf("write", "denyoom"), 1, -1, 1)
 
     val flushdbCommand = RedisCommandDetails("flushdb", -1, arrayListOf("write"), 0, 0, 0)
     val flushallCommand = RedisCommandDetails("flushall", -1, arrayListOf("write"), 0, 0, 0)

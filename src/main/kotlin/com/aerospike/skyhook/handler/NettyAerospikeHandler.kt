@@ -97,6 +97,10 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.HDEL,
                 RedisCommand.SREM,
                 RedisCommand.ZREM -> MapDelCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.SUNION -> SunionCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.SINTER -> SinterCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.SUNIONSTORE -> SunionstoreCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.SINTERSTORE -> SinterstoreCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.FLUSHDB,
                 RedisCommand.FLUSHALL -> FlushCommandHandler(aerospikeCtx, ctx).handle(cmd)

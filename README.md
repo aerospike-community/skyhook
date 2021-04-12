@@ -86,10 +86,14 @@ Operation | Description
 [SETEX](https://redis.io/commands/setex) *key seconds value* | Set key to hold the string value and set key to timeout after a given number of seconds.
 [SETNX](https://redis.io/commands/setnx) *key value* | Set key to hold string value if key does not exist.
 [SET](https://redis.io/commands/set) *key value* | Set key to hold the string value. If key already holds a value, it is overwritten, regardless of its type.
+[SINTER](https://redis.io/commands/sinter) *key [key ...]* | Returns the members of the set resulting from the intersection of all the given sets.
+[SINTERSTORE](https://redis.io/commands/sinterstore) *destination key [key ...]* | This command is equal to SINTER, but instead of returning the resulting set, it is stored in destination.
 [SISMEMBER](https://redis.io/commands/sismember) *key member* | Returns if member is a member of the set stored at key.
 [SMEMBERS](https://redis.io/commands/smembers) *key* | Returns all the members of the set value stored at key.
 [SREM](https://redis.io/commands/srem) *key member [member ...]* | Remove the specified members from the set stored at key.
 [STRLEN](https://redis.io/commands/strlen) *key* | Returns the length of the string value stored at key. An error is returned when key holds a non-string value.
+[SUNION](https://redis.io/commands/sunion) *key [key ...]* | Returns the members of the set resulting from the union of all the given sets.
+[SUNIONSTORE](https://redis.io/commands/sunionstore) *destination key [key ...]* | This command is equal to SUNION, but instead of returning the resulting set, it is stored in destination.
 [TIME](https://redis.io/commands/time) | Returns the current server time.
 [TOUCH](https://redis.io/commands/touch) *key [key ...]* | Alters the last access time of a key(s). A key is ignored if it does not exist.
 [TTL](https://redis.io/commands/ttl) *key* | Returns the remaining time to live of a key that has a timeout.
