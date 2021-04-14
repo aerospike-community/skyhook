@@ -36,13 +36,18 @@ echo "GET key1\r\n" | nc localhost 6379
 Operation | Description
 ----------|------------
 [APPEND](https://redis.io/commands/append) *key value* | If key already exists and is a string, this command appends the value at the end of the string. If key does not exist it is created and set as an empty string.
+[BGSAVE](https://redis.io/commands/bgsave) | Returns OK.
 [COMMAND](https://redis.io/commands/command) | Returns Array reply of details about all Redis commands.
 [COMMAND COUNT](https://redis.io/commands/command-count) | Returns Integer reply of number of total commands in this Redis server.
 [COMMAND INFO](https://redis.io/commands/command-info) *command-name [command-name ...]* | Returns Array reply of details about multiple Redis commands.
+[DBSIZE](https://redis.io/commands/dbsize) | Returns the number of keys in the currently-selected database.
+[DECR](https://redis.io/commands/decr) *key* | Decrements the number stored at key by one.
+[DECRBY](https://redis.io/commands/decrby) *key decrement* | Decrements the number stored at key by decrement.
 [DEL](https://redis.io/commands/del) *key* | Removes the specified key.
 [ECHO](https://redis.io/commands/echo) *message* | Returns message.
 [EXISTS](https://redis.io/commands/exists) *key [key ...]* | Returns if key exists.
 [EXPIRE](https://redis.io/commands/expire) *key seconds* | Set a timeout on key. After the timeout has expired, the key will automatically be deleted.
+[EXPIREAT](https://redis.io/commands/expireat) *key timestamp* | EXPIREAT has the same effect and semantic as EXPIRE, but instead of specifying the number of seconds representing the TTL (time to live), it takes an absolute Unix timestamp (seconds since January 1, 1970).
 [FLUSHALL](https://redis.io/commands/flushall) | Delete all the keys of all the existing databases, not just the currently selected one.
 [FLUSHDB](https://redis.io/commands/flushdb) | Delete all the keys of the currently selected DB.
 [GETSET](https://redis.io/commands/getset) *key value* | Atomically sets key to value and returns the old value stored at key.
@@ -73,15 +78,20 @@ Operation | Description
 [MGET](https://redis.io/commands/mget) *key [key ...]* | Returns the values of all specified keys.
 [MSET](https://redis.io/commands/mset) *key value [key value ...]* | Sets the given keys to their respective values.
 [MSETNX](https://redis.io/commands/msetnx) *key value [key value ...]* | Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.
+[PERSIST](https://redis.io/commands/persist) *key* | Remove the existing timeout on key, turning the key from volatile (a key with an expire set) to persistent.
 [PEXPIRE](https://redis.io/commands/pexpire) *key milliseconds* | This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.
+[PEXPIREAT](https://redis.io/commands/pexpireat) *key milliseconds-timestamp* | PEXPIREAT has the same effect and semantic as EXPIREAT, but the Unix time at which the key will expire is specified in milliseconds instead of seconds.
 [PING](https://redis.io/commands/ping) *[message]* | Returns PONG if no argument is provided, otherwise return a copy of the argument as a bulk.
 [PSETEX](https://redis.io/commands/psetex) *key milliseconds value* | PSETEX works exactly like SETEX with the sole difference that the expire time is specified in milliseconds instead of seconds.
 [PTTL](https://redis.io/commands/pttl) *key* | Returns the amount of remaining time in milliseconds.
+[QUIT](https://redis.io/commands/quit) | Returns OK.
 [RANDOMKEY](https://redis.io/commands/randomkey) | Return a random key from the currently selected database.
+[RESET](https://redis.io/commands/reset) | Returns 'RESET'.
 [RPOP](https://redis.io/commands/rpop) *key [count]* | Removes and returns the last elements of the list stored at key.
 [RPUSHX](https://redis.io/commands/rpushx) *key element [element ...]* | Inserts specified values at the tail of the list stored at key, only if key already exists and holds a list.
 [RPUSH](https://redis.io/commands/rpush) *key element [element ...]* | Insert all the specified values at the tail of the list stored at key.
 [SADD](https://redis.io/commands/sadd) *key member [member ...]* | Add the specified members to the set stored at key.
+[SAVE](https://redis.io/commands/save) | Returns OK.
 [SCARD](https://redis.io/commands/scard) *key* | Returns the set cardinality (number of elements) of the set stored at key.
 [SETEX](https://redis.io/commands/setex) *key seconds value* | Set key to hold the string value and set key to timeout after a given number of seconds.
 [SETNX](https://redis.io/commands/setnx) *key value* | Set key to hold string value if key does not exist.
@@ -97,6 +107,7 @@ Operation | Description
 [TIME](https://redis.io/commands/time) | Returns the current server time.
 [TOUCH](https://redis.io/commands/touch) *key [key ...]* | Alters the last access time of a key(s). A key is ignored if it does not exist.
 [TTL](https://redis.io/commands/ttl) *key* | Returns the remaining time to live of a key that has a timeout.
+[UNLINK](https://redis.io/commands/unlink) *key [key ...]* | This command is an alias to DEL.
 [ZCARD](https://redis.io/commands/zcard) *key* | Returns the sorted set cardinality (number of elements) of the sorted set stored at key.
 [ZREM](https://redis.io/commands/zrem) *key member [member ...]* | Removes the specified members from the sorted set stored at key.
 
