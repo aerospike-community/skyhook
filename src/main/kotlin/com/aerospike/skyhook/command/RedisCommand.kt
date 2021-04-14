@@ -65,6 +65,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.sunionstoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.timeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.touchCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.ttlCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.unlinkCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zcardCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zremCommand
 import io.netty.channel.ChannelHandlerContext
@@ -94,6 +95,7 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     TTL(ttlCommand),
     PTTL(pttlCommand),
     DEL(delCommand),
+    UNLINK(unlinkCommand),
     RANDOMKEY(randomkeyCommand),
 
     /**

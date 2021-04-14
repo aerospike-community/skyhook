@@ -25,6 +25,7 @@ object RedisCommandsDetails {
     val ttlCommand = RedisCommandDetails("ttl", 2, arrayListOf("readonly", "random", "fast"), 1, 1, 1)
     val pttlCommand = RedisCommandDetails("pttl", 2, arrayListOf("readonly", "random", "fast"), 1, 1, 1)
     val delCommand = RedisCommandDetails("del", -2, arrayListOf("write"), 1, -1, 1)
+    val unlinkCommand = RedisCommandDetails("unlink", -2, arrayListOf("write", "fast"), 1, -1, 1)
     val randomkeyCommand = RedisCommandDetails("randomkey", 1, arrayListOf("readonly", "random"), 0, 0, 0)
     val touchCommand = RedisCommandDetails("touch", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
 
