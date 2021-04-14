@@ -7,10 +7,7 @@ import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.config.ServerConfiguration
 import com.aerospike.skyhook.handler.aerospike.FlushCommandHandler
-import com.aerospike.skyhook.handler.redis.CommandCommandHandler
-import com.aerospike.skyhook.handler.redis.EchoCommandHandler
-import com.aerospike.skyhook.handler.redis.PingCommandHandler
-import com.aerospike.skyhook.handler.redis.TimeCommandHandler
+import com.aerospike.skyhook.handler.redis.*
 import com.aerospike.skyhook.listener.key.*
 import com.aerospike.skyhook.listener.list.*
 import com.aerospike.skyhook.listener.map.*
@@ -108,6 +105,10 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.PING -> PingCommandHandler(ctx).handle(cmd)
                 RedisCommand.ECHO -> EchoCommandHandler(ctx).handle(cmd)
                 RedisCommand.TIME -> TimeCommandHandler(ctx).handle(cmd)
+                RedisCommand.QUIT,
+                RedisCommand.RESET,
+                RedisCommand.SAVE,
+                RedisCommand.BGSAVE -> MockCommandHandler(ctx).handle(cmd)
                 RedisCommand.COMMAND -> CommandCommandHandler(ctx).handle(cmd)
 
                 else -> {

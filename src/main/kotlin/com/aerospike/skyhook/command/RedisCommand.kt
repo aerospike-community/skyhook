@@ -1,6 +1,7 @@
 package com.aerospike.skyhook.command
 
 import com.aerospike.skyhook.util.RedisCommandsDetails.appendCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.bgsaveCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.commandCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.delCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.echoCommand
@@ -41,10 +42,12 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.pingCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.psetexCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.pttlCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.randomkeyCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.resetCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.rpopCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.rpushCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.rpushxCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.saddCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.saveCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.scardCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.setCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.setexCommand
@@ -140,6 +143,10 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     PING(pingCommand),
     ECHO(echoCommand),
     TIME(timeCommand),
+    QUIT(null),
+    RESET(resetCommand),
+    SAVE(saveCommand),
+    BGSAVE(bgsaveCommand),
 
     COMMAND(commandCommand),
 
