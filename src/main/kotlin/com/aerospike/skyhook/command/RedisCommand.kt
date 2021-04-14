@@ -4,6 +4,8 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.appendCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.bgsaveCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.commandCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.dbsizeCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.decrCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.decrbyCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.delCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.echoCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.existsCommand
@@ -95,6 +97,8 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     INCR(incrCommand),
     INCRBY(incrbyCommand),
     INCRBYFLOAT(incrbyfloatCommand),
+    DECR(decrCommand),
+    DECRBY(decrbyCommand),
     STRLEN(strlenCommand),
     TTL(ttlCommand),
     PTTL(pttlCommand),

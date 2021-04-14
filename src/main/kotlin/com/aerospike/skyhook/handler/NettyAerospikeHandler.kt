@@ -63,6 +63,8 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.INCR,
                 RedisCommand.INCRBY,
                 RedisCommand.INCRBYFLOAT -> IncrCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.DECR,
+                RedisCommand.DECRBY -> DecrCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.STRLEN -> StrlenCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.TTL,
                 RedisCommand.PTTL -> TtlCommandListener(aerospikeCtx, ctx).handle(cmd)

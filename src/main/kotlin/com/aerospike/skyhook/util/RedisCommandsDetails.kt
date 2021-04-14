@@ -23,6 +23,8 @@ object RedisCommandsDetails {
     val incrCommand = RedisCommandDetails("incr", 2, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
     val incrbyCommand = RedisCommandDetails("incrby", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
     val incrbyfloatCommand = RedisCommandDetails("incrbyfloat", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val decrCommand = RedisCommandDetails("decr", 2, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val decrbyCommand = RedisCommandDetails("decrby", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
     val strlenCommand = RedisCommandDetails("strlen", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
     val ttlCommand = RedisCommandDetails("ttl", 2, arrayListOf("readonly", "random", "fast"), 1, 1, 1)
     val pttlCommand = RedisCommandDetails("pttl", 2, arrayListOf("readonly", "random", "fast"), 1, 1, 1)

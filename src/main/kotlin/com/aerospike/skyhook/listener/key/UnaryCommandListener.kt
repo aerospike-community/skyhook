@@ -12,7 +12,7 @@ import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
-class IncrCommandListener(
+abstract class UnaryCommandListener(
     aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
 ) : BaseListener(aeroCtx, ctx), RecordListener {
@@ -24,10 +24,13 @@ class IncrCommandListener(
 
         val key = createKey(cmd.key)
         val ops = arrayOf(
-            getIncrOperation(cmd),
+            getUnaryOperation(cmd),
             Operation.get(aeroCtx.bin)
         )
-        aeroCtx.client.operate(null, this, defaultWritePolicy, key, *ops)
+        aeroCtx.client.operate(
+            null, this,
+            defaultWritePolicy, key, *ops
+        )
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
@@ -44,7 +47,15 @@ class IncrCommandListener(
         }
     }
 
-    private fun getIncrOperation(cmd: RequestCommand): Operation {
+    protected abstract fun getUnaryOperation(cmd: RequestCommand): Operation
+}
+
+class IncrCommandListener(
+    aeroCtx: AerospikeContext,
+    ctx: ChannelHandlerContext
+) : UnaryCommandListener(aeroCtx, ctx) {
+
+    override fun getUnaryOperation(cmd: RequestCommand): Operation {
         return when (cmd.command) {
             RedisCommand.INCR -> {
                 Operation.add(Bin(aeroCtx.bin, 1))
@@ -54,6 +65,26 @@ class IncrCommandListener(
             }
             RedisCommand.INCRBYFLOAT -> {
                 Operation.add(Bin(aeroCtx.bin, Typed.getDouble(cmd.args[2])))
+            }
+            else -> {
+                throw IllegalArgumentException(cmd.command.toString())
+            }
+        }
+    }
+}
+
+class DecrCommandListener(
+    aeroCtx: AerospikeContext,
+    ctx: ChannelHandlerContext
+) : UnaryCommandListener(aeroCtx, ctx) {
+
+    override fun getUnaryOperation(cmd: RequestCommand): Operation {
+        return when (cmd.command) {
+            RedisCommand.DECR -> {
+                Operation.add(Bin(aeroCtx.bin, -1))
+            }
+            RedisCommand.DECRBY -> {
+                Operation.add(Bin(aeroCtx.bin, -Typed.getInteger(cmd.args[2])))
             }
             else -> {
                 throw IllegalArgumentException(cmd.command.toString())
