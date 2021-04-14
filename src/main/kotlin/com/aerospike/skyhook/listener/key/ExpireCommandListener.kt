@@ -10,6 +10,7 @@ import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
+import java.lang.Long.max
 
 class ExpireCommandListener(
     aeroCtx: AerospikeContext,
@@ -48,6 +49,16 @@ class ExpireCommandListener(
 
                 writePolicy.expiration = Typed.getInteger(cmd.args[2]) / 1000
             }
+            RedisCommand.EXPIREAT -> {
+                require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
+
+                writePolicy.expiration = fromTimestamp(Typed.getLong(cmd.args[2]) * 1000)
+            }
+            RedisCommand.PEXPIREAT -> {
+                require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
+
+                writePolicy.expiration = fromTimestamp(Typed.getLong(cmd.args[2]))
+            }
             RedisCommand.PERSIST -> {
                 require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
 
@@ -58,5 +69,9 @@ class ExpireCommandListener(
             }
         }
         return writePolicy
+    }
+
+    private fun fromTimestamp(ts: Long): Int {
+        return max((ts - System.currentTimeMillis()) / 1000, 1L).toInt()
     }
 }

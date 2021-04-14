@@ -56,6 +56,8 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.TOUCH -> ExistsCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.EXPIRE,
                 RedisCommand.PEXPIRE,
+                RedisCommand.EXPIREAT,
+                RedisCommand.PEXPIREAT,
                 RedisCommand.PERSIST -> ExpireCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.APPEND -> AppendCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.INCR,

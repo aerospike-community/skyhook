@@ -8,6 +8,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.delCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.echoCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.existsCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.expireCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.expireatCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.flushallCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.flushdbCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.getCommand
@@ -40,6 +41,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.msetCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.msetnxCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.persistCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.pexpireCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.pexpireatCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.pingCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.psetexCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.pttlCommand
@@ -86,6 +88,8 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     EXISTS(existsCommand),
     EXPIRE(expireCommand),
     PEXPIRE(pexpireCommand),
+    EXPIREAT(expireatCommand),
+    PEXPIREAT(pexpireatCommand),
     PERSIST(persistCommand),
     APPEND(appendCommand),
     INCR(incrCommand),
