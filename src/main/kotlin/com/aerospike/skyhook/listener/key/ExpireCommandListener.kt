@@ -1,5 +1,6 @@
 package com.aerospike.skyhook.listener.key
 
+import com.aerospike.client.AerospikeException
 import com.aerospike.client.Key
 import com.aerospike.client.listener.WriteListener
 import com.aerospike.client.policy.WritePolicy
@@ -16,8 +17,6 @@ class ExpireCommandListener(
 ) : BaseListener(aeroCtx, ctx), WriteListener {
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
-
         val key = createKey(cmd.key)
         val writePolicy = getPolicy(cmd)
         aeroCtx.client.touch(null, this, writePolicy, key)
@@ -32,14 +31,27 @@ class ExpireCommandListener(
         }
     }
 
+    override fun writeError(e: AerospikeException?) {
+        writeLong(ctx, 0L)
+    }
+
     private fun getPolicy(cmd: RequestCommand): WritePolicy {
         val writePolicy = getWritePolicy()
         when (cmd.command) {
             RedisCommand.EXPIRE -> {
+                require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
+
                 writePolicy.expiration = Typed.getInteger(cmd.args[2])
             }
             RedisCommand.PEXPIRE -> {
+                require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
+
                 writePolicy.expiration = Typed.getInteger(cmd.args[2]) / 1000
+            }
+            RedisCommand.PERSIST -> {
+                require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
+
+                writePolicy.expiration = -1
             }
             else -> {
                 throw IllegalArgumentException(cmd.command.toString())

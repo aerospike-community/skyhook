@@ -38,6 +38,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.lrangeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.mgetCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.msetCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.msetnxCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.persistCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.pexpireCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.pingCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.psetexCommand
@@ -84,6 +85,7 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     EXISTS(existsCommand),
     EXPIRE(expireCommand),
     PEXPIRE(pexpireCommand),
+    PERSIST(persistCommand),
     APPEND(appendCommand),
     INCR(incrCommand),
     INCRBY(incrbyCommand),

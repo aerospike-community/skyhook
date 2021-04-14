@@ -16,6 +16,7 @@ object RedisCommandsDetails {
     val existsCommand = RedisCommandDetails("exists", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
     val expireCommand = RedisCommandDetails("expire", 3, arrayListOf("write", "fast"), 1, 1, 1)
     val pexpireCommand = RedisCommandDetails("pexpire", 3, arrayListOf("write", "fast"), 1, 1, 1)
+    val persistCommand = RedisCommandDetails("persist", 2, arrayListOf("write", "fast"), 1, 1, 1)
     val appendCommand = RedisCommandDetails("append", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
     val incrCommand = RedisCommandDetails("incr", 2, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
     val incrbyCommand = RedisCommandDetails("incrby", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
