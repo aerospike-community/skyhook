@@ -6,6 +6,7 @@ import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.config.ServerConfiguration
+import com.aerospike.skyhook.handler.aerospike.DbsizeCommandHandler
 import com.aerospike.skyhook.handler.aerospike.FlushCommandHandler
 import com.aerospike.skyhook.handler.redis.*
 import com.aerospike.skyhook.listener.key.*
@@ -101,6 +102,7 @@ class NettyAerospikeHandler @Inject constructor(
 
                 RedisCommand.FLUSHDB,
                 RedisCommand.FLUSHALL -> FlushCommandHandler(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.DBSIZE -> DbsizeCommandHandler(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.PING -> PingCommandHandler(ctx).handle(cmd)
                 RedisCommand.ECHO -> EchoCommandHandler(ctx).handle(cmd)

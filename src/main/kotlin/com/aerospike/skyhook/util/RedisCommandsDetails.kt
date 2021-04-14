@@ -65,6 +65,7 @@ object RedisCommandsDetails {
 
     val flushdbCommand = RedisCommandDetails("flushdb", -1, arrayListOf("write"), 0, 0, 0)
     val flushallCommand = RedisCommandDetails("flushall", -1, arrayListOf("write"), 0, 0, 0)
+    val dbsizeCommand = RedisCommandDetails("dbsize", 1, arrayListOf("readonly", "fast"), 0, 0, 0)
 
     val pingCommand = RedisCommandDetails("ping", -1, arrayListOf("stale", "fast"), 0, 0, 0)
     val echoCommand = RedisCommandDetails("echo", 2, arrayListOf("fast"), 0, 0, 0)

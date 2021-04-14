@@ -3,6 +3,7 @@ package com.aerospike.skyhook.command
 import com.aerospike.skyhook.util.RedisCommandsDetails.appendCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.bgsaveCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.commandCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.dbsizeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.delCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.echoCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.existsCommand
@@ -139,6 +140,7 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
 
     FLUSHDB(flushdbCommand),
     FLUSHALL(flushallCommand),
+    DBSIZE(dbsizeCommand),
 
     PING(pingCommand),
     ECHO(echoCommand),
