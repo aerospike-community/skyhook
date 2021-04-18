@@ -24,32 +24,35 @@ class AerospikeChannelHandler @Inject constructor(
     }
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any?) {
-        val redisMessage = msg as RedisMessage?
-        //printAggregatedRedisResponse(redisMessage!!)
-
         try {
-            if (redisMessage is ArrayRedisMessage) {
-                val arguments: MutableList<ByteArray> = ArrayList(redisMessage.children().size)
-                for (child in redisMessage.children()) {
-                    if (child is FullBulkStringRedisMessage) {
-                        val bytes = ByteArray(child.content().readableBytes())
-                        val readerIndex = child.content().readerIndex()
-                        child.content().getBytes(readerIndex, bytes)
-                        arguments.add(bytes)
+            when (msg) {
+                is ArrayRedisMessage -> {
+                    val arguments: MutableList<ByteArray> = ArrayList(msg.children().size)
+                    for (child in msg.children()) {
+                        if (child is FullBulkStringRedisMessage) {
+                            val bytes = ByteArray(child.content().readableBytes())
+                            val readerIndex = child.content().readerIndex()
+                            child.content().getBytes(readerIndex, bytes)
+                            arguments.add(bytes)
+                        }
                     }
+
+                    val cmd = RequestCommand(arguments)
+                    nettyAerospikeHandler.handleCommand(cmd, ctx)
                 }
 
-                val cmd = RequestCommand(arguments)
-                nettyAerospikeHandler.handleCommand(cmd, ctx)
-            } else if (redisMessage is InlineCommandRedisMessage) {
-                val cmd = RequestCommand(
-                    (redisMessage.content().split(" ")
-                        .map { it.encodeToByteArray() }).toList()
-                )
-                nettyAerospikeHandler.handleCommand(cmd, ctx)
+                is AbstractStringRedisMessage -> {
+                    val cmd = RequestCommand(
+                        (msg.content().split(" ")
+                            .map { it.encodeToByteArray() }).toList()
+                    )
+                    nettyAerospikeHandler.handleCommand(cmd, ctx)
+                }
+
+                else -> log.warn { "Unsupported message type ${msg?.javaClass?.simpleName}" }
             }
         } finally {
-            ReferenceCountUtil.release(redisMessage)
+            ReferenceCountUtil.release(msg)
         }
     }
 
