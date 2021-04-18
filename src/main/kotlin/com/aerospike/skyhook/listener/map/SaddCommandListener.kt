@@ -20,10 +20,18 @@ class SaddCommandListener(
     ctx: ChannelHandlerContext
 ) : BaseListener(aeroCtx, ctx), RecordListener {
 
+    @Volatile
+    private var size: Long = 0L
+
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount >= 3) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
+
+        val getSize = MapOperation.size(aeroCtx.bin)
+        size = aeroCtx.client.operate(defaultWritePolicy, key, getSize)
+            ?.getLong(aeroCtx.bin) ?: 0L
+
         val operation = MapOperation.putItems(
             MapPolicy(MapOrder.UNORDERED, MapWriteFlags.CREATE_ONLY),
             aeroCtx.bin,
@@ -47,11 +55,12 @@ class SaddCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
+            writeLong(ctx, 0L)
             ctx.flush()
         } else {
             try {
-                writeResponse(record.bins[aeroCtx.bin])
+                val added = record.getLong(aeroCtx.bin) - size
+                writeLong(ctx, added)
                 ctx.flush()
             } catch (e: Exception) {
                 closeCtx(e)
