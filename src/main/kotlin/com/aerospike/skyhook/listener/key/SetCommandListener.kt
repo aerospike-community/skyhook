@@ -1,5 +1,6 @@
 package com.aerospike.skyhook.listener.key
 
+import com.aerospike.client.AerospikeException
 import com.aerospike.client.Bin
 import com.aerospike.client.Key
 import com.aerospike.client.Value
@@ -18,9 +19,13 @@ class SetCommandListener(
     ctx: ChannelHandlerContext
 ) : BaseListener(aeroCtx, ctx), WriteListener {
 
+    @Volatile
+    private lateinit var command: RedisCommand
+
     private data class Params(val writePolicy: WritePolicy, val value: Value)
 
     override fun handle(cmd: RequestCommand) {
+        command = cmd.command
         val key = createKey(cmd.key)
         val params = parse(cmd)
         aeroCtx.client.put(
@@ -31,10 +36,22 @@ class SetCommandListener(
 
     override fun onSuccess(key: Key?) {
         try {
-            writeOK(ctx)
+            if (command == RedisCommand.SETNX) {
+                writeLong(ctx, 1L)
+            } else {
+                writeOK(ctx)
+            }
             ctx.flush()
         } catch (e: Exception) {
             closeCtx(e)
+        }
+    }
+
+    override fun writeError(e: AerospikeException?) {
+        if (command == RedisCommand.SETNX) {
+            writeLong(ctx, 0L)
+        } else {
+            writeErrorString(ctx, "internal error")
         }
     }
 
