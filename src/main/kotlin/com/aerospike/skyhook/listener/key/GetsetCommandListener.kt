@@ -1,9 +1,6 @@
 package com.aerospike.skyhook.listener.key
 
-import com.aerospike.client.Bin
-import com.aerospike.client.Key
-import com.aerospike.client.Operation
-import com.aerospike.client.Record
+import com.aerospike.client.*
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
@@ -27,6 +24,10 @@ class GetsetCommandListener(
         )
 
         aeroCtx.client.operate(null, this, updateOnlyPolicy, key, *ops)
+    }
+
+    override fun writeError(e: AerospikeException?) {
+        writeNullString(ctx)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
