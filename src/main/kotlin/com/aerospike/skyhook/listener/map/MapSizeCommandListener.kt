@@ -28,7 +28,7 @@ class MapSizeCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
+            writeLong(ctx, 0L)
             ctx.flush()
         } else {
             try {
