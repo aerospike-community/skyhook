@@ -1,24 +1,17 @@
 package com.aerospike.skyhook
 
 import com.aerospike.skyhook.command.RedisCommand
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class KeyCommandsTest() : SkyhookIntegrationTestBase() {
 
-    fun setup(n: Int = 3) {
+    private fun setup(n: Int = 3) {
         for (i in 1..n) {
             writeCommand("${RedisCommand.SET.name} key$i val$i")
             assertEquals(ok, readString())
         }
-    }
-
-    @AfterEach
-    fun clear() {
-        writeCommand(RedisCommand.FLUSHDB.name)
-        assertEquals(ok, readString())
     }
 
     @Test

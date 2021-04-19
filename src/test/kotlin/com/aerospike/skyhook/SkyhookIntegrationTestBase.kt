@@ -4,13 +4,16 @@ import com.aerospike.client.Bin
 import com.aerospike.client.IAerospikeClient
 import com.aerospike.client.Key
 import com.aerospike.client.Value
+import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.config.ServerConfiguration
 import com.aerospike.skyhook.handler.AerospikeChannelHandler
 import com.google.inject.Guice
 import io.netty.buffer.Unpooled.buffer
 import io.netty.channel.embedded.EmbeddedChannel
 import io.netty.handler.codec.redis.*
+import org.junit.jupiter.api.AfterEach
 import kotlin.experimental.and
+import kotlin.test.assertEquals
 
 abstract class SkyhookIntegrationTestBase {
 
@@ -29,6 +32,12 @@ abstract class SkyhookIntegrationTestBase {
         protected val nullString = ""
         private const val eol = "\r\n"
         private const val sleepMillis = 50L
+    }
+
+    @AfterEach
+    protected fun clear() {
+        writeCommand(RedisCommand.FLUSHDB.name)
+        assertEquals(ok, readString())
     }
 
     private val channel = EmbeddedChannel(
