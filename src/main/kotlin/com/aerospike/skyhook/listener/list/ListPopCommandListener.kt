@@ -36,7 +36,7 @@ class ListPopCommandListener(
                 ListOperation.popRange(aeroCtx.bin, 0, count)
             }
             RedisCommand.RPOP -> {
-                ListOperation.popRange(aeroCtx.bin, -1, count)
+                ListOperation.popRange(aeroCtx.bin, -1 * count, count)
             }
             else -> {
                 throw IllegalArgumentException(cmd.command.toString())
