@@ -25,7 +25,7 @@ a non-blocking I/O client-server framework.
 This project is now in **beta**. If you're an enterprise customer feel free to
 reach out to our support with feedback and feature requests.
 We appreciate feedback from the Aerospike community on
-[issues](https://github.com/aerospike/aerospike-prometheus-exporter/issues)
+[issues](https://github.com/aerospike/skyhook/issues)
 related to Skyhook.
 
 ## Connectivity
