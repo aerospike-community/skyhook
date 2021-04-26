@@ -19,7 +19,11 @@ class MapGetCommandListener(
     ctx: ChannelHandlerContext
 ) : BaseListener(aeroCtx, ctx), RecordListener {
 
+    @Volatile
+    private lateinit var command: RedisCommand
+
     override fun handle(cmd: RequestCommand) {
+        command = cmd.command
         val key = createKey(cmd.key)
 
         aeroCtx.client.operate(
@@ -35,7 +39,7 @@ class MapGetCommandListener(
 
     private fun getOperation(cmd: RequestCommand): Operation {
         return when (cmd.command) {
-            RedisCommand.HGET -> {
+            RedisCommand.HGET, RedisCommand.ZRANK -> {
                 require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
 
                 val mapKey = Typed.getValue(cmd.args[2])
@@ -44,7 +48,7 @@ class MapGetCommandListener(
                     MapReturnType.VALUE
                 )
             }
-            RedisCommand.HMGET -> {
+            RedisCommand.HMGET, RedisCommand.ZMSCORE -> {
                 require(cmd.argCount >= 3) { argValidationErrorMsg(cmd) }
 
                 val mapKeys = getValues(cmd)
@@ -104,7 +108,10 @@ class MapGetCommandListener(
                 when (data.firstOrNull()) {
                     is Map.Entry<*, *> -> data.map { it as Map.Entry<*, *> }
                         .map { it.toPair().toList() }.flatten()
-                    else -> data
+                    else -> when (command) {
+                        RedisCommand.ZMSCORE -> data.map { it.toString() }
+                        else -> data
+                    }
                 }
             }
             else -> data

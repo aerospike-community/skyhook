@@ -91,9 +91,12 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.HGETALL,
                 RedisCommand.HVALS,
                 RedisCommand.HKEYS,
+                RedisCommand.ZMSCORE,
+                RedisCommand.ZRANK,
                 RedisCommand.SMEMBERS -> MapGetCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.HINCRBY,
-                RedisCommand.HINCRBYFLOAT -> HincrbyCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HINCRBYFLOAT,
+                RedisCommand.ZINCRBY -> HincrbyCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.HSTRLEN -> HstrlenCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.HLEN,
                 RedisCommand.SCARD,
@@ -105,6 +108,17 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.SINTER -> SinterCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.SUNIONSTORE -> SunionstoreCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.SINTERSTORE -> SinterstoreCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZADD -> ZaddCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZPOPMAX -> ZpopmaxCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZPOPMIN -> ZpopminCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZRANDMEMBER -> ZrandmemberCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZCOUNT -> ZcountCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZREMRANGEBYSCORE -> ZremrangebyscoreCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZRANGE -> ZrangeCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZRANGESTORE -> ZrangestoreCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZREVRANGE -> ZrevrangeCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZRANGEBYSCORE -> ZrangebyscoreCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZREVRANGEBYSCORE -> ZrevrangebyscoreCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.FLUSHDB,
                 RedisCommand.FLUSHALL -> FlushCommandHandler(aerospikeCtx, ctx).handle(cmd)
@@ -129,7 +143,7 @@ class NettyAerospikeHandler @Inject constructor(
                 is AerospikeException -> "internal error"
                 else -> e.message
             }
-            log.warn { e }
+            log.warn(e) {}
             writeErrorString(ctx, msg)
             ctx.flush()
         }
