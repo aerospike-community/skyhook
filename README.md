@@ -114,8 +114,22 @@ Operation | Description
 [TOUCH](https://redis.io/commands/touch) *key [key ...]* | Alters the last access time of a key(s). A key is ignored if it does not exist.
 [TTL](https://redis.io/commands/ttl) *key* | Returns the remaining time to live of a key that has a timeout.
 [UNLINK](https://redis.io/commands/unlink) *key [key ...]* | This command is an alias to DEL.
+[ZADD](https://redis.io/commands/zadd) *key [NX/XX] [GT/LT] [CH] [INCR] score member [score member ...]* | Adds all the specified members with the specified scores to the sorted set stored at key.
 [ZCARD](https://redis.io/commands/zcard) *key* | Returns the sorted set cardinality (number of elements) of the sorted set stored at key.
+[ZCOUNT](https://redis.io/commands/zcount) *key min max* | Returns the number of elements in the sorted set at key with a score between min and max.
+[ZINCRBY](https://redis.io/commands/zincrby) *key increment member* | Increments the score of member in the sorted set stored at key by increment.
+[ZMSCORE](https://redis.io/commands/zmscore) *key member [member ...]* | Returns the scores associated with the specified members in the sorted set stored at key.
+[ZPOPMAX](https://redis.io/commands/zpopmax) *key [count]* | Removes and returns up to count members with the highest scores in the sorted set stored at key.
+[ZPOPMIN](https://redis.io/commands/zpopmin) *key [count]* | Removes and returns up to count members with the lowest scores in the sorted set stored at key.
+[ZRANDMEMBER](https://redis.io/commands/zrandmember) *key [count [WITHSCORES]]* | When called with just the key argument, return a random element from the sorted set value stored at key.
+[ZRANGE](https://redis.io/commands/zrange) *key min max [BYSCORE/BYLEX] [REV] [LIMIT offset count] [WITHSCORES]* | Returns the specified range of elements in the sorted set stored at <key>.
+[ZRANGEBYSCORE](https://redis.io/commands/zrangebyscore) *key min max [WITHSCORES] [LIMIT offset count]* | Returns all the elements in the sorted set at key with a score between min and max (including elements with score equal to min or max). The elements are considered to be ordered from low to high scores.
+[ZRANGESTORE](https://redis.io/commands/zrangestore) *dst src min max [BYSCORE/BYLEX] [REV] [LIMIT offset count]* | This command is like ZRANGE, but stores the result in the <dst> destination key.
+[ZRANK](https://redis.io/commands/zrank) *key member* | Returns the rank of member in the sorted set stored at key, with the scores ordered from low to high.
 [ZREM](https://redis.io/commands/zrem) *key member [member ...]* | Removes the specified members from the sorted set stored at key.
+[ZREMRANGEBYSCORE](https://redis.io/commands/zremrangebyscore) *key min max* | Removes all elements in the sorted set stored at key with a score between min and max (inclusive).
+[ZREVRANGE](https://redis.io/commands/zrevrange) *key start stop [WITHSCORES]* | Returns the specified range of elements in the sorted set stored at key.
+[ZREVRANGEBYSCORE](https://redis.io/commands/zrevrangebyscore) *key max min [WITHSCORES] [LIMIT offset count]* | Returns all the elements in the sorted set at key with a score between max and min (including elements with score equal to max or min). In contrary to the default ordering of sorted sets, for this command the elements are considered to be ordered from high to low scores.
 
 </details>
 
