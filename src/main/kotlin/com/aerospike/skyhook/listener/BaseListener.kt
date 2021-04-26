@@ -36,6 +36,13 @@ abstract class BaseListener(
         }
 
         @JvmStatic
+        internal val createOnlyPolicy = run {
+            val updateOnlyPolicy = getWritePolicy()
+            updateOnlyPolicy.recordExistsAction = RecordExistsAction.CREATE_ONLY
+            updateOnlyPolicy
+        }
+
+        @JvmStatic
         internal val defaultWritePolicy: WritePolicy = getWritePolicy()
 
         @JvmStatic
