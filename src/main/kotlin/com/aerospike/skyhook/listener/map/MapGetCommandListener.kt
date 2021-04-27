@@ -39,13 +39,22 @@ class MapGetCommandListener(
 
     private fun getOperation(cmd: RequestCommand): Operation {
         return when (cmd.command) {
-            RedisCommand.HGET, RedisCommand.ZRANK -> {
+            RedisCommand.HGET -> {
                 require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
 
                 val mapKey = Typed.getValue(cmd.args[2])
                 MapOperation.getByKey(
                     aeroCtx.bin, mapKey,
                     MapReturnType.VALUE
+                )
+            }
+            RedisCommand.ZRANK -> {
+                require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
+
+                val mapKey = Typed.getValue(cmd.args[2])
+                MapOperation.getByKey(
+                    aeroCtx.bin, mapKey,
+                    MapReturnType.RANK
                 )
             }
             RedisCommand.HMGET, RedisCommand.ZMSCORE -> {
@@ -89,7 +98,7 @@ class MapGetCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
+            writeNull()
             ctx.flush()
         } else {
             try {
@@ -98,6 +107,17 @@ class MapGetCommandListener(
             } catch (e: Exception) {
                 closeCtx(e)
             }
+        }
+    }
+
+    private fun writeNull() {
+        when (command) {
+            RedisCommand.HGETALL,
+            RedisCommand.HVALS,
+            RedisCommand.HKEYS,
+            RedisCommand.SMEMBERS ->
+                writeEmptyList(ctx)
+            else -> writeNullString(ctx)
         }
     }
 
@@ -114,6 +134,7 @@ class MapGetCommandListener(
                     }
                 }
             }
+            -1L -> if (command == RedisCommand.ZRANK) null else data
             else -> data
         }
     }

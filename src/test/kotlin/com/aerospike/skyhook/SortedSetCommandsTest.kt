@@ -54,10 +54,15 @@ class SortedSetCommandsTest() : SkyhookIntegrationTestBase() {
 
     @Test
     fun testZrank() {
-        setup(1)
-        writeCommand("${RedisCommand.ZRANK.name} $_key val1")
-        assertEquals(1, readLong())
-        writeCommand("${RedisCommand.ZRANK.name} $_key val2")
+        setup()
+        setup(3, _key, "v")
+        writeCommand("${RedisCommand.ZRANK.name} $_key v1")
+        assertEquals(0, readLong())
+        writeCommand("${RedisCommand.ZRANK.name} $_key val3")
+        assertEquals(5, readLong())
+        writeCommand("${RedisCommand.ZRANK.name} $_key val11")
+        assertEquals(nullString, readFullBulkString())
+        writeCommand("${RedisCommand.ZRANK.name} ne val1")
         assertEquals(nullString, readFullBulkString())
     }
 
