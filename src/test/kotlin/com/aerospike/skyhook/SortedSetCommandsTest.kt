@@ -152,6 +152,50 @@ class SortedSetCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
+    fun testZlexcount() {
+        writeCommand("${RedisCommand.ZADD.name} $_key 0 a 0 b 0 c 0 d 0 e 0 f 0 g")
+        assertEquals(7, readLong())
+        writeCommand("${RedisCommand.ZLEXCOUNT.name} $_key - +")
+        assertEquals(7, readLong())
+        writeCommand("${RedisCommand.ZLEXCOUNT.name} $_key b f")
+        assertEquals(5, readLong())
+        writeCommand("${RedisCommand.ZLEXCOUNT.name} $_key [c e")
+        assertEquals(2, readLong())
+        writeCommand("${RedisCommand.ZLEXCOUNT.name} $_key a [c")
+        assertEquals(2, readLong())
+        writeCommand("${RedisCommand.ZLEXCOUNT.name} $_key - [d")
+        assertEquals(3, readLong())
+        writeCommand("${RedisCommand.ZLEXCOUNT.name} ne 1 2")
+        assertEquals(0, readLong())
+    }
+
+    @Test
+    fun testZremrangebylex() {
+        writeCommand("${RedisCommand.ZADD.name} $_key 0 a 0 b 0 c 0 d 0 e 0 f 0 g")
+        assertEquals(7, readLong())
+        writeCommand("${RedisCommand.ZREMRANGEBYLEX.name} $_key - +")
+        assertEquals(7, readLong())
+
+        writeCommand("${RedisCommand.ZADD.name} $_key 0 a 0 b 0 c 0 d 0 e 0 f 0 g")
+        assertEquals(7, readLong())
+        writeCommand("${RedisCommand.ZREMRANGEBYLEX.name} $_key b f")
+        assertEquals(5, readLong())
+
+        writeCommand("${RedisCommand.ZADD.name} $_key 0 a 0 b 0 c 0 d 0 e 0 f 0 g")
+        assertEquals(5, readLong())
+        writeCommand("${RedisCommand.ZREMRANGEBYLEX.name} $_key [c e")
+        assertEquals(2, readLong())
+
+        writeCommand("${RedisCommand.ZADD.name} $_key 0 a 0 b 0 c 0 d 0 e 0 f 0 g")
+        assertEquals(2, readLong())
+        writeCommand("${RedisCommand.ZREMRANGEBYLEX.name} $_key a [c")
+        assertEquals(2, readLong())
+
+        writeCommand("${RedisCommand.ZREMRANGEBYLEX.name} ne 1 2")
+        assertEquals(0, readLong())
+    }
+
+    @Test
     fun testZremrangebyscore() {
         setup(6)
         writeCommand("${RedisCommand.ZREMRANGEBYSCORE.name} $_key -inf +inf")
@@ -321,5 +365,47 @@ class SortedSetCommandsTest() : SkyhookIntegrationTestBase() {
         assertTrue { r2.size == 2 }
         assertEquals("val4", r2[0])
         assertEquals("val3", r2[1])
+    }
+
+    @Test
+    fun testZrangebylex() {
+        writeCommand("${RedisCommand.ZADD.name} $_key 0 a 0 b 0 c 0 d 0 e 0 f 0 g")
+        assertEquals(7, readLong())
+        writeCommand("${RedisCommand.ZRANGEBYLEX.name} $_key - + LIMIT 1 2")
+        assertEquals(2, readStringArray().size)
+
+        writeCommand("${RedisCommand.ZRANGEBYLEX.name} $_key [a d")
+        val r = readStringArray()
+        assertTrue { r.size == 3 }
+        assertEquals("b", r[0])
+        assertEquals("c", r[1])
+        assertEquals("d", r[2])
+
+        writeCommand("${RedisCommand.ZRANGEBYLEX.name} $_key c [e")
+        val r2 = readStringArray()
+        assertTrue { r2.size == 2 }
+        assertEquals("c", r2[0])
+        assertEquals("d", r2[1])
+    }
+
+    @Test
+    fun testZrevrangebylex() {
+        writeCommand("${RedisCommand.ZADD.name} $_key 0 a 0 b 0 c 0 d 0 e 0 f 0 g")
+        assertEquals(7, readLong())
+        writeCommand("${RedisCommand.ZREVRANGEBYLEX.name} $_key - +")
+        assertEquals(7, readStringArray().size)
+
+        writeCommand("${RedisCommand.ZREVRANGEBYLEX.name} $_key [a d")
+        val r = readStringArray()
+        assertTrue { r.size == 3 }
+        assertEquals("d", r[0])
+        assertEquals("c", r[1])
+        assertEquals("b", r[2])
+
+        writeCommand("${RedisCommand.ZREVRANGEBYLEX.name} $_key c [e")
+        val r2 = readStringArray()
+        assertTrue { r2.size == 2 }
+        assertEquals("d", r2[0])
+        assertEquals("c", r2[1])
     }
 }
