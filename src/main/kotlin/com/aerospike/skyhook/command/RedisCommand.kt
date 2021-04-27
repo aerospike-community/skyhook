@@ -74,18 +74,22 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.zaddCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zcardCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zcountCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zincrbyCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.zlexcountCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zmscoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zpopmaxCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zpopminCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrandmemberCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrangeCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.zrangebylexCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrangebyscoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrangestoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrankCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zremCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.zremrangebylexCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zremrangebyrankCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zremrangebyscoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangeCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangebylexCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangebyscoreCommand
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.redis.ArrayHeaderRedisMessage
@@ -172,13 +176,17 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     ZPOPMIN(zpopminCommand),
     ZRANDMEMBER(zrandmemberCommand),
     ZCOUNT(zcountCommand),
+    ZLEXCOUNT(zlexcountCommand),
     ZREMRANGEBYSCORE(zremrangebyscoreCommand),
     ZREMRANGEBYRANK(zremrangebyrankCommand),
+    ZREMRANGEBYLEX(zremrangebylexCommand),
     ZRANGE(zrangeCommand),
     ZRANGESTORE(zrangestoreCommand),
     ZREVRANGE(zrevrangeCommand),
     ZRANGEBYSCORE(zrangebyscoreCommand),
     ZREVRANGEBYSCORE(zrevrangebyscoreCommand),
+    ZRANGEBYLEX(zrangebylexCommand),
+    ZREVRANGEBYLEX(zrevrangebylexCommand),
 
     FLUSHDB(flushdbCommand),
     FLUSHALL(flushallCommand),

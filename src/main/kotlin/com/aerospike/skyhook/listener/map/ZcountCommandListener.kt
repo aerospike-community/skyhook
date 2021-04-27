@@ -54,6 +54,21 @@ open class ZcountCommandListener(
     }
 }
 
+class ZlexcountCommandListener(
+    aeroCtx: AerospikeContext,
+    ctx: ChannelHandlerContext
+) : ZcountCommandListener(aeroCtx, ctx) {
+
+    override fun getOperation(cmd: RequestCommand): Operation {
+        return MapOperation.getByKeyRange(
+            aeroCtx.bin,
+            Value.get(Intervals.fromLex(String(cmd.args[2]))),
+            Value.get(Intervals.upLex(String(cmd.args[3]))),
+            MapReturnType.COUNT
+        )
+    }
+}
+
 class ZremrangebyscoreCommandListener(
     aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
@@ -98,6 +113,21 @@ class ZremrangebyrankCommandListener(
             } else {
                 (to - from) + 1
             }, 0
+        )
+    }
+}
+
+class ZremrangebylexCommandListener(
+    aeroCtx: AerospikeContext,
+    ctx: ChannelHandlerContext
+) : ZcountCommandListener(aeroCtx, ctx) {
+
+    override fun getOperation(cmd: RequestCommand): Operation {
+        return MapOperation.removeByKeyRange(
+            aeroCtx.bin,
+            Value.get(Intervals.fromLex(String(cmd.args[2]))),
+            Value.get(Intervals.upLex(String(cmd.args[3]))),
+            MapReturnType.COUNT
         )
     }
 }

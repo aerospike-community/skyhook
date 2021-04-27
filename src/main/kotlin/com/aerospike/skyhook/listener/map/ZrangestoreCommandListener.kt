@@ -22,7 +22,7 @@ class ZrangestoreCommandListener(
         val destKey = createKey(cmd.key)
         val sourceKey = createKey(Value.get(cmd.args[2]))
         rangeCommand = RangeCommand(cmd, 5)
-        validateRangeCommand()
+        validateAndSet()
 
         val record = aeroCtx.client.operate(
             defaultWritePolicy, sourceKey, getMapOperation()

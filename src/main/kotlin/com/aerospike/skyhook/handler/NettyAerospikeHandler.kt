@@ -113,13 +113,17 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.ZPOPMIN -> ZpopminCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZRANDMEMBER -> ZrandmemberCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZCOUNT -> ZcountCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZLEXCOUNT -> ZlexcountCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZREMRANGEBYSCORE -> ZremrangebyscoreCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZREMRANGEBYRANK -> ZremrangebyrankCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZREMRANGEBYLEX -> ZremrangebylexCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZRANGE -> ZrangeCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZRANGESTORE -> ZrangestoreCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZREVRANGE -> ZrevrangeCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZRANGEBYSCORE -> ZrangebyscoreCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZREVRANGEBYSCORE -> ZrevrangebyscoreCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZRANGEBYLEX -> ZrangebylexCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZREVRANGEBYLEX -> ZrevrangebylexCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.FLUSHDB,
                 RedisCommand.FLUSHALL -> FlushCommandHandler(aerospikeCtx, ctx).handle(cmd)
