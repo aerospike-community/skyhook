@@ -114,6 +114,7 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.ZRANDMEMBER -> ZrandmemberCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZCOUNT -> ZcountCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZREMRANGEBYSCORE -> ZremrangebyscoreCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZREMRANGEBYRANK -> ZremrangebyrankCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZRANGE -> ZrangeCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZRANGESTORE -> ZrangestoreCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZREVRANGE -> ZrevrangeCommandListener(aerospikeCtx, ctx).handle(cmd)

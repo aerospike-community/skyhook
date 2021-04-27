@@ -83,6 +83,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.zrangebyscoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrangestoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrankCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zremCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.zremrangebyrankCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zremrangebyscoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangebyscoreCommand
@@ -172,6 +173,7 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     ZRANDMEMBER(zrandmemberCommand),
     ZCOUNT(zcountCommand),
     ZREMRANGEBYSCORE(zremrangebyscoreCommand),
+    ZREMRANGEBYRANK(zremrangebyrankCommand),
     ZRANGE(zrangeCommand),
     ZRANGESTORE(zrangestoreCommand),
     ZREVRANGE(zrevrangeCommand),

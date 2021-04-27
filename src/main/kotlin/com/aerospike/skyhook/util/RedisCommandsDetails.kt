@@ -77,6 +77,7 @@ object RedisCommandsDetails {
     val zrandmemberCommand = RedisCommandDetails("zrandmember", -2, arrayListOf("readonly", "random"), 1, 1, 1)
     val zcountCommand = RedisCommandDetails("zcount", 4, arrayListOf("readonly", "fast"), 1, 1, 1)
     val zremrangebyscoreCommand = RedisCommandDetails("zremrangebyscore", 4, arrayListOf("write"), 1, 1, 1)
+    val zremrangebyrankCommand = RedisCommandDetails("zremrangebyrank", 4, arrayListOf("write"), 1, 1, 1)
     val zrangeCommand = RedisCommandDetails("zrange", -4, arrayListOf("readonly"), 1, 1, 1)
     val zrangestoreCommand = RedisCommandDetails("zrangestore", -5, arrayListOf("write", "denyoom"), 1, 2, 1)
     val zrevrangeCommand = RedisCommandDetails("zrevrange", -4, arrayListOf("readonly"), 1, 1, 1)

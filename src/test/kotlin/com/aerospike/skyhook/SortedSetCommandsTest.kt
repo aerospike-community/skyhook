@@ -180,6 +180,40 @@ class SortedSetCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
+    fun testZremrangebyrank() {
+        setup()
+        setup(3, _key, "v")
+        writeCommand("${RedisCommand.ZREMRANGEBYRANK.name} $_key 3 4")
+        assertEquals(2, readLong())
+        writeCommand("${RedisCommand.ZRANGE.name} $_key -inf +inf BYSCORE")
+        val r = readStringArray()
+        assertTrue { r.size == 4 }
+        assertEquals("v1", r[0])
+        assertEquals("val1", r[1])
+        assertEquals("v2", r[2])
+        assertEquals("val3", r[3])
+
+        clear()
+        setup()
+        setup(3, _key, "v")
+        writeCommand("${RedisCommand.ZREMRANGEBYRANK.name} $_key 3 -2")
+        assertEquals(2, readLong())
+        writeCommand("${RedisCommand.ZRANGE.name} $_key -inf +inf BYSCORE")
+        val r2 = readStringArray()
+        assertTrue { r2.size == 4 }
+        assertEquals("v1", r2[0])
+        assertEquals("val1", r2[1])
+        assertEquals("v2", r2[2])
+        assertEquals("val3", r2[3])
+
+        writeCommand("${RedisCommand.ZREMRANGEBYRANK.name} $_key 3 -4")
+        assertEquals(0, readLong())
+
+        writeCommand("${RedisCommand.ZREMRANGEBYRANK.name} ne 3 4")
+        assertEquals(0, readLong())
+    }
+
+    @Test
     fun testZrange() {
         setup(6)
         writeCommand("${RedisCommand.ZRANGE.name} $_key -inf +inf WITHSCORES")
