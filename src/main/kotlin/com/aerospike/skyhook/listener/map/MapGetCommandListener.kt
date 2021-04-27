@@ -19,7 +19,11 @@ class MapGetCommandListener(
     ctx: ChannelHandlerContext
 ) : BaseListener(aeroCtx, ctx), RecordListener {
 
+    @Volatile
+    private lateinit var command: RedisCommand
+
     override fun handle(cmd: RequestCommand) {
+        command = cmd.command
         val key = createKey(cmd.key)
 
         aeroCtx.client.operate(
@@ -44,7 +48,16 @@ class MapGetCommandListener(
                     MapReturnType.VALUE
                 )
             }
-            RedisCommand.HMGET -> {
+            RedisCommand.ZRANK -> {
+                require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
+
+                val mapKey = Typed.getValue(cmd.args[2])
+                MapOperation.getByKey(
+                    aeroCtx.bin, mapKey,
+                    MapReturnType.RANK
+                )
+            }
+            RedisCommand.HMGET, RedisCommand.ZMSCORE -> {
                 require(cmd.argCount >= 3) { argValidationErrorMsg(cmd) }
 
                 val mapKeys = getValues(cmd)
@@ -85,7 +98,7 @@ class MapGetCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
+            writeNull()
             ctx.flush()
         } else {
             try {
@@ -97,6 +110,17 @@ class MapGetCommandListener(
         }
     }
 
+    private fun writeNull() {
+        when (command) {
+            RedisCommand.HGETALL,
+            RedisCommand.HVALS,
+            RedisCommand.HKEYS,
+            RedisCommand.SMEMBERS ->
+                writeEmptyList(ctx)
+            else -> writeNullString(ctx)
+        }
+    }
+
     private fun marshalOutput(data: Any?): Any? {
         return when (data) {
             is Map<*, *> -> data.toList()
@@ -104,9 +128,13 @@ class MapGetCommandListener(
                 when (data.firstOrNull()) {
                     is Map.Entry<*, *> -> data.map { it as Map.Entry<*, *> }
                         .map { it.toPair().toList() }.flatten()
-                    else -> data
+                    else -> when (command) {
+                        RedisCommand.ZMSCORE -> data.map { it.toString() }
+                        else -> data
+                    }
                 }
             }
+            -1L -> if (command == RedisCommand.ZRANK) null else data
             else -> data
         }
     }

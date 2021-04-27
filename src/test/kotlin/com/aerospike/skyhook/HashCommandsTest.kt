@@ -3,6 +3,7 @@ package com.aerospike.skyhook
 import com.aerospike.skyhook.command.RedisCommand
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class HashCommandsTest() : SkyhookIntegrationTestBase() {
 
@@ -13,6 +14,17 @@ class HashCommandsTest() : SkyhookIntegrationTestBase() {
             writeCommand("${RedisCommand.HSET.name} $_key key$i val$i")
             assertEquals(1, readLong())
         }
+    }
+
+    @Test
+    fun testHget() {
+        setup()
+        writeCommand("${RedisCommand.HGET.name} $_key key1")
+        assertEquals("val1", readFullBulkString())
+        writeCommand("${RedisCommand.HGET.name} $_key key11")
+        assertEquals(nullString, readFullBulkString())
+        writeCommand("${RedisCommand.HGET.name} ne key1")
+        assertEquals(nullString, readFullBulkString())
     }
 
     @Test
@@ -65,6 +77,9 @@ class HashCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals("val2", r[3])
         assertEquals("key3", r[4])
         assertEquals("val3", r[5])
+        writeCommand("${RedisCommand.HGETALL.name} ne")
+        val r2 = readStringArray()
+        assertTrue { r2.isEmpty() }
     }
 
     @Test
@@ -75,6 +90,9 @@ class HashCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals("key1", r[0])
         assertEquals("key2", r[1])
         assertEquals("key3", r[2])
+        writeCommand("${RedisCommand.HKEYS.name} ne")
+        val r2 = readStringArray()
+        assertTrue { r2.isEmpty() }
     }
 
     @Test
@@ -85,6 +103,9 @@ class HashCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals("val1", r[0])
         assertEquals("val2", r[1])
         assertEquals("val3", r[2])
+        writeCommand("${RedisCommand.HVALS.name} ne")
+        val r2 = readStringArray()
+        assertTrue { r2.isEmpty() }
     }
 
     @Test

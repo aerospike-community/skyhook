@@ -16,6 +16,10 @@ object Typed {
         return Value.StringValue(wireVal.toString(Charsets.UTF_8))
     }
 
+    fun getStringValue(wireVal: ByteArray): Value {
+        return Value.StringValue(wireVal.toString(Charsets.UTF_8))
+    }
+
     fun getInteger(wireVal: ByteArray): Int {
         return String(wireVal).toInt()
     }
