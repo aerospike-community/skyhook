@@ -118,17 +118,22 @@ Operation | Description
 [ZCARD](https://redis.io/commands/zcard) *key* | Returns the sorted set cardinality (number of elements) of the sorted set stored at key.
 [ZCOUNT](https://redis.io/commands/zcount) *key min max* | Returns the number of elements in the sorted set at key with a score between min and max.
 [ZINCRBY](https://redis.io/commands/zincrby) *key increment member* | Increments the score of member in the sorted set stored at key by increment.
+[ZLEXCOUNT](https://redis.io/commands/zlexcount) *key min max* | When all the elements in a sorted set are inserted with the same score, in order to force lexicographical ordering, this command returns the number of elements in the sorted set at key with a value between min and max.
 [ZMSCORE](https://redis.io/commands/zmscore) *key member [member ...]* | Returns the scores associated with the specified members in the sorted set stored at key.
 [ZPOPMAX](https://redis.io/commands/zpopmax) *key [count]* | Removes and returns up to count members with the highest scores in the sorted set stored at key.
 [ZPOPMIN](https://redis.io/commands/zpopmin) *key [count]* | Removes and returns up to count members with the lowest scores in the sorted set stored at key.
 [ZRANDMEMBER](https://redis.io/commands/zrandmember) *key [count [WITHSCORES]]* | When called with just the key argument, return a random element from the sorted set value stored at key.
 [ZRANGE](https://redis.io/commands/zrange) *key min max [BYSCORE/BYLEX] [REV] [LIMIT offset count] [WITHSCORES]* | Returns the specified range of elements in the sorted set stored at <key>.
+[ZRANGEBYLEX](https://redis.io/commands/zrangebylex) *key min max [LIMIT offset count]* | When all the elements in a sorted set are inserted with the same score, in order to force lexicographical ordering, this command returns all the elements in the sorted set at key with a value between min and max.
 [ZRANGEBYSCORE](https://redis.io/commands/zrangebyscore) *key min max [WITHSCORES] [LIMIT offset count]* | Returns all the elements in the sorted set at key with a score between min and max (including elements with score equal to min or max). The elements are considered to be ordered from low to high scores.
 [ZRANGESTORE](https://redis.io/commands/zrangestore) *dst src min max [BYSCORE/BYLEX] [REV] [LIMIT offset count]* | This command is like ZRANGE, but stores the result in the <dst> destination key.
 [ZRANK](https://redis.io/commands/zrank) *key member* | Returns the rank of member in the sorted set stored at key, with the scores ordered from low to high.
 [ZREM](https://redis.io/commands/zrem) *key member [member ...]* | Removes the specified members from the sorted set stored at key.
+[ZREMRANGEBYLEX](https://redis.io/commands/zremrangebylex) *key min max* | When all the elements in a sorted set are inserted with the same score, in order to force lexicographical ordering, this command removes all elements in the sorted set stored at key between the lexicographical range specified by min and max.
+[ZREMRANGEBYRANK](https://redis.io/commands/zremrangebyrank) *key start stop* | Removes all elements in the sorted set stored at key with rank between start and stop.
 [ZREMRANGEBYSCORE](https://redis.io/commands/zremrangebyscore) *key min max* | Removes all elements in the sorted set stored at key with a score between min and max (inclusive).
 [ZREVRANGE](https://redis.io/commands/zrevrange) *key start stop [WITHSCORES]* | Returns the specified range of elements in the sorted set stored at key.
+[ZREVRANGEBYLEX](https://redis.io/commands/zrevrangebylex) *key max min [LIMIT offset count]* | Apart from the reversed ordering, ZREVRANGEBYLEX is similar to ZRANGEBYLEX.
 [ZREVRANGEBYSCORE](https://redis.io/commands/zrevrangebyscore) *key max min [WITHSCORES] [LIMIT offset count]* | Returns all the elements in the sorted set at key with a score between max and min (including elements with score equal to max or min). In contrary to the default ordering of sorted sets, for this command the elements are considered to be ordered from high to low scores.
 
 </details>
