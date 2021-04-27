@@ -63,7 +63,7 @@ class ZaddCommandListener(
         private fun setSortedSetValues(from: Int) {
             values = cmd.args.drop(from).chunked(2)
                 .map { (it1, it2) ->
-                    Typed.getValue(it2) to
+                    Typed.getStringValue(it2) to
                             Value.LongValue(Typed.getLong(it1))
                 }
                 .toMap()
