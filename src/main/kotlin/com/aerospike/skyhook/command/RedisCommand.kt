@@ -34,6 +34,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.incrbyCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.incrbyfloatCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.lindexCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.llenCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.lolwutCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.lpopCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.lpushCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.lpushxCommand
@@ -196,6 +197,7 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
 
     PING(pingCommand),
     ECHO(echoCommand),
+    LOLWUT(lolwutCommand),
     TIME(timeCommand),
     QUIT(null),
     RESET(resetCommand),

@@ -95,6 +95,7 @@ object RedisCommandsDetails {
 
     val pingCommand = RedisCommandDetails("ping", -1, arrayListOf("stale", "fast"), 0, 0, 0)
     val echoCommand = RedisCommandDetails("echo", 2, arrayListOf("fast"), 0, 0, 0)
+    val lolwutCommand = RedisCommandDetails("lolwut", -1, arrayListOf("readonly", "fast"), 0, 0, 0)
     val timeCommand = RedisCommandDetails("time", 1, arrayListOf("random", "loading", "stale", "fast"), 0, 0, 0)
     val resetCommand = RedisCommandDetails("reset", 1, arrayListOf("noscript", "loading", "stale", "fast"), 0, 0, 0)
     val saveCommand = RedisCommandDetails("save", 1, arrayListOf("admin", "noscript"), 0, 0, 0)

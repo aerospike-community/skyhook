@@ -133,6 +133,7 @@ class NettyAerospikeHandler @Inject constructor(
 
                 RedisCommand.PING -> PingCommandHandler(ctx).handle(cmd)
                 RedisCommand.ECHO -> EchoCommandHandler(ctx).handle(cmd)
+                RedisCommand.LOLWUT -> LolwutCommandHandler(ctx).handle(cmd)
                 RedisCommand.TIME -> TimeCommandHandler(ctx).handle(cmd)
                 RedisCommand.QUIT,
                 RedisCommand.RESET,

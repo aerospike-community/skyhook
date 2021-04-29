@@ -21,4 +21,8 @@ object SystemUtils {
             else -> OS.OTHER
         }
     }
+
+    val version: String by lazy {
+        SystemUtils.javaClass.getPackage().implementationVersion?.trim() ?: "NA"
+    }
 }
