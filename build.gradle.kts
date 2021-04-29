@@ -22,7 +22,8 @@ tasks.withType<Jar> {
     manifest {
         attributes(
             mapOf(
-                "Main-Class" to application.mainClassName
+                "Main-Class" to application.mainClassName,
+                "Implementation-Version" to version
             )
         )
     }
