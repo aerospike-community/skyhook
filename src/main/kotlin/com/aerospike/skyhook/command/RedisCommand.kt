@@ -69,6 +69,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.sunionstoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.timeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.touchCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.ttlCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.typeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.unlinkCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zaddCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zcardCommand
@@ -132,6 +133,7 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
      * [com.aerospike.client.AerospikeClient.exists].
      */
     TOUCH(touchCommand),
+    TYPE(typeCommand),
 
     LPUSH(lpushCommand),
     LPUSHX(lpushxCommand),

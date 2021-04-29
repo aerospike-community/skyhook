@@ -32,7 +32,7 @@ class HsetCommandListener(
         )
         aeroCtx.client.operate(
             null, this, defaultWritePolicy,
-            key, operation
+            key, hashTypeOp(), operation
         )
     }
 

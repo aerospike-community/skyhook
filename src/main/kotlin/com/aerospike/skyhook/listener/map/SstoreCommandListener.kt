@@ -53,7 +53,7 @@ abstract class SstoreBaseCommandListener(
                 }.toMap()
             )
             aeroCtx.client.operate(
-                defaultWritePolicy, key, operation
+                defaultWritePolicy, key, setTypeOp(), operation
             )
             writeLong(ctx, values.size)
         }

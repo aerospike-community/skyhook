@@ -23,6 +23,11 @@ data class ServerConfiguration(
     val bin: String = "b",
 
     /**
+     * The Aerospike bin name to set value type.
+     */
+    val typeBin: String = "t",
+
+    /**
      * The server port to bind to.
      */
     val redisPort: Int = 6379,

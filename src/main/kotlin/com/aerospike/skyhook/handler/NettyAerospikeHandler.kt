@@ -31,7 +31,8 @@ class NettyAerospikeHandler @Inject constructor(
         client,
         config.namespase,
         config.set,
-        config.bin
+        config.bin,
+        config.typeBin
     )
 
     /**
@@ -69,6 +70,7 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.TTL,
                 RedisCommand.PTTL -> TtlCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.RANDOMKEY -> RandomkeyCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.TYPE -> TypeCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.LPUSH,
                 RedisCommand.LPUSHX,

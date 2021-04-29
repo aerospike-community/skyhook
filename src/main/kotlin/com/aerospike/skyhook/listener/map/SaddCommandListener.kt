@@ -39,7 +39,7 @@ class SaddCommandListener(
         )
         aeroCtx.client.operate(
             null, this, defaultWritePolicy,
-            key, operation
+            key, setTypeOp(), operation
         )
     }
 
