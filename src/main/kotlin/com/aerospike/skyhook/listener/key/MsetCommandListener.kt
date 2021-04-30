@@ -17,6 +17,9 @@ class MsetCommandListener(
 ) : BaseListener(aeroCtx, ctx), WriteListener {
 
     @Volatile
+    private lateinit var command: RedisCommand
+
+    @Volatile
     private var total: Int = 0
 
     private val lock = Any()
@@ -29,6 +32,7 @@ class MsetCommandListener(
             argValidationErrorMsg(cmd)
         }
 
+        command = cmd.command
         val values = getValues(cmd)
         if (!handleNX(cmd, values.keys.toTypedArray())) return
 
@@ -63,7 +67,11 @@ class MsetCommandListener(
             synchronized(lock) {
                 total--
                 if (total == 0) {
-                    writeLong(ctx, 1L)
+                    if (command == RedisCommand.MSETNX) {
+                        writeLong(ctx, 1L)
+                    } else {
+                        writeOK(ctx)
+                    }
                     ctx.flush()
                 }
             }
