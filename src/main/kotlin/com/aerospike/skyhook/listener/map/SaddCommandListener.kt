@@ -1,9 +1,6 @@
 package com.aerospike.skyhook.listener.map
 
-import com.aerospike.client.AerospikeException
-import com.aerospike.client.Key
-import com.aerospike.client.Record
-import com.aerospike.client.Value
+import com.aerospike.client.*
 import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapOrder
 import com.aerospike.client.cdt.MapPolicy
@@ -15,35 +12,44 @@ import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
-class SaddCommandListener(
+open class SaddCommandListener(
     aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
 ) : BaseListener(aeroCtx, ctx), RecordListener {
 
     @Volatile
-    private var size: Long = 0L
+    protected open var size: Long = 0L
+    protected open val typeOperation: Operation = setTypeOp()
+    protected open val mapPolicy = MapPolicy(MapOrder.UNORDERED, MapWriteFlags.CREATE_ONLY)
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount >= 3) { argValidationErrorMsg(cmd) }
+        validate(cmd)
 
         val key = createKey(cmd.key)
-
-        val getSize = MapOperation.size(aeroCtx.bin)
-        size = aeroCtx.client.operate(defaultWritePolicy, key, getSize)
-            ?.getLong(aeroCtx.bin) ?: 0L
+        setSize(key)
 
         val operation = MapOperation.putItems(
-            MapPolicy(MapOrder.UNORDERED, MapWriteFlags.CREATE_ONLY),
+            mapPolicy,
             aeroCtx.bin,
             getValues(cmd)
         )
         aeroCtx.client.operate(
             null, this, defaultWritePolicy,
-            key, setTypeOp(), operation
+            key, typeOperation, operation
         )
     }
 
-    private fun getValues(cmd: RequestCommand): Map<Value, Value> {
+    protected open fun validate(cmd: RequestCommand) {
+        require(cmd.argCount >= 3) { argValidationErrorMsg(cmd) }
+    }
+
+    protected open fun setSize(key: Key) {
+        val getSize = MapOperation.size(aeroCtx.bin)
+        size = aeroCtx.client.operate(defaultWritePolicy, key, getSize)
+            ?.getLong(aeroCtx.bin) ?: 0L
+    }
+
+    protected open fun getValues(cmd: RequestCommand): Map<Value, Value> {
         return cmd.args.drop(2)
             .map { Typed.getValue(it) to Value.getAsNull() }
             .toMap()

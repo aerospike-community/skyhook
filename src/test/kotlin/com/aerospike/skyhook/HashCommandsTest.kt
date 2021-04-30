@@ -17,6 +17,20 @@ class HashCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
+    fun testHset() {
+        writeCommand("${RedisCommand.HSET.name} $_key key1 val1 key2 val2")
+        assertEquals(2, readLong())
+        writeCommand("${RedisCommand.HSET.name} $_key key1 val11 key3 val3")
+        assertEquals(1, readLong())
+        writeCommand("${RedisCommand.HGET.name} $_key key1")
+        assertEquals("val11", readFullBulkString())
+        writeCommand("${RedisCommand.HGET.name} $_key key2")
+        assertEquals("val2", readFullBulkString())
+        writeCommand("${RedisCommand.HGET.name} $_key key3")
+        assertEquals("val3", readFullBulkString())
+    }
+
+    @Test
     fun testHget() {
         setup()
         writeCommand("${RedisCommand.HGET.name} $_key key1")
@@ -41,8 +55,10 @@ class HashCommandsTest() : SkyhookIntegrationTestBase() {
     fun testHmset() {
         writeCommand("${RedisCommand.HMSET.name} $_key key1 val1 key2 val2")
         assertEquals(ok, readString())
+        writeCommand("${RedisCommand.HMSET.name} $_key key1 val11 key2 val2")
+        assertEquals(ok, readString())
         writeCommand("${RedisCommand.HGET.name} $_key key1")
-        assertEquals("val1", readFullBulkString())
+        assertEquals("val11", readFullBulkString())
         writeCommand("${RedisCommand.HGET.name} $_key key2")
         assertEquals("val2", readFullBulkString())
     }
