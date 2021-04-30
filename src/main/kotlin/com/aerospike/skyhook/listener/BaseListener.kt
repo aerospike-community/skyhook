@@ -104,6 +104,10 @@ abstract class BaseListener(
         return Key(aeroCtx.namespace, aeroCtx.set, key)
     }
 
+    protected fun createKey(key: ByteArray): Key {
+        return createKey(Value.get(String(key)))
+    }
+
     protected fun closeCtx(e: Exception?) {
         log.error(e) { "${this.javaClass.simpleName} error" }
         ctx.close()

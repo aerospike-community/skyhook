@@ -35,7 +35,7 @@ abstract class SstoreBaseCommandListener(
 
     private fun getKeys(cmd: RequestCommand): List<Key> {
         return cmd.args.drop(2)
-            .map { createKey(Value.get(it)) }
+            .map { createKey(it) }
     }
 
     override fun onSuccess(keys: Array<out Key>?, records: Array<Record?>?) {

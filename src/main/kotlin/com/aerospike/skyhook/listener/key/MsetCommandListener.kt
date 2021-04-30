@@ -8,7 +8,6 @@ import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
-import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
@@ -55,7 +54,7 @@ class MsetCommandListener(
 
     private fun getValues(cmd: RequestCommand): Map<Key, Value> {
         return cmd.args.drop(1).chunked(2)
-            .map { (it1, it2) -> createKey(Value.get(it1)) to Typed.getValue(it2) }
+            .map { (it1, it2) -> createKey(it1) to Typed.getValue(it2) }
             .toMap()
     }
 
