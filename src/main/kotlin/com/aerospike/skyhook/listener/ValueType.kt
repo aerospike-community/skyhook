@@ -9,5 +9,9 @@ enum class ValueType(val str: String) {
     SET("set"),
     ZSET("zset"),
     HASH("hash"),
-    STREAM("stream")
+    STREAM("stream");
+
+    companion object {
+        fun valueOf(ba: ByteArray) = valueOf(String(ba).toUpperCase())
+    }
 }

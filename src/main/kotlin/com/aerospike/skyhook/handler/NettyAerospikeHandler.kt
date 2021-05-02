@@ -12,6 +12,10 @@ import com.aerospike.skyhook.handler.redis.*
 import com.aerospike.skyhook.listener.key.*
 import com.aerospike.skyhook.listener.list.*
 import com.aerospike.skyhook.listener.map.*
+import com.aerospike.skyhook.listener.scan.HscanCommandListener
+import com.aerospike.skyhook.listener.scan.ScanCommandListener
+import com.aerospike.skyhook.listener.scan.SscanCommandListener
+import com.aerospike.skyhook.listener.scan.ZscanCommandListener
 import io.netty.channel.ChannelHandlerContext
 import mu.KotlinLogging
 import javax.inject.Inject
@@ -126,6 +130,11 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.ZREVRANGEBYSCORE -> ZrevrangebyscoreCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZRANGEBYLEX -> ZrangebylexCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZREVRANGEBYLEX -> ZrevrangebylexCommandListener(aerospikeCtx, ctx).handle(cmd)
+
+                RedisCommand.SCAN -> ScanCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HSCAN -> HscanCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.SSCAN -> SscanCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZSCAN -> ZscanCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.FLUSHDB,
                 RedisCommand.FLUSHALL -> FlushCommandHandler(aerospikeCtx, ctx).handle(cmd)
