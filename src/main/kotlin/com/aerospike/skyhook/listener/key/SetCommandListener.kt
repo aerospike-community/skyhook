@@ -30,7 +30,7 @@ class SetCommandListener(
         val params = parse(cmd)
         aeroCtx.client.put(
             null, this, params.writePolicy, key,
-            Bin(aeroCtx.bin, params.value)
+            Bin(aeroCtx.bin, params.value), stringTypeBin()
         )
     }
 

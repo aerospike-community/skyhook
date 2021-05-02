@@ -45,6 +45,16 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
+    fun testMset() {
+        writeCommand("${RedisCommand.MSET.name} key1 val1 key2 val2")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.GET.name} key1")
+        assertEquals("val1", readFullBulkString())
+        writeCommand("${RedisCommand.GET.name} key2")
+        assertEquals("val2", readFullBulkString())
+    }
+
+    @Test
     fun testGetset() {
         setup(1)
         writeCommand("${RedisCommand.GETSET.name} key1 val11")

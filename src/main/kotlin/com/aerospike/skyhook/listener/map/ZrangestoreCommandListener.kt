@@ -20,7 +20,7 @@ class ZrangestoreCommandListener(
         require(cmd.argCount >= 4) { argValidationErrorMsg(cmd) }
 
         val destKey = createKey(cmd.key)
-        val sourceKey = createKey(Value.get(cmd.args[2]))
+        val sourceKey = createKey(cmd.args[2])
         rangeCommand = RangeCommand(cmd, 5)
         validateAndSet()
 

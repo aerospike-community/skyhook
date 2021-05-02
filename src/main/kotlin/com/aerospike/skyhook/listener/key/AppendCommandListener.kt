@@ -17,6 +17,7 @@ class AppendCommandListener(
 
         val key = createKey(cmd.key)
         val ops = arrayOf(
+            stringTypeOp(),
             Operation.append(Bin(aeroCtx.bin, Value.StringValue(String(cmd.args[2])))),
             Operation.get(aeroCtx.bin)
         )

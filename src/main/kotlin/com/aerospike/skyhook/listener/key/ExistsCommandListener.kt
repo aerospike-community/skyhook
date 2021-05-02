@@ -1,7 +1,6 @@
 package com.aerospike.skyhook.listener.key
 
 import com.aerospike.client.Key
-import com.aerospike.client.Value
 import com.aerospike.client.listener.ExistsArrayListener
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
@@ -25,7 +24,7 @@ class ExistsCommandListener(
 
     private fun getKeys(cmd: RequestCommand): Set<Key> {
         return cmd.args.drop(1)
-            .map { createKey(Value.get(it)) }
+            .map { createKey(it) }
             .toSet()
     }
 

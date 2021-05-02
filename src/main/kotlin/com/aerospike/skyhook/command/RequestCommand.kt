@@ -9,7 +9,7 @@ data class RequestCommand(
     val argCount: Int = args.size
 
     val key: Value by lazy {
-        Value.get(args[1])
+        Value.get(String(args[1]))
     }
 
     val command: RedisCommand by lazy {

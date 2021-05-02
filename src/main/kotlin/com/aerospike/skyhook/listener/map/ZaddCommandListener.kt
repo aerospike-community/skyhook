@@ -96,7 +96,7 @@ class ZaddCommandListener(
 
         aeroCtx.client.operate(
             null, this, defaultWritePolicy,
-            key, getMapOperation()
+            key, zsetTypeOp(), getMapOperation()
         )
     }
 

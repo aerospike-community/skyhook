@@ -68,6 +68,7 @@ Operation | Description
 [HLEN](https://redis.io/commands/hlen) *key* | Returns the number of fields contained in the hash stored at key.
 [HMGET](https://redis.io/commands/hmget) *key field [field ...]* | Returns the values associated with the specified fields in the hash stored at key.
 [HMSET](https://redis.io/commands/hmset) *key field value [field value ...]* | Sets the specified fields to their respective values in the hash stored at key.
+[HSCAN](https://redis.io/commands/hscan) *key cursor [MATCH pattern] [COUNT count]* | See SCAN for HSCAN documentation.
 [HSETNX](https://redis.io/commands/hsetnx) *key field value* | Sets field in the hash stored at key to value, only if field does not yet exist.
 [HSET](https://redis.io/commands/hset) *key field value [field value ...]* | Sets field in the hash stored at key to value.
 [HSTRLEN](https://redis.io/commands/hstrlen) *key field* | Returns the string length of the value associated with field in the hash stored at key.
@@ -77,6 +78,7 @@ Operation | Description
 [INCR](https://redis.io/commands/incr) *key* | Increments the number stored at key by one.
 [LINDEX](https://redis.io/commands/lindex) *key index* | Returns the element at index index in the list stored at key.
 [LLEN](https://redis.io/commands/llen) *key* | Returns the length of the list stored at key.
+[LOLWUT](https://redis.io/commands/lolwut) *[VERSION version]* | The LOLWUT command displays the Redis version.
 [LPOP](https://redis.io/commands/lpop) *key [count]* | Removes and returns the first elements of the list stored at key.
 [LPUSHX](https://redis.io/commands/lpushx) *key element [element ...]* | Inserts specified values at the head of the list stored at key, only if key already exists and holds a list.
 [LPUSH](https://redis.io/commands/lpush) *key element [element ...]* | Insert all the specified values at the head of the list stored at key.
@@ -98,6 +100,7 @@ Operation | Description
 [RPUSH](https://redis.io/commands/rpush) *key element [element ...]* | Insert all the specified values at the tail of the list stored at key.
 [SADD](https://redis.io/commands/sadd) *key member [member ...]* | Add the specified members to the set stored at key.
 [SAVE](https://redis.io/commands/save) | Returns OK.
+[SCAN](https://redis.io/commands/scan) *cursor [MATCH pattern] [COUNT count] [TYPE type]* | The SCAN command and the closely related commands SSCAN, HSCAN and ZSCAN are used in order to incrementally iterate over a collection of elements.
 [SCARD](https://redis.io/commands/scard) *key* | Returns the set cardinality (number of elements) of the set stored at key.
 [SETEX](https://redis.io/commands/setex) *key seconds value* | Set key to hold the string value and set key to timeout after a given number of seconds.
 [SETNX](https://redis.io/commands/setnx) *key value* | Set key to hold string value if key does not exist.
@@ -107,12 +110,14 @@ Operation | Description
 [SISMEMBER](https://redis.io/commands/sismember) *key member* | Returns if member is a member of the set stored at key.
 [SMEMBERS](https://redis.io/commands/smembers) *key* | Returns all the members of the set value stored at key.
 [SREM](https://redis.io/commands/srem) *key member [member ...]* | Remove the specified members from the set stored at key.
+[SSCAN](https://redis.io/commands/sscan) *key cursor [MATCH pattern] [COUNT count]* | See SCAN for SSCAN documentation.
 [STRLEN](https://redis.io/commands/strlen) *key* | Returns the length of the string value stored at key. An error is returned when key holds a non-string value.
 [SUNION](https://redis.io/commands/sunion) *key [key ...]* | Returns the members of the set resulting from the union of all the given sets.
 [SUNIONSTORE](https://redis.io/commands/sunionstore) *destination key [key ...]* | This command is equal to SUNION, but instead of returning the resulting set, it is stored in destination.
 [TIME](https://redis.io/commands/time) | Returns the current server time.
 [TOUCH](https://redis.io/commands/touch) *key [key ...]* | Alters the last access time of a key(s). A key is ignored if it does not exist.
 [TTL](https://redis.io/commands/ttl) *key* | Returns the remaining time to live of a key that has a timeout.
+[TYPE](https://redis.io/commands/type) *key* | Returns the string representation of the type of the value stored at key. The different types that can be returned are: string, list, set, zset, hash and stream.
 [UNLINK](https://redis.io/commands/unlink) *key [key ...]* | This command is an alias to DEL.
 [ZADD](https://redis.io/commands/zadd) *key [NX/XX] [GT/LT] [CH] [INCR] score member [score member ...]* | Adds all the specified members with the specified scores to the sorted set stored at key.
 [ZCARD](https://redis.io/commands/zcard) *key* | Returns the sorted set cardinality (number of elements) of the sorted set stored at key.
@@ -135,6 +140,7 @@ Operation | Description
 [ZREVRANGE](https://redis.io/commands/zrevrange) *key start stop [WITHSCORES]* | Returns the specified range of elements in the sorted set stored at key.
 [ZREVRANGEBYLEX](https://redis.io/commands/zrevrangebylex) *key max min [LIMIT offset count]* | Apart from the reversed ordering, ZREVRANGEBYLEX is similar to ZRANGEBYLEX.
 [ZREVRANGEBYSCORE](https://redis.io/commands/zrevrangebyscore) *key max min [WITHSCORES] [LIMIT offset count]* | Returns all the elements in the sorted set at key with a score between max and min (including elements with score equal to max or min). In contrary to the default ordering of sorted sets, for this command the elements are considered to be ordered from high to low scores.
+[ZSCAN](https://redis.io/commands/zscan) *key cursor [MATCH pattern] [COUNT count]* | See SCAN for ZSCAN documentation.
 
 </details>
 

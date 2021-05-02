@@ -25,6 +25,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.hkeysCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.hlenCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.hmgetCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.hmsetCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.hscanCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.hsetCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.hsetnxCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.hstrlenCommand
@@ -34,6 +35,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.incrbyCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.incrbyfloatCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.lindexCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.llenCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.lolwutCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.lpopCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.lpushCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.lpushxCommand
@@ -54,6 +56,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.rpushCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.rpushxCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.saddCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.saveCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.scanCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.scardCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.setCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.setexCommand
@@ -63,12 +66,14 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.sinterstoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.sismemberCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.smembersCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.sremCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.sscanCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.strlenCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.sunionCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.sunionstoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.timeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.touchCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.ttlCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.typeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.unlinkCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zaddCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zcardCommand
@@ -91,6 +96,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.zremrangebyscoreCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangebylexCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangebyscoreCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.zscanCommand
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.redis.ArrayHeaderRedisMessage
 import mu.KotlinLogging
@@ -132,6 +138,7 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
      * [com.aerospike.client.AerospikeClient.exists].
      */
     TOUCH(touchCommand),
+    TYPE(typeCommand),
 
     LPUSH(lpushCommand),
     LPUSHX(lpushxCommand),
@@ -188,12 +195,18 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
     ZRANGEBYLEX(zrangebylexCommand),
     ZREVRANGEBYLEX(zrevrangebylexCommand),
 
+    SCAN(scanCommand),
+    HSCAN(hscanCommand),
+    SSCAN(sscanCommand),
+    ZSCAN(zscanCommand),
+
     FLUSHDB(flushdbCommand),
     FLUSHALL(flushallCommand),
     DBSIZE(dbsizeCommand),
 
     PING(pingCommand),
     ECHO(echoCommand),
+    LOLWUT(lolwutCommand),
     TIME(timeCommand),
     QUIT(null),
     RESET(resetCommand),

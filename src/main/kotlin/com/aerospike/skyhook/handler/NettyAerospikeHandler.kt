@@ -12,6 +12,10 @@ import com.aerospike.skyhook.handler.redis.*
 import com.aerospike.skyhook.listener.key.*
 import com.aerospike.skyhook.listener.list.*
 import com.aerospike.skyhook.listener.map.*
+import com.aerospike.skyhook.listener.scan.HscanCommandListener
+import com.aerospike.skyhook.listener.scan.ScanCommandListener
+import com.aerospike.skyhook.listener.scan.SscanCommandListener
+import com.aerospike.skyhook.listener.scan.ZscanCommandListener
 import io.netty.channel.ChannelHandlerContext
 import mu.KotlinLogging
 import javax.inject.Inject
@@ -31,7 +35,8 @@ class NettyAerospikeHandler @Inject constructor(
         client,
         config.namespase,
         config.set,
-        config.bin
+        config.bin,
+        config.typeBin
     )
 
     /**
@@ -69,6 +74,7 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.TTL,
                 RedisCommand.PTTL -> TtlCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.RANDOMKEY -> RandomkeyCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.TYPE -> TypeCommandListener(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.LPUSH,
                 RedisCommand.LPUSHX,
@@ -80,8 +86,8 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.RPOP -> ListPopCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.LRANGE -> LrangeCommandListener(aerospikeCtx, ctx).handle(cmd)
 
-                RedisCommand.HSET,
-                RedisCommand.HSETNX -> HsetCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HSETNX -> HsetnxCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HSET -> HsetCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.HMSET -> HmsetCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.SADD -> SaddCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.HEXISTS,
@@ -125,12 +131,18 @@ class NettyAerospikeHandler @Inject constructor(
                 RedisCommand.ZRANGEBYLEX -> ZrangebylexCommandListener(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.ZREVRANGEBYLEX -> ZrevrangebylexCommandListener(aerospikeCtx, ctx).handle(cmd)
 
+                RedisCommand.SCAN -> ScanCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.HSCAN -> HscanCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.SSCAN -> SscanCommandListener(aerospikeCtx, ctx).handle(cmd)
+                RedisCommand.ZSCAN -> ZscanCommandListener(aerospikeCtx, ctx).handle(cmd)
+
                 RedisCommand.FLUSHDB,
                 RedisCommand.FLUSHALL -> FlushCommandHandler(aerospikeCtx, ctx).handle(cmd)
                 RedisCommand.DBSIZE -> DbsizeCommandHandler(aerospikeCtx, ctx).handle(cmd)
 
                 RedisCommand.PING -> PingCommandHandler(ctx).handle(cmd)
                 RedisCommand.ECHO -> EchoCommandHandler(ctx).handle(cmd)
+                RedisCommand.LOLWUT -> LolwutCommandHandler(ctx).handle(cmd)
                 RedisCommand.TIME -> TimeCommandHandler(ctx).handle(cmd)
                 RedisCommand.QUIT,
                 RedisCommand.RESET,

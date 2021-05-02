@@ -1,8 +1,6 @@
 package com.aerospike.skyhook.listener.key
 
 import com.aerospike.client.BatchRead
-import com.aerospike.client.Key
-import com.aerospike.client.Value
 import com.aerospike.client.listener.BatchListListener
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
@@ -18,7 +16,7 @@ class MgetCommandListener(
         require(cmd.argCount >= 2) { argValidationErrorMsg(cmd) }
 
         val keys = cmd.args.drop(1)
-            .map { Key(aeroCtx.namespace, aeroCtx.set, Value.get(it)) }
+            .map { createKey(it) }
             .map { BatchRead(it, true) }
         aeroCtx.client.get(null, this, null, keys)
     }

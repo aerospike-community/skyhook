@@ -7,6 +7,7 @@ import com.aerospike.client.Value
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.config.ServerConfiguration
 import com.aerospike.skyhook.handler.AerospikeChannelHandler
+import com.aerospike.skyhook.util.ScanResponse
 import com.google.inject.Guice
 import io.netty.buffer.Unpooled.buffer
 import io.netty.channel.embedded.EmbeddedChannel
@@ -107,6 +108,18 @@ abstract class SkyhookIntegrationTestBase {
     protected fun readError(): String {
         Thread.sleep(sleepMillis)
         return channel.readOutbound<ErrorRedisMessage>().content()
+    }
+
+    protected fun readScanResponse(): ScanResponse {
+        Thread.sleep(sleepMillis)
+        var len = channel.readOutbound<ArrayHeaderRedisMessage>().length()
+        assertEquals(2, len)
+        val cursor = channel.readOutbound<SimpleStringRedisMessage>().content()
+        len = channel.readOutbound<ArrayHeaderRedisMessage>().length()
+        val elements = (1..len).map {
+            String(channel.readOutbound<FullBulkStringRedisMessage>().content().array())
+        }.toList()
+        return ScanResponse(cursor, elements)
     }
 
     private val hexArray = "0123456789ABCDEF".toCharArray()

@@ -28,7 +28,7 @@ class ListPushCommandListener(
         val opPolicy = getOpWritePolicy(cmd)
         aeroCtx.client.operate(
             null, this, opPolicy.writePolicy,
-            key, opPolicy.op
+            key, listTypeOp(), opPolicy.op
         )
     }
 

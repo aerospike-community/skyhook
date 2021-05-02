@@ -2,7 +2,6 @@ package com.aerospike.skyhook.listener.map
 
 import com.aerospike.client.Key
 import com.aerospike.client.Record
-import com.aerospike.client.Value
 import com.aerospike.client.listener.RecordArrayListener
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
@@ -28,7 +27,7 @@ abstract class SmergeBaseCommandListener(
 
     private fun getKeys(cmd: RequestCommand): List<Key> {
         return cmd.args.drop(1)
-            .map { createKey(Value.get(it)) }
+            .map { createKey(it) }
     }
 
     override fun onSuccess(keys: Array<out Key>?, records: Array<Record?>?) {

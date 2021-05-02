@@ -5,22 +5,27 @@ import com.aerospike.client.IAerospikeClient
 data class AerospikeContext(
 
     /**
-     * The Aerospike client instance
+     * The Aerospike client instance.
      */
     val client: IAerospikeClient,
 
     /**
-     * The namespace name to proxy to
+     * The Aerospike namespace to map to.
      */
     val namespace: String,
 
     /**
-     * The set name to proxy to
+     * The Aerospike set name to map to.
      */
     val set: String?,
 
     /**
-     * The bin name to set values
+     * The Aerospike bin name to set values.
      */
     val bin: String,
+
+    /**
+     * The Aerospike bin name to set value type.
+     */
+    val typeBin: String,
 )

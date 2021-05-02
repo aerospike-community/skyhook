@@ -1,8 +1,6 @@
 package com.aerospike.skyhook.listener
 
-import com.aerospike.client.AerospikeException
-import com.aerospike.client.Key
-import com.aerospike.client.Value
+import com.aerospike.client.*
 import com.aerospike.client.policy.RecordExistsAction
 import com.aerospike.client.policy.WritePolicy
 import com.aerospike.skyhook.command.RequestCommand
@@ -53,6 +51,34 @@ abstract class BaseListener(
         }
     }
 
+    protected fun stringTypeBin(): Bin {
+        return Bin(aeroCtx.typeBin, ValueType.STRING.str)
+    }
+
+    protected fun stringTypeOp(): Operation {
+        return Operation.put(stringTypeBin())
+    }
+
+    protected fun listTypeOp(): Operation {
+        return Operation.put(Bin(aeroCtx.typeBin, ValueType.LIST.str))
+    }
+
+    protected fun setTypeOp(): Operation {
+        return Operation.put(Bin(aeroCtx.typeBin, ValueType.SET.str))
+    }
+
+    protected fun zsetTypeOp(): Operation {
+        return Operation.put(Bin(aeroCtx.typeBin, ValueType.ZSET.str))
+    }
+
+    protected fun hashTypeOp(): Operation {
+        return Operation.put(Bin(aeroCtx.typeBin, ValueType.HASH.str))
+    }
+
+    protected fun streamTypeOp(): Operation {
+        return Operation.put(Bin(aeroCtx.typeBin, ValueType.STREAM.str))
+    }
+
     @Throws(IOException::class)
     protected open fun writeResponse(mapped: Any?) {
         writeObject(ctx, mapped)
@@ -76,6 +102,10 @@ abstract class BaseListener(
 
     protected fun createKey(key: Value): Key {
         return Key(aeroCtx.namespace, aeroCtx.set, key)
+    }
+
+    protected fun createKey(key: ByteArray): Key {
+        return createKey(Value.get(String(key)))
     }
 
     protected fun closeCtx(e: Exception?) {

@@ -32,6 +32,7 @@ object RedisCommandsDetails {
     val unlinkCommand = RedisCommandDetails("unlink", -2, arrayListOf("write", "fast"), 1, -1, 1)
     val randomkeyCommand = RedisCommandDetails("randomkey", 1, arrayListOf("readonly", "random"), 0, 0, 0)
     val touchCommand = RedisCommandDetails("touch", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
+    val typeCommand = RedisCommandDetails("type", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
 
     val lpushCommand = RedisCommandDetails("lpush", -3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
     val lpushxCommand = RedisCommandDetails("lpushx", -3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
@@ -88,12 +89,18 @@ object RedisCommandsDetails {
     val zrangebylexCommand = RedisCommandDetails("zrangebylex", -4, arrayListOf("readonly"), 1, 1, 1)
     val zrevrangebylexCommand = RedisCommandDetails("zrevrangebylex", -4, arrayListOf("readonly"), 1, 1, 1)
 
+    val scanCommand = RedisCommandDetails("scan", -2, arrayListOf("readonly", "random"), 0, 0, 0)
+    val hscanCommand = RedisCommandDetails("hscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
+    val sscanCommand = RedisCommandDetails("sscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
+    val zscanCommand = RedisCommandDetails("zscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
+
     val flushdbCommand = RedisCommandDetails("flushdb", -1, arrayListOf("write"), 0, 0, 0)
     val flushallCommand = RedisCommandDetails("flushall", -1, arrayListOf("write"), 0, 0, 0)
     val dbsizeCommand = RedisCommandDetails("dbsize", 1, arrayListOf("readonly", "fast"), 0, 0, 0)
 
     val pingCommand = RedisCommandDetails("ping", -1, arrayListOf("stale", "fast"), 0, 0, 0)
     val echoCommand = RedisCommandDetails("echo", 2, arrayListOf("fast"), 0, 0, 0)
+    val lolwutCommand = RedisCommandDetails("lolwut", -1, arrayListOf("readonly", "fast"), 0, 0, 0)
     val timeCommand = RedisCommandDetails("time", 1, arrayListOf("random", "loading", "stale", "fast"), 0, 0, 0)
     val resetCommand = RedisCommandDetails("reset", 1, arrayListOf("noscript", "loading", "stale", "fast"), 0, 0, 0)
     val saveCommand = RedisCommandDetails("save", 1, arrayListOf("admin", "noscript"), 0, 0, 0)

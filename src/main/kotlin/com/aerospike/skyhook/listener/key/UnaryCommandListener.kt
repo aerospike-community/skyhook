@@ -24,6 +24,7 @@ abstract class UnaryCommandListener(
 
         val key = createKey(cmd.key)
         val ops = arrayOf(
+            stringTypeOp(),
             getUnaryOperation(cmd),
             Operation.get(aeroCtx.bin)
         )
