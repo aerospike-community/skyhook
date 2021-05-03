@@ -18,6 +18,11 @@ data class ServerConfiguration(
     val set: String? = "redis",
 
     /**
+     * Aerospike Client Policy configuration properties.
+     */
+    val clientPolicy: ClientPolicyConfig = ClientPolicyConfig(),
+
+    /**
      * The Aerospike bin name to set values.
      */
     val bin: String = "b",
