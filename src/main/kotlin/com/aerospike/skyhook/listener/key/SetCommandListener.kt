@@ -9,15 +9,13 @@ import com.aerospike.client.policy.RecordExistsAction
 import com.aerospike.client.policy.WritePolicy
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class SetCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), WriteListener {
+) : BaseListener(ctx), WriteListener {
 
     @Volatile
     private lateinit var command: RedisCommand
@@ -28,7 +26,7 @@ class SetCommandListener(
         command = cmd.command
         val key = createKey(cmd.key)
         val params = parse(cmd)
-        aeroCtx.client.put(
+        client.put(
             null, this, params.writePolicy, key,
             Bin(aeroCtx.bin, params.value), stringTypeBin()
         )

@@ -3,20 +3,18 @@ package com.aerospike.skyhook.listener.key
 import com.aerospike.client.Key
 import com.aerospike.client.listener.ExistsArrayListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
 class ExistsCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), ExistsArrayListener {
+) : BaseListener(ctx), ExistsArrayListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount >= 2) { argValidationErrorMsg(cmd) }
 
         val keys = getKeys(cmd)
-        aeroCtx.client.exists(
+        client.exists(
             null, this,
             null, keys.toTypedArray()
         )

@@ -1,6 +1,18 @@
 package com.aerospike.skyhook.command
 
+import com.aerospike.skyhook.handler.CommandHandler
+import com.aerospike.skyhook.handler.aerospike.DbsizeCommandHandler
+import com.aerospike.skyhook.handler.aerospike.FlushCommandHandler
+import com.aerospike.skyhook.handler.redis.*
+import com.aerospike.skyhook.listener.key.*
+import com.aerospike.skyhook.listener.list.*
+import com.aerospike.skyhook.listener.map.*
+import com.aerospike.skyhook.listener.scan.HscanCommandListener
+import com.aerospike.skyhook.listener.scan.ScanCommandListener
+import com.aerospike.skyhook.listener.scan.SscanCommandListener
+import com.aerospike.skyhook.listener.scan.ZscanCommandListener
 import com.aerospike.skyhook.util.RedisCommandsDetails.appendCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.authCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.bgsaveCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.commandCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.dbsizeCommand
@@ -101,35 +113,39 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.redis.ArrayHeaderRedisMessage
 import mu.KotlinLogging
 import java.util.*
+import kotlin.reflect.KFunction1
 
-enum class RedisCommand(private val details: RedisCommandDetails?) {
-    GET(getCommand),
-    MGET(mgetCommand),
-    GETSET(getsetCommand),
-    SET(setCommand),
-    SETEX(setexCommand),
-    PSETEX(psetexCommand),
-    SETNX(setnxCommand),
-    MSET(msetCommand),
-    MSETNX(msetnxCommand),
-    EXISTS(existsCommand),
-    EXPIRE(expireCommand),
-    PEXPIRE(pexpireCommand),
-    EXPIREAT(expireatCommand),
-    PEXPIREAT(pexpireatCommand),
-    PERSIST(persistCommand),
-    APPEND(appendCommand),
-    INCR(incrCommand),
-    INCRBY(incrbyCommand),
-    INCRBYFLOAT(incrbyfloatCommand),
-    DECR(decrCommand),
-    DECRBY(decrbyCommand),
-    STRLEN(strlenCommand),
-    TTL(ttlCommand),
-    PTTL(pttlCommand),
-    DEL(delCommand),
-    UNLINK(unlinkCommand),
-    RANDOMKEY(randomkeyCommand),
+enum class RedisCommand(
+    val details: RedisCommandDetails?,
+    val newHandler: KFunction1<ChannelHandlerContext, CommandHandler>
+) {
+    GET(getCommand, ::GetCommandListener),
+    MGET(mgetCommand, ::MgetCommandListener),
+    GETSET(getsetCommand, ::GetsetCommandListener),
+    SET(setCommand, ::SetCommandListener),
+    SETEX(setexCommand, ::SetCommandListener),
+    PSETEX(psetexCommand, ::SetCommandListener),
+    SETNX(setnxCommand, ::SetCommandListener),
+    MSET(msetCommand, ::MsetCommandListener),
+    MSETNX(msetnxCommand, ::MsetCommandListener),
+    EXISTS(existsCommand, ::ExistsCommandListener),
+    EXPIRE(expireCommand, ::ExpireCommandListener),
+    PEXPIRE(pexpireCommand, ::ExpireCommandListener),
+    EXPIREAT(expireatCommand, ::ExpireCommandListener),
+    PEXPIREAT(pexpireatCommand, ::ExpireCommandListener),
+    PERSIST(persistCommand, ::ExpireCommandListener),
+    APPEND(appendCommand, ::AppendCommandListener),
+    INCR(incrCommand, ::IncrCommandListener),
+    INCRBY(incrbyCommand, ::IncrCommandListener),
+    INCRBYFLOAT(incrbyfloatCommand, ::IncrCommandListener),
+    DECR(decrCommand, ::DecrCommandListener),
+    DECRBY(decrbyCommand, ::DecrCommandListener),
+    STRLEN(strlenCommand, ::StrlenCommandListener),
+    TTL(ttlCommand, ::TtlCommandListener),
+    PTTL(pttlCommand, ::TtlCommandListener),
+    DEL(delCommand, ::DelCommandListener),
+    UNLINK(unlinkCommand, ::DelCommandListener),
+    RANDOMKEY(randomkeyCommand, ::RandomkeyCommandListener),
 
     /**
      * The Redis TOUCH command changes the last_access_time of the key (used for LRU eviction).
@@ -137,85 +153,84 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
      * The actual implementation returns the number of records that were 'touched' using
      * [com.aerospike.client.AerospikeClient.exists].
      */
-    TOUCH(touchCommand),
-    TYPE(typeCommand),
+    TOUCH(touchCommand, ::ExistsCommandListener),
+    TYPE(typeCommand, ::TypeCommandListener),
 
-    LPUSH(lpushCommand),
-    LPUSHX(lpushxCommand),
-    RPUSH(rpushCommand),
-    RPUSHX(rpushxCommand),
-    LINDEX(lindexCommand),
-    LLEN(llenCommand),
-    LPOP(lpopCommand),
-    RPOP(rpopCommand),
-    LRANGE(lrangeCommand),
+    LPUSH(lpushCommand, ::ListPushCommandListener),
+    LPUSHX(lpushxCommand, ::ListPushCommandListener),
+    RPUSH(rpushCommand, ::ListPushCommandListener),
+    RPUSHX(rpushxCommand, ::ListPushCommandListener),
+    LINDEX(lindexCommand, ::LindexCommandListener),
+    LLEN(llenCommand, ::LlenCommandListener),
+    LPOP(lpopCommand, ::ListPopCommandListener),
+    RPOP(rpopCommand, ::ListPopCommandListener),
+    LRANGE(lrangeCommand, ::LrangeCommandListener),
 
-    HSET(hsetCommand),
-    HSETNX(hsetnxCommand),
-    HMSET(hmsetCommand),
-    SADD(saddCommand),
-    HEXISTS(hexistsCommand),
-    SISMEMBER(sismemberCommand),
-    HGET(hgetCommand),
-    HMGET(hmgetCommand),
-    HGETALL(hgetallCommand),
-    HVALS(hvalsCommand),
-    HKEYS(hkeysCommand),
-    ZMSCORE(zmscoreCommand),
-    ZRANK(zrankCommand),
-    SMEMBERS(smembersCommand),
-    HINCRBY(hincrbyCommand),
-    HINCRBYFLOAT(hincrbyfloatCommand),
-    ZINCRBY(zincrbyCommand),
-    HSTRLEN(hstrlenCommand),
-    HLEN(hlenCommand),
-    SCARD(scardCommand),
-    ZCARD(zcardCommand),
-    HDEL(hdelCommand),
-    SREM(sremCommand),
-    ZREM(zremCommand),
-    SUNION(sunionCommand),
-    SINTER(sinterCommand),
-    SUNIONSTORE(sunionstoreCommand),
-    SINTERSTORE(sinterstoreCommand),
-    ZADD(zaddCommand),
-    ZPOPMAX(zpopmaxCommand),
-    ZPOPMIN(zpopminCommand),
-    ZRANDMEMBER(zrandmemberCommand),
-    ZCOUNT(zcountCommand),
-    ZLEXCOUNT(zlexcountCommand),
-    ZREMRANGEBYSCORE(zremrangebyscoreCommand),
-    ZREMRANGEBYRANK(zremrangebyrankCommand),
-    ZREMRANGEBYLEX(zremrangebylexCommand),
-    ZRANGE(zrangeCommand),
-    ZRANGESTORE(zrangestoreCommand),
-    ZREVRANGE(zrevrangeCommand),
-    ZRANGEBYSCORE(zrangebyscoreCommand),
-    ZREVRANGEBYSCORE(zrevrangebyscoreCommand),
-    ZRANGEBYLEX(zrangebylexCommand),
-    ZREVRANGEBYLEX(zrevrangebylexCommand),
+    HSET(hsetCommand, ::HsetCommandListener),
+    HSETNX(hsetnxCommand, ::HsetnxCommandListener),
+    HMSET(hmsetCommand, ::HmsetCommandListener),
+    SADD(saddCommand, ::SaddCommandListener),
+    HEXISTS(hexistsCommand, ::HexistsCommandListener),
+    SISMEMBER(sismemberCommand, ::HexistsCommandListener),
+    HGET(hgetCommand, ::MapGetCommandListener),
+    HMGET(hmgetCommand, ::MapGetCommandListener),
+    HGETALL(hgetallCommand, ::MapGetCommandListener),
+    HVALS(hvalsCommand, ::MapGetCommandListener),
+    HKEYS(hkeysCommand, ::MapGetCommandListener),
+    ZMSCORE(zmscoreCommand, ::MapGetCommandListener),
+    ZRANK(zrankCommand, ::MapGetCommandListener),
+    SMEMBERS(smembersCommand, ::MapGetCommandListener),
+    HINCRBY(hincrbyCommand, ::HincrbyCommandListener),
+    HINCRBYFLOAT(hincrbyfloatCommand, ::HincrbyCommandListener),
+    ZINCRBY(zincrbyCommand, ::HincrbyCommandListener),
+    HSTRLEN(hstrlenCommand, ::HstrlenCommandListener),
+    HLEN(hlenCommand, ::MapSizeCommandListener),
+    SCARD(scardCommand, ::MapSizeCommandListener),
+    ZCARD(zcardCommand, ::MapSizeCommandListener),
+    HDEL(hdelCommand, ::MapDelCommandListener),
+    SREM(sremCommand, ::MapDelCommandListener),
+    ZREM(zremCommand, ::MapDelCommandListener),
+    SUNION(sunionCommand, ::SunionCommandListener),
+    SINTER(sinterCommand, ::SinterCommandListener),
+    SUNIONSTORE(sunionstoreCommand, ::SunionstoreCommandListener),
+    SINTERSTORE(sinterstoreCommand, ::SinterstoreCommandListener),
+    ZADD(zaddCommand, ::ZaddCommandListener),
+    ZPOPMAX(zpopmaxCommand, ::ZpopmaxCommandListener),
+    ZPOPMIN(zpopminCommand, ::ZpopminCommandListener),
+    ZRANDMEMBER(zrandmemberCommand, ::ZrandmemberCommandListener),
+    ZCOUNT(zcountCommand, ::ZcountCommandListener),
+    ZLEXCOUNT(zlexcountCommand, ::ZlexcountCommandListener),
+    ZREMRANGEBYSCORE(zremrangebyscoreCommand, ::ZremrangebyscoreCommandListener),
+    ZREMRANGEBYRANK(zremrangebyrankCommand, ::ZremrangebyrankCommandListener),
+    ZREMRANGEBYLEX(zremrangebylexCommand, ::ZremrangebylexCommandListener),
+    ZRANGE(zrangeCommand, ::ZrangeCommandListener),
+    ZRANGESTORE(zrangestoreCommand, ::ZrangestoreCommandListener),
+    ZREVRANGE(zrevrangeCommand, ::ZrevrangeCommandListener),
+    ZRANGEBYSCORE(zrangebyscoreCommand, ::ZrangebyscoreCommandListener),
+    ZREVRANGEBYSCORE(zrevrangebyscoreCommand, ::ZrevrangebyscoreCommandListener),
+    ZRANGEBYLEX(zrangebylexCommand, ::ZrangebylexCommandListener),
+    ZREVRANGEBYLEX(zrevrangebylexCommand, ::ZrevrangebylexCommandListener),
 
-    SCAN(scanCommand),
-    HSCAN(hscanCommand),
-    SSCAN(sscanCommand),
-    ZSCAN(zscanCommand),
+    SCAN(scanCommand, ::ScanCommandListener),
+    HSCAN(hscanCommand, ::HscanCommandListener),
+    SSCAN(sscanCommand, ::SscanCommandListener),
+    ZSCAN(zscanCommand, ::ZscanCommandListener),
 
-    FLUSHDB(flushdbCommand),
-    FLUSHALL(flushallCommand),
-    DBSIZE(dbsizeCommand),
+    FLUSHDB(flushdbCommand, ::FlushCommandHandler),
+    FLUSHALL(flushallCommand, ::FlushCommandHandler),
+    DBSIZE(dbsizeCommand, ::DbsizeCommandHandler),
 
-    PING(pingCommand),
-    ECHO(echoCommand),
-    LOLWUT(lolwutCommand),
-    TIME(timeCommand),
-    QUIT(null),
-    RESET(resetCommand),
-    SAVE(saveCommand),
-    BGSAVE(bgsaveCommand),
+    PING(pingCommand, ::PingCommandHandler),
+    ECHO(echoCommand, ::EchoCommandHandler),
+    LOLWUT(lolwutCommand, ::LolwutCommandHandler),
+    TIME(timeCommand, ::TimeCommandHandler),
+    QUIT(null, ::MockCommandHandler),
+    RESET(resetCommand, ::MockCommandHandler),
+    SAVE(saveCommand, ::MockCommandHandler),
+    BGSAVE(bgsaveCommand, ::MockCommandHandler),
+    AUTH(authCommand, ::AuthCommandHandler),
 
-    COMMAND(commandCommand),
-
-    UNKNOWN(null);
+    COMMAND(commandCommand, ::CommandCommandHandler);
 
     companion object {
         private val log = KotlinLogging.logger {}
@@ -223,9 +238,10 @@ enum class RedisCommand(private val details: RedisCommandDetails?) {
         fun getValue(stringValue: String): RedisCommand {
             return try {
                 valueOf(stringValue.toUpperCase(Locale.ENGLISH))
-            } catch (ignore: IllegalArgumentException) {
-                log.warn { "$stringValue unsupported command" }
-                UNKNOWN
+            } catch (e: IllegalArgumentException) {
+                val msg = "ERR $stringValue unsupported command"
+                log.warn { msg }
+                throw UnsupportedOperationException(msg)
             }
         }
 

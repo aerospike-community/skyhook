@@ -5,14 +5,12 @@ import com.aerospike.client.Record
 import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
 class MapSizeCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
@@ -20,7 +18,7 @@ class MapSizeCommandListener(
         val key = createKey(cmd.key)
         val operation = MapOperation.size(aeroCtx.bin)
 
-        aeroCtx.client.operate(
+        client.operate(
             null, this, null,
             key, operation
         )

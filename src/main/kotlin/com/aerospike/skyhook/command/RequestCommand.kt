@@ -12,7 +12,6 @@ data class RequestCommand(
         Value.get(String(args[1]))
     }
 
-    val command: RedisCommand by lazy {
+    val command: RedisCommand =
         RedisCommand.getValue(String(args[0]))
-    }
 }

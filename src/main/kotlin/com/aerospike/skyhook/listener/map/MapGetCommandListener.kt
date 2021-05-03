@@ -9,15 +9,13 @@ import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class MapGetCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     @Volatile
     private lateinit var command: RedisCommand
@@ -26,7 +24,7 @@ class MapGetCommandListener(
         command = cmd.command
         val key = createKey(cmd.key)
 
-        aeroCtx.client.operate(
+        client.operate(
             null, this, null,
             key, getOperation(cmd)
         )

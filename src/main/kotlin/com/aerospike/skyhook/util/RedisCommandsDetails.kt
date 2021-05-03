@@ -107,4 +107,13 @@ object RedisCommandsDetails {
     val bgsaveCommand = RedisCommandDetails("bgsave", -1, arrayListOf("admin", "noscript"), 0, 0, 0)
     val commandCommand = RedisCommandDetails("command", -1, arrayListOf("random", "loading", "stale"), 0, 0, 0)
 
+    val authCommand = RedisCommandDetails(
+        "auth",
+        -2,
+        arrayListOf("noscript", "loading", "stale", "skip_monitor", "skip_slowlog", "fast", "no_auth"),
+        0,
+        0,
+        0
+    )
+
 }

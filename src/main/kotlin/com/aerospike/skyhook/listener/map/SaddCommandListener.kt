@@ -7,15 +7,13 @@ import com.aerospike.client.cdt.MapPolicy
 import com.aerospike.client.cdt.MapWriteFlags
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 open class SaddCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     @Volatile
     protected open var size: Long = 0L
@@ -33,7 +31,7 @@ open class SaddCommandListener(
             aeroCtx.bin,
             getValues(cmd)
         )
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy,
             key, typeOperation, operation
         )
@@ -45,7 +43,7 @@ open class SaddCommandListener(
 
     protected open fun setSize(key: Key) {
         val getSize = MapOperation.size(aeroCtx.bin)
-        size = aeroCtx.client.operate(defaultWritePolicy, key, getSize)
+        size = client.operate(defaultWritePolicy, key, getSize)
             ?.getLong(aeroCtx.bin) ?: 0L
     }
 

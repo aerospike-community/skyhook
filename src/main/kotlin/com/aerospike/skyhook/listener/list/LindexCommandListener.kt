@@ -6,15 +6,13 @@ import com.aerospike.client.cdt.ListOperation
 import com.aerospike.client.cdt.ListReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class LindexCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
@@ -26,7 +24,7 @@ class LindexCommandListener(
             aeroCtx.bin, index,
             ListReturnType.VALUE
         )
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy,
             key, operation
         )

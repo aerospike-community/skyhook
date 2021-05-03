@@ -6,15 +6,13 @@ import com.aerospike.client.Value
 import com.aerospike.client.listener.WriteListener
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class MsetCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), WriteListener {
+) : BaseListener(ctx), WriteListener {
 
     @Volatile
     private lateinit var command: RedisCommand
@@ -38,7 +36,7 @@ class MsetCommandListener(
 
         total = values.size
         values.forEach { (k, v) ->
-            aeroCtx.client.put(
+            client.put(
                 null, this, defaultWritePolicy, k,
                 Bin(aeroCtx.bin, v), stringTypeBin()
             )
@@ -47,7 +45,7 @@ class MsetCommandListener(
 
     private fun handleNX(cmd: RequestCommand, keys: Array<Key>): Boolean {
         if (cmd.command == RedisCommand.MSETNX) {
-            if (!aeroCtx.client.exists(null, keys).all { !it }) {
+            if (!client.exists(null, keys).all { !it }) {
                 writeLong(ctx, 0L)
                 ctx.flush()
                 return false

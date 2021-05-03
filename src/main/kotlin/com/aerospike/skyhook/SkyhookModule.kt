@@ -1,12 +1,13 @@
 package com.aerospike.skyhook
 
-import com.aerospike.client.AerospikeClient
-import com.aerospike.client.Host
-import com.aerospike.client.IAerospikeClient
+import com.aerospike.client.async.EventLoops
+import com.aerospike.client.async.NettyEventLoops
 import com.aerospike.client.async.NioEventLoops
 import com.aerospike.client.policy.ClientPolicy
 import com.aerospike.skyhook.config.ServerConfiguration
 import com.aerospike.skyhook.util.SystemUtils
+import com.aerospike.skyhook.util.client.AerospikeClientPool
+import com.aerospike.skyhook.util.client.AerospikeClientPoolImpl
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import com.google.inject.name.Names
@@ -31,6 +32,7 @@ class SkyhookModule(
     }
 
     override fun configure() {
+        bind(AerospikeClientPool::class.java).to(AerospikeClientPoolImpl::class.java)
         bindEventLoops()
     }
 
@@ -97,15 +99,21 @@ class SkyhookModule(
     @Provides
     @Singleton
     @Inject
-    fun aerospikeClient(): IAerospikeClient {
+    fun clientPolicy(): ClientPolicy {
         val clientPolicy = ClientPolicy()
-        clientPolicy.eventLoops = NioEventLoops(config.workerThreads)
+        clientPolicy.eventLoops = getClientEventLoops()
+        config.clientPolicy.user?.let { clientPolicy.user = it }
+        config.clientPolicy.password?.let { clientPolicy.password = it }
+        config.clientPolicy.authMode?.let { clientPolicy.authMode = it }
+        config.clientPolicy.timeout?.let { clientPolicy.timeout = it }
+        return clientPolicy
+    }
 
-        return AerospikeClient(
-            clientPolicy, *Host.parseHosts(
-                config.hostList,
-                3000
-            )
-        )
+    private fun getClientEventLoops(): EventLoops {
+        return when (SystemUtils.os) {
+            SystemUtils.OS.LINUX -> NettyEventLoops(EpollEventLoopGroup(config.workerThreads))
+            SystemUtils.OS.MAC -> NettyEventLoops(KQueueEventLoopGroup(config.workerThreads))
+            else -> NioEventLoops(config.workerThreads)
+        }
     }
 }

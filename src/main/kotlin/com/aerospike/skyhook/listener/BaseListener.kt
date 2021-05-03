@@ -7,12 +7,14 @@ import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.handler.CommandHandler
 import com.aerospike.skyhook.handler.NettyResponseWriter
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.aeroCtxAttrKey
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.authDetailsAttrKey
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.clientPoolAttrKey
 import io.netty.channel.ChannelHandlerContext
 import mu.KotlinLogging
 import java.io.IOException
 
 abstract class BaseListener(
-    protected val aeroCtx: AerospikeContext,
     protected val ctx: ChannelHandlerContext
 ) : NettyResponseWriter(), CommandHandler {
 
@@ -77,6 +79,16 @@ abstract class BaseListener(
 
     protected fun streamTypeOp(): Operation {
         return Operation.put(Bin(aeroCtx.typeBin, ValueType.STREAM.str))
+    }
+
+    protected val aeroCtx: AerospikeContext by lazy {
+        ctx.channel().attr(aeroCtxAttrKey).get()
+    }
+
+    protected val client: IAerospikeClient by lazy {
+        ctx.channel().attr(clientPoolAttrKey).get().getClient(
+            ctx.channel().attr(authDetailsAttrKey).get()
+        )
     }
 
     @Throws(IOException::class)

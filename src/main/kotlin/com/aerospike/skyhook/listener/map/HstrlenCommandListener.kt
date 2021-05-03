@@ -7,15 +7,13 @@ import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class HstrlenCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
@@ -26,7 +24,7 @@ class HstrlenCommandListener(
             aeroCtx.bin, mapKey,
             MapReturnType.VALUE
         )
-        aeroCtx.client.operate(
+        client.operate(
             null, this, null, key, operation
         )
     }

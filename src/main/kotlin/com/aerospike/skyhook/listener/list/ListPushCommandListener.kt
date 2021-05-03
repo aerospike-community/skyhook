@@ -9,15 +9,13 @@ import com.aerospike.client.listener.RecordListener
 import com.aerospike.client.policy.WritePolicy
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class ListPushCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     private data class OpWritePolicy(val writePolicy: WritePolicy, val op: Operation)
 
@@ -26,7 +24,7 @@ class ListPushCommandListener(
 
         val key = createKey(cmd.key)
         val opPolicy = getOpWritePolicy(cmd)
-        aeroCtx.client.operate(
+        client.operate(
             null, this, opPolicy.writePolicy,
             key, listTypeOp(), opPolicy.op
         )

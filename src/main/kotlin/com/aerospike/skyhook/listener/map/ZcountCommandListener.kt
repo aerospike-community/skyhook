@@ -5,22 +5,20 @@ import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Intervals
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 open class ZcountCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
-        aeroCtx.client.operate(
+        client.operate(
             null, this, null,
             key, getOperation(cmd)
         )
@@ -55,9 +53,8 @@ open class ZcountCommandListener(
 }
 
 class ZlexcountCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZcountCommandListener(aeroCtx, ctx) {
+) : ZcountCommandListener(ctx) {
 
     override fun getOperation(cmd: RequestCommand): Operation {
         return MapOperation.getByKeyRange(
@@ -70,9 +67,8 @@ class ZlexcountCommandListener(
 }
 
 class ZremrangebyscoreCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZcountCommandListener(aeroCtx, ctx) {
+) : ZcountCommandListener(ctx) {
 
     override fun getOperation(cmd: RequestCommand): Operation {
         return MapOperation.removeByValueRange(
@@ -85,9 +81,8 @@ class ZremrangebyscoreCommandListener(
 }
 
 class ZremrangebyrankCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZcountCommandListener(aeroCtx, ctx) {
+) : ZcountCommandListener(ctx) {
 
     override fun getOperation(cmd: RequestCommand): Operation {
         val from = Typed.getInteger(cmd.args[2])
@@ -105,7 +100,7 @@ class ZremrangebyrankCommandListener(
         return maxOf(
             if (to < 0) {
                 val key = createKey(cmd.key)
-                val mapSize = aeroCtx.client.operate(
+                val mapSize = client.operate(
                     null,
                     key, MapOperation.size(aeroCtx.bin)
                 ).getInt(aeroCtx.bin)
@@ -118,9 +113,8 @@ class ZremrangebyrankCommandListener(
 }
 
 class ZremrangebylexCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZcountCommandListener(aeroCtx, ctx) {
+) : ZcountCommandListener(ctx) {
 
     override fun getOperation(cmd: RequestCommand): Operation {
         return MapOperation.removeByKeyRange(

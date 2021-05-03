@@ -7,14 +7,12 @@ import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
 open class HscanCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     @Volatile
     protected lateinit var scanCommand: ScanCommand
@@ -24,7 +22,7 @@ open class HscanCommandListener(
 
         val key = createKey(cmd.key)
         scanCommand = ScanCommand(cmd, 3)
-        aeroCtx.client.operate(
+        client.operate(
             null, this, null,
             key, getOperation()
         )

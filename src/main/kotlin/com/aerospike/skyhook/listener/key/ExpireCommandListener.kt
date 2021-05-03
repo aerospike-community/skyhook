@@ -6,21 +6,19 @@ import com.aerospike.client.listener.WriteListener
 import com.aerospike.client.policy.WritePolicy
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 import java.lang.Long.max
 
 class ExpireCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), WriteListener {
+) : BaseListener(ctx), WriteListener {
 
     override fun handle(cmd: RequestCommand) {
         val key = createKey(cmd.key)
         val writePolicy = getPolicy(cmd)
-        aeroCtx.client.touch(null, this, writePolicy, key)
+        client.touch(null, this, writePolicy, key)
     }
 
     override fun onSuccess(key: Key?) {

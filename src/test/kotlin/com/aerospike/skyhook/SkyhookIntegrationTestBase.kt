@@ -1,13 +1,16 @@
 package com.aerospike.skyhook
 
 import com.aerospike.client.Bin
-import com.aerospike.client.IAerospikeClient
 import com.aerospike.client.Key
 import com.aerospike.client.Value
 import com.aerospike.skyhook.command.RedisCommand
+import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.config.ServerConfiguration
 import com.aerospike.skyhook.handler.AerospikeChannelHandler
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.aeroCtxAttrKey
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.clientPoolAttrKey
 import com.aerospike.skyhook.util.ScanResponse
+import com.aerospike.skyhook.util.client.AerospikeClientPool
 import com.google.inject.Guice
 import io.netty.buffer.Unpooled.buffer
 import io.netty.channel.embedded.EmbeddedChannel
@@ -22,7 +25,7 @@ abstract class SkyhookIntegrationTestBase {
         private val config = ServerConfiguration()
         private val injector = Guice.createInjector(SkyhookModule(config))
 
-        protected val client: IAerospikeClient = injector.getInstance(IAerospikeClient::class.java)
+        protected val clientPool: AerospikeClientPool = injector.getInstance(AerospikeClientPool::class.java)
 
         private val aerospikeChannelHandler = injector.getInstance(AerospikeChannelHandler::class.java)
 
@@ -48,6 +51,19 @@ abstract class SkyhookIntegrationTestBase {
         aerospikeChannelHandler,
         RedisEncoder(),
     )
+
+    init {
+        channel.attr(aeroCtxAttrKey).set(
+            AerospikeContext(
+                config.namespase,
+                config.set,
+                config.bin,
+                config.typeBin
+            )
+        )
+
+        channel.attr(clientPoolAttrKey).set(clientPool)
+    }
 
     protected fun aeroKey(key: Any): Key {
         return Key(config.namespase, config.set, Value.get(key))

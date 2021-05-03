@@ -7,15 +7,13 @@ import com.aerospike.client.Record
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 abstract class UnaryCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2 || cmd.argCount == 3) {
@@ -28,7 +26,7 @@ abstract class UnaryCommandListener(
             getUnaryOperation(cmd),
             Operation.get(aeroCtx.bin)
         )
-        aeroCtx.client.operate(
+        client.operate(
             null, this,
             defaultWritePolicy, key, *ops
         )
@@ -52,9 +50,8 @@ abstract class UnaryCommandListener(
 }
 
 class IncrCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : UnaryCommandListener(aeroCtx, ctx) {
+) : UnaryCommandListener(ctx) {
 
     override fun getUnaryOperation(cmd: RequestCommand): Operation {
         return when (cmd.command) {
@@ -75,9 +72,8 @@ class IncrCommandListener(
 }
 
 class DecrCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : UnaryCommandListener(aeroCtx, ctx) {
+) : UnaryCommandListener(ctx) {
 
     override fun getUnaryOperation(cmd: RequestCommand): Operation {
         return when (cmd.command) {
