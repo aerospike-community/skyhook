@@ -25,12 +25,12 @@ class LlenCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeEmptyList(ctx)
-            ctx.flush()
+            writeEmptyList()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(record.bins[aeroCtx.bin])
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

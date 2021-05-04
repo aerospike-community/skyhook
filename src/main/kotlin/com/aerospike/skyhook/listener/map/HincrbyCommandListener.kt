@@ -50,15 +50,15 @@ class HincrbyCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeErrorString(ctx, "failed to create a record")
-            ctx.flush()
+            writeErrorString("Failed to create a record")
+            flushCtxTransactionAware()
         } else {
             try {
                 when (command) {
                     RedisCommand.ZINCRBY -> writeResponse(record.getLong(aeroCtx.bin).toString())
                     else -> writeResponse(record.bins[aeroCtx.bin])
                 }
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

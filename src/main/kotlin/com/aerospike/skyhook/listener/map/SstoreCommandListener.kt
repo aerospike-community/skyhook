@@ -38,7 +38,7 @@ abstract class SstoreBaseCommandListener(
 
     override fun onSuccess(keys: Array<out Key>?, records: Array<Record?>?) {
         if (records == null) {
-            writeLong(ctx, 0L)
+            writeLong(0L)
         } else {
             val values = merge(records.filterNotNull()
                 .map { it.getMap(aeroCtx.bin) }.map { it.keys })
@@ -53,9 +53,9 @@ abstract class SstoreBaseCommandListener(
             client.operate(
                 defaultWritePolicy, key, setTypeOp(), operation
             )
-            writeLong(ctx, values.size)
+            writeLong(values.size)
         }
-        ctx.flush()
+        flushCtxTransactionAware()
     }
 }
 

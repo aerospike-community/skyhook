@@ -1,8 +1,7 @@
 package com.aerospike.skyhook.command
 
 import com.aerospike.skyhook.handler.CommandHandler
-import com.aerospike.skyhook.handler.aerospike.DbsizeCommandHandler
-import com.aerospike.skyhook.handler.aerospike.FlushCommandHandler
+import com.aerospike.skyhook.handler.aerospike.*
 import com.aerospike.skyhook.handler.redis.*
 import com.aerospike.skyhook.listener.key.*
 import com.aerospike.skyhook.listener.list.*
@@ -19,7 +18,9 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.dbsizeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.decrCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.decrbyCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.delCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.discardCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.echoCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.execCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.existsCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.expireCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.expireatCommand
@@ -55,6 +56,7 @@ import com.aerospike.skyhook.util.RedisCommandsDetails.lrangeCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.mgetCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.msetCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.msetnxCommand
+import com.aerospike.skyhook.util.RedisCommandsDetails.multiCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.persistCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.pexpireCommand
 import com.aerospike.skyhook.util.RedisCommandsDetails.pexpireatCommand
@@ -229,6 +231,10 @@ enum class RedisCommand(
     SAVE(saveCommand, ::MockCommandHandler),
     BGSAVE(bgsaveCommand, ::MockCommandHandler),
     AUTH(authCommand, ::AuthCommandHandler),
+
+    MULTI(multiCommand, ::MultiCommandHandler),
+    DISCARD(discardCommand, ::DiscardCommandHandler),
+    EXEC(execCommand, ::ExecCommandHandler),
 
     COMMAND(commandCommand, ::CommandCommandHandler);
 

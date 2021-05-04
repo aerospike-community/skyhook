@@ -135,11 +135,11 @@ open class ZrangeCommandListener(
     override fun onSuccess(key: Key?, record: Record?) {
         try {
             if (record == null) {
-                writeEmptyList(ctx)
+                writeEmptyList()
             } else {
                 writeResponse(record.bins[aeroCtx.bin])
             }
-            ctx.flush()
+            flushCtxTransactionAware()
         } catch (e: Exception) {
             closeCtx(e)
         }
@@ -177,7 +177,7 @@ open class ZrangeCommandListener(
                 l.subList(it.offset, it.offset + it.count)
             } ?: l
         }.also {
-            writeArrayHeader(ctx, it.size * rangeCommand.factor)
+            writeArrayHeader(it.size * rangeCommand.factor)
         }
     }
 

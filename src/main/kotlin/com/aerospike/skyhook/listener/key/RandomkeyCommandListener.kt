@@ -35,7 +35,7 @@ class RandomkeyCommandListener(
     }
 
     override fun onSuccess() {
-        if (isEmpty) writeNullString(ctx)
-        ctx.flush()
+        if (isEmpty) writeNullString()
+        flushCtxTransactionAware()
     }
 }

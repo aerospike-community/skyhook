@@ -10,15 +10,16 @@ data class RedisCommandDetails(
     val firstKeyPosition: Int,
     val lastKeyPosition: Int,
     val stepCount: Int
-) : NettyResponseWriter() {
+) {
 
     fun write(ctx: ChannelHandlerContext) {
-        writeArrayHeader(ctx, 6)
-        writeSimpleString(ctx, commandName)
-        writeLong(ctx, commandArity)
-        writeObjectListStr(ctx, commandFlags)
-        writeLong(ctx, firstKeyPosition)
-        writeLong(ctx, lastKeyPosition)
-        writeLong(ctx, stepCount)
+        val nrw = NettyResponseWriter(ctx)
+        nrw.writeArrayHeader(6)
+        nrw.writeSimpleString(commandName)
+        nrw.writeLong(commandArity)
+        nrw.writeObjectListStr(commandFlags)
+        nrw.writeLong(firstKeyPosition)
+        nrw.writeLong(lastKeyPosition)
+        nrw.writeLong(stepCount)
     }
 }

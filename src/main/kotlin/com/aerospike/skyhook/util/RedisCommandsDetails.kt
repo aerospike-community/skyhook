@@ -116,4 +116,31 @@ object RedisCommandsDetails {
         0
     )
 
+    val multiCommand = RedisCommandDetails(
+        "multi",
+        1,
+        arrayListOf("noscript", "loading", "stale", "fast"),
+        0,
+        0,
+        0
+    )
+
+    val discardCommand = RedisCommandDetails(
+        "discard",
+        1,
+        arrayListOf("noscript", "loading", "stale", "fast"),
+        0,
+        0,
+        0
+    )
+
+    val execCommand = RedisCommandDetails(
+        "exec",
+        1,
+        arrayListOf("noscript", "loading", "stale", "skip_monitor", "skip_slowlog"),
+        0,
+        0,
+        0
+    )
+
 }

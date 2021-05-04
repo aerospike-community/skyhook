@@ -97,11 +97,11 @@ class MapGetCommandListener(
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
             writeNull()
-            ctx.flush()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(marshalOutput(record.bins[aeroCtx.bin]))
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }
@@ -114,8 +114,8 @@ class MapGetCommandListener(
             RedisCommand.HVALS,
             RedisCommand.HKEYS,
             RedisCommand.SMEMBERS ->
-                writeEmptyList(ctx)
-            else -> writeNullString(ctx)
+                writeEmptyList()
+            else -> writeNullString()
         }
     }
 

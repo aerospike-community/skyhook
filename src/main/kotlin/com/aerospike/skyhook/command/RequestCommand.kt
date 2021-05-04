@@ -14,4 +14,10 @@ data class RequestCommand(
 
     val command: RedisCommand =
         RedisCommand.getValue(String(args[0]))
+
+    val transactional: Boolean by lazy {
+        command == RedisCommand.MULTI ||
+                command == RedisCommand.EXEC ||
+                command == RedisCommand.DISCARD
+    }
 }

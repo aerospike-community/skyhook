@@ -2,6 +2,7 @@ package com.aerospike.skyhook.handler
 
 import com.aerospike.client.AerospikeException
 import com.aerospike.skyhook.command.RequestCommand
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.transactionAttrKey
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
@@ -63,7 +64,14 @@ class AerospikeChannelHandler() : ChannelInboundHandlerAdapter() {
      */
     private fun handleCommand(cmd: RequestCommand, ctx: ChannelHandlerContext) {
         try {
-            cmd.command.newHandler(ctx).handle(cmd)
+            val state = ctx.channel().attr(transactionAttrKey).get()
+            if (state.inTransaction && !cmd.transactional) {
+                state.commands.addLast(cmd)
+                ctx.write(SimpleStringRedisMessage("QUEUED"))
+                ctx.flush()
+            } else {
+                cmd.command.newHandler(ctx).handle(cmd)
+            }
         } catch (e: Exception) {
             val msg = when (e) {
                 is AerospikeException -> "Internal error"

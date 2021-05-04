@@ -47,11 +47,11 @@ class ZrangestoreCommandListener(
     override fun onSuccess(key: Key?, record: Record?) {
         try {
             if (record == null) {
-                writeLong(ctx, 0L)
+                writeLong(0L)
             } else {
-                writeLong(ctx, record.getLong(aeroCtx.bin))
+                writeLong(record.getLong(aeroCtx.bin))
             }
-            ctx.flush()
+            flushCtxTransactionAware()
         } catch (e: Exception) {
             closeCtx(e)
         }

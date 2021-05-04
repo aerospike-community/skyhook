@@ -44,12 +44,12 @@ class ListPopCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullArray(ctx)
-            ctx.flush()
+            writeNullArray()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(record.bins[aeroCtx.bin])
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

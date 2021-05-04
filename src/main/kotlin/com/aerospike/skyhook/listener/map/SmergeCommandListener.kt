@@ -30,13 +30,13 @@ abstract class SmergeBaseCommandListener(
 
     override fun onSuccess(keys: Array<out Key>?, records: Array<Record?>?) {
         if (records == null) {
-            writeEmptyList(ctx)
+            writeEmptyList()
         } else {
             val values = merge(records.filterNotNull()
                 .map { it.getMap(aeroCtx.bin) }.map { it.keys })
             writeResponse(values)
         }
-        ctx.flush()
+        flushCtxTransactionAware()
     }
 }
 

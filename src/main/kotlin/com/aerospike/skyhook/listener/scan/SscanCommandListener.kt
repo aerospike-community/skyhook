@@ -19,6 +19,6 @@ open class SscanCommandListener(
     }
 
     override fun writeElementsArray(list: List<*>) {
-        writeObject(ctx, list)
+        writeObject(list)
     }
 }

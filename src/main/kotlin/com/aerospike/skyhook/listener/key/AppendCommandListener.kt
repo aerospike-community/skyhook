@@ -24,13 +24,13 @@ class AppendCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
-            ctx.flush()
+            writeNullString()
+            flushCtxTransactionAware()
         } else {
             try {
                 val value: String = (record.bins[aeroCtx.bin] as String)
-                writeLong(ctx, value.length)
-                ctx.flush()
+                writeLong(value.length)
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

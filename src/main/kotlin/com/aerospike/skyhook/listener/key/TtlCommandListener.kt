@@ -25,13 +25,13 @@ class TtlCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeLong(ctx, -2L)
-            ctx.flush()
+            writeLong(-2L)
+            flushCtxTransactionAware()
         } else {
             try {
                 val ttl = if (record.timeToLive == -1) -1L else record.timeToLive * m
-                writeLong(ctx, ttl)
-                ctx.flush()
+                writeLong(ttl)
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

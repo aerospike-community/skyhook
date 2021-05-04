@@ -34,12 +34,12 @@ abstract class UnaryCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
-            ctx.flush()
+            writeNullString()
+            flushCtxTransactionAware()
         } else {
             try {
-                writeObject(ctx, record.bins[aeroCtx.bin])
-                ctx.flush()
+                writeObject(record.bins[aeroCtx.bin])
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

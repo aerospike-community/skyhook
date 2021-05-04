@@ -136,17 +136,17 @@ class ZaddCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeLong(ctx, 0L)
-            ctx.flush()
+            writeLong(0L)
+            flushCtxTransactionAware()
         } else {
             try {
                 if (zaddCommand.INCR) {
                     writeResponse(record.getString(aeroCtx.bin))
                 } else {
                     val added = record.getLong(aeroCtx.bin) - size
-                    writeLong(ctx, added)
+                    writeLong(added)
                 }
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

@@ -9,8 +9,8 @@ import io.netty.channel.ChannelHandlerContext
 import java.util.*
 
 class CommandCommandHandler(
-    private val ctx: ChannelHandlerContext
-) : NettyResponseWriter(), CommandHandler {
+    ctx: ChannelHandlerContext
+) : NettyResponseWriter(ctx), CommandHandler {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount >= 1) { BaseListener.argValidationErrorMsg(cmd) }
@@ -20,7 +20,7 @@ class CommandCommandHandler(
         } else {
             when (String(cmd.args[1]).toUpperCase(Locale.ENGLISH)) {
                 "COUNT" -> {
-                    writeLong(ctx, RedisCommand.totalCommands)
+                    writeLong(RedisCommand.totalCommands)
                 }
                 "INFO" -> {
                     val commands = cmd.args.drop(2).map { String(it) }
@@ -32,6 +32,6 @@ class CommandCommandHandler(
                 }
             }
         }
-        ctx.flush()
+        flushCtxTransactionAware()
     }
 }

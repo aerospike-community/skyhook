@@ -8,16 +8,16 @@ import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
 class MockCommandHandler(
-    private val ctx: ChannelHandlerContext
-) : NettyResponseWriter(), CommandHandler {
+    ctx: ChannelHandlerContext
+) : NettyResponseWriter(ctx), CommandHandler {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount >= 1) { BaseListener.argValidationErrorMsg(cmd) }
 
         when (cmd.command) {
-            RedisCommand.RESET -> writeSimpleString(ctx, "RESET")
-            else -> writeOK(ctx)
+            RedisCommand.RESET -> writeSimpleString("RESET")
+            else -> writeOK()
         }
-        ctx.flush()
+        flushCtxTransactionAware()
     }
 }

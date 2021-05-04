@@ -20,11 +20,11 @@ class DelCommandListener(
     override fun onSuccess(key: Key?, existed: Boolean) {
         try {
             if (existed) {
-                writeLong(ctx, 1L)
+                writeLong(1L)
             } else {
-                writeLong(ctx, 0L)
+                writeLong(0L)
             }
-            ctx.flush()
+            flushCtxTransactionAware()
         } catch (e: Exception) {
             closeCtx(e)
         }

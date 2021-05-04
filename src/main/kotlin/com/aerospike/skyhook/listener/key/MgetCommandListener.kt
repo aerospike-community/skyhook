@@ -21,16 +21,16 @@ class MgetCommandListener(
 
     override fun onSuccess(records: MutableList<BatchRead>?) {
         if (records == null) {
-            writeNullString(ctx)
-            ctx.flush()
+            writeNullString()
+            flushCtxTransactionAware()
         } else {
             try {
-                writeObjectListStr(ctx, records.mapNotNull {
+                writeObjectListStr(records.mapNotNull {
                     if (it.record != null) {
                         it.record.bins[aeroCtx.bin]
                     } else null
                 })
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

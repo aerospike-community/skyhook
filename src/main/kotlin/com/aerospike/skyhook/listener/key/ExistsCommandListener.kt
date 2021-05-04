@@ -29,8 +29,8 @@ class ExistsCommandListener(
     override fun onSuccess(keys: Array<out Key>?, exists: BooleanArray?) {
         try {
             val count = exists?.count { it } ?: 0
-            writeLong(ctx, count)
-            ctx.flush()
+            writeLong(count)
+            flushCtxTransactionAware()
         } catch (e: Exception) {
             closeCtx(e)
         }

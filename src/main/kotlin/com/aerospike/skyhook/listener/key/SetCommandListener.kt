@@ -35,11 +35,11 @@ class SetCommandListener(
     override fun onSuccess(key: Key?) {
         try {
             if (command == RedisCommand.SETNX) {
-                writeLong(ctx, 1L)
+                writeLong(1L)
             } else {
-                writeOK(ctx)
+                writeOK()
             }
-            ctx.flush()
+            flushCtxTransactionAware()
         } catch (e: Exception) {
             closeCtx(e)
         }
@@ -47,9 +47,9 @@ class SetCommandListener(
 
     override fun writeError(e: AerospikeException?) {
         if (command == RedisCommand.SETNX) {
-            writeLong(ctx, 0L)
+            writeLong(0L)
         } else {
-            writeErrorString(ctx, "internal error")
+            writeErrorString("Internal error")
         }
     }
 

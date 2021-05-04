@@ -25,17 +25,17 @@ class GetsetCommandListener(
     }
 
     override fun writeError(e: AerospikeException?) {
-        writeNullString(ctx)
+        writeNullString()
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
-            ctx.flush()
+            writeNullString()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(record.bins[aeroCtx.bin])
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

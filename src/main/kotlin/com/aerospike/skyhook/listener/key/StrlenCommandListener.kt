@@ -20,12 +20,12 @@ class StrlenCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeLong(ctx, 0L)
-            ctx.flush()
+            writeLong(0L)
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(getValueStrLen(record.bins[aeroCtx.bin]))
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

@@ -23,15 +23,15 @@ class ExpireCommandListener(
 
     override fun onSuccess(key: Key?) {
         try {
-            writeLong(ctx, 1L)
-            ctx.flush()
+            writeLong(1L)
+            flushCtxTransactionAware()
         } catch (e: Exception) {
             closeCtx(e)
         }
     }
 
     override fun writeError(e: AerospikeException?) {
-        writeLong(ctx, 0L)
+        writeLong(0L)
     }
 
     private fun getPolicy(cmd: RequestCommand): WritePolicy {

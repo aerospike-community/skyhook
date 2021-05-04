@@ -13,7 +13,7 @@ class FlushCommandHandler(
         require(cmd.argCount <= 2) { argValidationErrorMsg(cmd) }
 
         client.truncate(null, aeroCtx.namespace, aeroCtx.set, null)
-        writeOK(ctx)
-        ctx.flush()
+        writeOK()
+        flushCtxTransactionAware()
     }
 }

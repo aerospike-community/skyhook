@@ -7,13 +7,13 @@ import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
 class EchoCommandHandler(
-    private val ctx: ChannelHandlerContext
-) : NettyResponseWriter(), CommandHandler {
+    ctx: ChannelHandlerContext
+) : NettyResponseWriter(ctx), CommandHandler {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2) { BaseListener.argValidationErrorMsg(cmd) }
 
-        writeSimpleString(ctx, String(cmd.args[1]))
-        ctx.flush()
+        writeSimpleString(String(cmd.args[1]))
+        flushCtxTransactionAware()
     }
 }

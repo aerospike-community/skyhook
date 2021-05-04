@@ -15,8 +15,8 @@ class DbsizeCommandHandler(
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 1) { argValidationErrorMsg(cmd) }
 
-        writeLong(ctx, getTableRecordsNumber(aeroCtx.namespace, aeroCtx.set))
-        ctx.flush()
+        writeLong(getTableRecordsNumber(aeroCtx.namespace, aeroCtx.set))
+        flushCtxTransactionAware()
     }
 
     private fun getTableRecordsNumber(ns: String, set: String?): Long {

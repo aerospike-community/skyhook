@@ -54,18 +54,18 @@ open class SaddCommandListener(
     }
 
     override fun writeError(e: AerospikeException?) {
-        writeLong(ctx, 0L)
+        writeLong(0L)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeLong(ctx, 0L)
-            ctx.flush()
+            writeLong(0L)
+            flushCtxTransactionAware()
         } else {
             try {
                 val added = record.getLong(aeroCtx.bin) - size
-                writeLong(ctx, added)
-                ctx.flush()
+                writeLong(added)
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

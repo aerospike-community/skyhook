@@ -9,13 +9,16 @@ import com.aerospike.skyhook.config.ServerConfiguration
 import com.aerospike.skyhook.handler.AerospikeChannelHandler
 import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.aeroCtxAttrKey
 import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.clientPoolAttrKey
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.transactionAttrKey
 import com.aerospike.skyhook.util.ScanResponse
+import com.aerospike.skyhook.util.TransactionState
 import com.aerospike.skyhook.util.client.AerospikeClientPool
 import com.google.inject.Guice
 import io.netty.buffer.Unpooled.buffer
 import io.netty.channel.embedded.EmbeddedChannel
 import io.netty.handler.codec.redis.*
 import org.junit.jupiter.api.AfterEach
+import java.util.concurrent.ExecutorService
 import kotlin.experimental.and
 import kotlin.test.assertEquals
 
@@ -28,6 +31,7 @@ abstract class SkyhookIntegrationTestBase {
         protected val clientPool: AerospikeClientPool = injector.getInstance(AerospikeClientPool::class.java)
 
         private val aerospikeChannelHandler = injector.getInstance(AerospikeChannelHandler::class.java)
+        protected val executorService: ExecutorService = injector.getInstance(ExecutorService::class.java)
 
         @JvmStatic
         protected val ok = "OK"
@@ -63,6 +67,7 @@ abstract class SkyhookIntegrationTestBase {
         )
 
         channel.attr(clientPoolAttrKey).set(clientPool)
+        channel.attr(transactionAttrKey).set(TransactionState(executorService))
     }
 
     protected fun aeroKey(key: Any): Key {
@@ -88,6 +93,11 @@ abstract class SkyhookIntegrationTestBase {
         }
         val byteBuf = buffer().writeBytes(sb.toString().toByteArray())
         channel.writeInbound(byteBuf)
+    }
+
+    protected fun readArrayLen(): Long {
+        Thread.sleep(sleepMillis)
+        return channel.readOutbound<ArrayHeaderRedisMessage>().length()
     }
 
     protected fun readStringArray(): Array<String> {

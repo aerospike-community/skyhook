@@ -36,10 +36,10 @@ class ScanCommandListener(
     }
 
     private fun writeScanResponse() {
-        writeArrayHeader(ctx, 2)
-        writeSimpleString(ctx, getNextCursor())
-        writeObjectListStr(ctx, recordSet.map { it.key.userKey.`object` as String })
-        ctx.flush()
+        writeArrayHeader(2)
+        writeSimpleString(getNextCursor())
+        writeObjectListStr(recordSet.map { it.key.userKey.`object` as String })
+        flushCtxTransactionAware()
     }
 
     private fun getNextCursor(): String {

@@ -47,12 +47,12 @@ abstract class ZpopCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeEmptyList(ctx)
-            ctx.flush()
+            writeEmptyList()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(marshalOutput(record.bins[aeroCtx.bin]))
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

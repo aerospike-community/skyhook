@@ -34,17 +34,17 @@ open class ZcountCommandListener(
     }
 
     override fun writeError(e: AerospikeException?) {
-        writeLong(ctx, 0L)
+        writeLong(0L)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeLong(ctx, 0L)
-            ctx.flush()
+            writeLong(0L)
+            flushCtxTransactionAware()
         } else {
             try {
-                writeLong(ctx, record.getLong(aeroCtx.bin))
-                ctx.flush()
+                writeLong(record.getLong(aeroCtx.bin))
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

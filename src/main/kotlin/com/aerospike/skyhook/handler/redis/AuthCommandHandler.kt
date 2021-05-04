@@ -10,8 +10,8 @@ import com.aerospike.skyhook.util.client.AuthDetails
 import io.netty.channel.ChannelHandlerContext
 
 class AuthCommandHandler(
-    private val ctx: ChannelHandlerContext,
-) : NettyResponseWriter(), CommandHandler {
+    ctx: ChannelHandlerContext,
+) : NettyResponseWriter(ctx), CommandHandler {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 3) { BaseListener.argValidationErrorMsg(cmd) }
@@ -23,10 +23,10 @@ class AuthCommandHandler(
         val client = ctx.channel().attr(clientPoolAttrKey).get().getClient(authDetails)
         if (client != null) {
             ctx.channel().attr(authDetailsAttrKey).set(authDetails.hashString)
-            writeOK(ctx)
+            writeOK()
         } else {
-            writeErrorString(ctx, "Invalid AUTH details")
+            writeErrorString("Invalid AUTH details")
         }
-        ctx.flush()
+        flushCtxTransactionAware()
     }
 }

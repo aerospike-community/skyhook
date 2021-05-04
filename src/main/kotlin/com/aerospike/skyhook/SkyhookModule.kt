@@ -20,6 +20,8 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.ServerSocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import mu.KotlinLogging
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -115,5 +117,12 @@ class SkyhookModule(
             SystemUtils.OS.MAC -> NettyEventLoops(KQueueEventLoopGroup(config.workerThreads))
             else -> NioEventLoops(config.workerThreads)
         }
+    }
+
+    @Provides
+    @Singleton
+    @Inject
+    fun executorService(): ExecutorService {
+        return Executors.newFixedThreadPool(config.workerThreads)
     }
 }

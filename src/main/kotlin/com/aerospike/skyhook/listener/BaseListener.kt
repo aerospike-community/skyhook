@@ -15,8 +15,8 @@ import mu.KotlinLogging
 import java.io.IOException
 
 abstract class BaseListener(
-    protected val ctx: ChannelHandlerContext
-) : NettyResponseWriter(), CommandHandler {
+    ctx: ChannelHandlerContext
+) : NettyResponseWriter(ctx), CommandHandler {
 
     companion object {
 
@@ -93,22 +93,21 @@ abstract class BaseListener(
 
     @Throws(IOException::class)
     protected open fun writeResponse(mapped: Any?) {
-        writeObject(ctx, mapped)
+        writeObject(mapped)
     }
 
     @Throws(IOException::class)
     protected open fun writeError(e: AerospikeException?) {
-        writeErrorString(ctx, "internal error")
+        writeErrorString("Internal error")
     }
 
     open fun onFailure(exception: AerospikeException?) {
         try {
             log.debug { exception }
             writeError(exception)
-            ctx.flush()
+            flushCtxTransactionAware()
         } catch (e: IOException) {
-            ctx.close()
-            log.error(e) { "Exception at onFailure" }
+            closeCtx(e)
         }
     }
 
@@ -118,10 +117,5 @@ abstract class BaseListener(
 
     protected fun createKey(key: ByteArray): Key {
         return createKey(Value.get(String(key)))
-    }
-
-    protected fun closeCtx(e: Exception?) {
-        log.error(e) { "${this.javaClass.simpleName} error" }
-        ctx.close()
     }
 }

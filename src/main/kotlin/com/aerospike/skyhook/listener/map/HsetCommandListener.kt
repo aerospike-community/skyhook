@@ -32,17 +32,17 @@ class HsetnxCommandListener(
     }
 
     override fun writeError(e: AerospikeException?) {
-        writeLong(ctx, 0L)
+        writeLong(0L)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
-            ctx.flush()
+            writeNullString()
+            flushCtxTransactionAware()
         } else {
             try {
-                writeLong(ctx, 1L)
-                ctx.flush()
+                writeLong(1L)
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }
@@ -78,12 +78,12 @@ class HmsetCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
-            ctx.flush()
+            writeNullString()
+            flushCtxTransactionAware()
         } else {
             try {
-                writeOK(ctx)
-                ctx.flush()
+                writeOK()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

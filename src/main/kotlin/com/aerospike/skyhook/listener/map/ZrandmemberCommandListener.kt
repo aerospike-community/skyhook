@@ -65,7 +65,7 @@ class ZrandmemberCommandListener(
 
         zrandmemberCommand.set(indexList.size)
         if (zrandmemberCommand.get() > 1) {
-            writeArrayHeader(ctx, zrandmemberCommand.get().toLong())
+            writeArrayHeader(zrandmemberCommand.get().toLong())
         }
         for (i: Int in indexList) {
             client.operate(
@@ -113,14 +113,14 @@ class ZrandmemberCommandListener(
     override fun onSuccess(key: Key?, record: Record?) {
         try {
             if (record == null) {
-                writeNullString(ctx)
+                writeNullString()
             } else {
                 synchronized(zrandmemberCommand) {
                     writeResponse(record.bins[aeroCtx.bin])
                 }
             }
             if (zrandmemberCommand.decrementAndGet() == 0) {
-                ctx.flush()
+                flushCtxTransactionAware()
             }
         } catch (e: Exception) {
             closeCtx(e)

@@ -46,8 +46,8 @@ class MsetCommandListener(
     private fun handleNX(cmd: RequestCommand, keys: Array<Key>): Boolean {
         if (cmd.command == RedisCommand.MSETNX) {
             if (!client.exists(null, keys).all { !it }) {
-                writeLong(ctx, 0L)
-                ctx.flush()
+                writeLong(0L)
+                flushCtxTransactionAware()
                 return false
             }
         }
@@ -66,11 +66,11 @@ class MsetCommandListener(
                 total--
                 if (total == 0) {
                     if (command == RedisCommand.MSETNX) {
-                        writeLong(ctx, 1L)
+                        writeLong(1L)
                     } else {
-                        writeOK(ctx)
+                        writeOK()
                     }
-                    ctx.flush()
+                    flushCtxTransactionAware()
                 }
             }
         } catch (e: Exception) {
