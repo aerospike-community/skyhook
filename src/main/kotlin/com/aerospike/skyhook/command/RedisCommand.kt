@@ -1,5 +1,106 @@
 package com.aerospike.skyhook.command
 
+import com.aerospike.skyhook.command.CommandsDetails.appendCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.authCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.bgsaveCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.commandCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.dbsizeCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.decrCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.decrbyCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.delCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.discardCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.echoCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.execCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.existsCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.expireCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.expireatCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.flushallCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.flushdbCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.getCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.getsetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hdelCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hexistsCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hgetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hgetallCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hincrbyCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hincrbyfloatCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hkeysCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hlenCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hmgetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hmsetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hscanCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hsetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hsetnxCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hstrlenCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hvalsCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.incrCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.incrbyCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.incrbyfloatCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.lindexCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.llenCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.lolwutCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.lpopCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.lpushCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.lpushxCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.lrangeCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.mgetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.msetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.msetnxCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.multiCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.persistCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.pexpireCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.pexpireatCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.pingCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.psetexCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.pttlCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.randomkeyCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.resetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.rpopCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.rpushCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.rpushxCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.saddCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.saveCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.scanCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.scardCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.setCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.setexCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.setnxCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.sinterCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.sinterstoreCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.sismemberCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.smembersCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.sremCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.sscanCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.strlenCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.sunionCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.sunionstoreCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.timeCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.touchCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.ttlCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.typeCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.unlinkCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zaddCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zcardCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zcountCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zincrbyCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zlexcountCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zmscoreCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zpopmaxCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zpopminCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zrandmemberCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zrangeCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zrangebylexCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zrangebyscoreCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zrangestoreCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zrankCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zremCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zremrangebylexCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zremrangebyrankCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zremrangebyscoreCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zrevrangeCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zrevrangebylexCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zrevrangebyscoreCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.zscanCommandDetails
 import com.aerospike.skyhook.handler.CommandHandler
 import com.aerospike.skyhook.handler.aerospike.*
 import com.aerospike.skyhook.handler.redis.*
@@ -10,107 +111,6 @@ import com.aerospike.skyhook.listener.scan.HscanCommandListener
 import com.aerospike.skyhook.listener.scan.ScanCommandListener
 import com.aerospike.skyhook.listener.scan.SscanCommandListener
 import com.aerospike.skyhook.listener.scan.ZscanCommandListener
-import com.aerospike.skyhook.util.RedisCommandsDetails.appendCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.authCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.bgsaveCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.commandCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.dbsizeCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.decrCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.decrbyCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.delCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.discardCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.echoCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.execCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.existsCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.expireCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.expireatCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.flushallCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.flushdbCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.getCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.getsetCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hdelCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hexistsCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hgetCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hgetallCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hincrbyCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hincrbyfloatCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hkeysCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hlenCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hmgetCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hmsetCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hscanCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hsetCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hsetnxCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hstrlenCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.hvalsCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.incrCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.incrbyCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.incrbyfloatCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.lindexCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.llenCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.lolwutCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.lpopCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.lpushCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.lpushxCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.lrangeCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.mgetCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.msetCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.msetnxCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.multiCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.persistCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.pexpireCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.pexpireatCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.pingCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.psetexCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.pttlCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.randomkeyCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.resetCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.rpopCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.rpushCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.rpushxCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.saddCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.saveCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.scanCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.scardCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.setCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.setexCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.setnxCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.sinterCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.sinterstoreCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.sismemberCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.smembersCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.sremCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.sscanCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.strlenCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.sunionCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.sunionstoreCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.timeCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.touchCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.ttlCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.typeCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.unlinkCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zaddCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zcardCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zcountCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zincrbyCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zlexcountCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zmscoreCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zpopmaxCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zpopminCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zrandmemberCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zrangeCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zrangebylexCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zrangebyscoreCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zrangestoreCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zrankCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zremCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zremrangebylexCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zremrangebyrankCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zremrangebyscoreCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangeCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangebylexCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zrevrangebyscoreCommand
-import com.aerospike.skyhook.util.RedisCommandsDetails.zscanCommand
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.redis.ArrayHeaderRedisMessage
 import mu.KotlinLogging
@@ -121,33 +121,33 @@ enum class RedisCommand(
     val details: RedisCommandDetails?,
     val newHandler: KFunction1<ChannelHandlerContext, CommandHandler>
 ) {
-    GET(getCommand, ::GetCommandListener),
-    MGET(mgetCommand, ::MgetCommandListener),
-    GETSET(getsetCommand, ::GetsetCommandListener),
-    SET(setCommand, ::SetCommandListener),
-    SETEX(setexCommand, ::SetCommandListener),
-    PSETEX(psetexCommand, ::SetCommandListener),
-    SETNX(setnxCommand, ::SetCommandListener),
-    MSET(msetCommand, ::MsetCommandListener),
-    MSETNX(msetnxCommand, ::MsetCommandListener),
-    EXISTS(existsCommand, ::ExistsCommandListener),
-    EXPIRE(expireCommand, ::ExpireCommandListener),
-    PEXPIRE(pexpireCommand, ::ExpireCommandListener),
-    EXPIREAT(expireatCommand, ::ExpireCommandListener),
-    PEXPIREAT(pexpireatCommand, ::ExpireCommandListener),
-    PERSIST(persistCommand, ::ExpireCommandListener),
-    APPEND(appendCommand, ::AppendCommandListener),
-    INCR(incrCommand, ::IncrCommandListener),
-    INCRBY(incrbyCommand, ::IncrCommandListener),
-    INCRBYFLOAT(incrbyfloatCommand, ::IncrCommandListener),
-    DECR(decrCommand, ::DecrCommandListener),
-    DECRBY(decrbyCommand, ::DecrCommandListener),
-    STRLEN(strlenCommand, ::StrlenCommandListener),
-    TTL(ttlCommand, ::TtlCommandListener),
-    PTTL(pttlCommand, ::TtlCommandListener),
-    DEL(delCommand, ::DelCommandListener),
-    UNLINK(unlinkCommand, ::DelCommandListener),
-    RANDOMKEY(randomkeyCommand, ::RandomkeyCommandListener),
+    GET(getCommandDetails, ::GetCommandListener),
+    MGET(mgetCommandDetails, ::MgetCommandListener),
+    GETSET(getsetCommandDetails, ::GetsetCommandListener),
+    SET(setCommandDetails, ::SetCommandListener),
+    SETEX(setexCommandDetails, ::SetCommandListener),
+    PSETEX(psetexCommandDetails, ::SetCommandListener),
+    SETNX(setnxCommandDetails, ::SetCommandListener),
+    MSET(msetCommandDetails, ::MsetCommandListener),
+    MSETNX(msetnxCommandDetails, ::MsetCommandListener),
+    EXISTS(existsCommandDetails, ::ExistsCommandListener),
+    EXPIRE(expireCommandDetails, ::ExpireCommandListener),
+    PEXPIRE(pexpireCommandDetails, ::ExpireCommandListener),
+    EXPIREAT(expireatCommandDetails, ::ExpireCommandListener),
+    PEXPIREAT(pexpireatCommandDetails, ::ExpireCommandListener),
+    PERSIST(persistCommandDetails, ::ExpireCommandListener),
+    APPEND(appendCommandDetails, ::AppendCommandListener),
+    INCR(incrCommandDetails, ::IncrCommandListener),
+    INCRBY(incrbyCommandDetails, ::IncrCommandListener),
+    INCRBYFLOAT(incrbyfloatCommandDetails, ::IncrCommandListener),
+    DECR(decrCommandDetails, ::DecrCommandListener),
+    DECRBY(decrbyCommandDetails, ::DecrCommandListener),
+    STRLEN(strlenCommandDetails, ::StrlenCommandListener),
+    TTL(ttlCommandDetails, ::TtlCommandListener),
+    PTTL(pttlCommandDetails, ::TtlCommandListener),
+    DEL(delCommandDetails, ::DelCommandListener),
+    UNLINK(unlinkCommandDetails, ::DelCommandListener),
+    RANDOMKEY(randomkeyCommandDetails, ::RandomkeyCommandListener),
 
     /**
      * The Redis TOUCH command changes the last_access_time of the key (used for LRU eviction).
@@ -155,88 +155,88 @@ enum class RedisCommand(
      * The actual implementation returns the number of records that were 'touched' using
      * [com.aerospike.client.AerospikeClient.exists].
      */
-    TOUCH(touchCommand, ::ExistsCommandListener),
-    TYPE(typeCommand, ::TypeCommandListener),
+    TOUCH(touchCommandDetails, ::ExistsCommandListener),
+    TYPE(typeCommandDetails, ::TypeCommandListener),
 
-    LPUSH(lpushCommand, ::ListPushCommandListener),
-    LPUSHX(lpushxCommand, ::ListPushCommandListener),
-    RPUSH(rpushCommand, ::ListPushCommandListener),
-    RPUSHX(rpushxCommand, ::ListPushCommandListener),
-    LINDEX(lindexCommand, ::LindexCommandListener),
-    LLEN(llenCommand, ::LlenCommandListener),
-    LPOP(lpopCommand, ::ListPopCommandListener),
-    RPOP(rpopCommand, ::ListPopCommandListener),
-    LRANGE(lrangeCommand, ::LrangeCommandListener),
+    LPUSH(lpushCommandDetails, ::ListPushCommandListener),
+    LPUSHX(lpushxCommandDetails, ::ListPushCommandListener),
+    RPUSH(rpushCommandDetails, ::ListPushCommandListener),
+    RPUSHX(rpushxCommandDetails, ::ListPushCommandListener),
+    LINDEX(lindexCommandDetails, ::LindexCommandListener),
+    LLEN(llenCommandDetails, ::LlenCommandListener),
+    LPOP(lpopCommandDetails, ::ListPopCommandListener),
+    RPOP(rpopCommandDetails, ::ListPopCommandListener),
+    LRANGE(lrangeCommandDetails, ::LrangeCommandListener),
 
-    HSET(hsetCommand, ::HsetCommandListener),
-    HSETNX(hsetnxCommand, ::HsetnxCommandListener),
-    HMSET(hmsetCommand, ::HmsetCommandListener),
-    SADD(saddCommand, ::SaddCommandListener),
-    HEXISTS(hexistsCommand, ::HexistsCommandListener),
-    SISMEMBER(sismemberCommand, ::HexistsCommandListener),
-    HGET(hgetCommand, ::MapGetCommandListener),
-    HMGET(hmgetCommand, ::MapGetCommandListener),
-    HGETALL(hgetallCommand, ::MapGetCommandListener),
-    HVALS(hvalsCommand, ::MapGetCommandListener),
-    HKEYS(hkeysCommand, ::MapGetCommandListener),
-    ZMSCORE(zmscoreCommand, ::MapGetCommandListener),
-    ZRANK(zrankCommand, ::MapGetCommandListener),
-    SMEMBERS(smembersCommand, ::MapGetCommandListener),
-    HINCRBY(hincrbyCommand, ::HincrbyCommandListener),
-    HINCRBYFLOAT(hincrbyfloatCommand, ::HincrbyCommandListener),
-    ZINCRBY(zincrbyCommand, ::HincrbyCommandListener),
-    HSTRLEN(hstrlenCommand, ::HstrlenCommandListener),
-    HLEN(hlenCommand, ::MapSizeCommandListener),
-    SCARD(scardCommand, ::MapSizeCommandListener),
-    ZCARD(zcardCommand, ::MapSizeCommandListener),
-    HDEL(hdelCommand, ::MapDelCommandListener),
-    SREM(sremCommand, ::MapDelCommandListener),
-    ZREM(zremCommand, ::MapDelCommandListener),
-    SUNION(sunionCommand, ::SunionCommandListener),
-    SINTER(sinterCommand, ::SinterCommandListener),
-    SUNIONSTORE(sunionstoreCommand, ::SunionstoreCommandListener),
-    SINTERSTORE(sinterstoreCommand, ::SinterstoreCommandListener),
-    ZADD(zaddCommand, ::ZaddCommandListener),
-    ZPOPMAX(zpopmaxCommand, ::ZpopmaxCommandListener),
-    ZPOPMIN(zpopminCommand, ::ZpopminCommandListener),
-    ZRANDMEMBER(zrandmemberCommand, ::ZrandmemberCommandListener),
-    ZCOUNT(zcountCommand, ::ZcountCommandListener),
-    ZLEXCOUNT(zlexcountCommand, ::ZlexcountCommandListener),
-    ZREMRANGEBYSCORE(zremrangebyscoreCommand, ::ZremrangebyscoreCommandListener),
-    ZREMRANGEBYRANK(zremrangebyrankCommand, ::ZremrangebyrankCommandListener),
-    ZREMRANGEBYLEX(zremrangebylexCommand, ::ZremrangebylexCommandListener),
-    ZRANGE(zrangeCommand, ::ZrangeCommandListener),
-    ZRANGESTORE(zrangestoreCommand, ::ZrangestoreCommandListener),
-    ZREVRANGE(zrevrangeCommand, ::ZrevrangeCommandListener),
-    ZRANGEBYSCORE(zrangebyscoreCommand, ::ZrangebyscoreCommandListener),
-    ZREVRANGEBYSCORE(zrevrangebyscoreCommand, ::ZrevrangebyscoreCommandListener),
-    ZRANGEBYLEX(zrangebylexCommand, ::ZrangebylexCommandListener),
-    ZREVRANGEBYLEX(zrevrangebylexCommand, ::ZrevrangebylexCommandListener),
+    HSET(hsetCommandDetails, ::HsetCommandListener),
+    HSETNX(hsetnxCommandDetails, ::HsetnxCommandListener),
+    HMSET(hmsetCommandDetails, ::HmsetCommandListener),
+    SADD(saddCommandDetails, ::SaddCommandListener),
+    HEXISTS(hexistsCommandDetails, ::HexistsCommandListener),
+    SISMEMBER(sismemberCommandDetails, ::HexistsCommandListener),
+    HGET(hgetCommandDetails, ::MapGetCommandListener),
+    HMGET(hmgetCommandDetails, ::MapGetCommandListener),
+    HGETALL(hgetallCommandDetails, ::MapGetCommandListener),
+    HVALS(hvalsCommandDetails, ::MapGetCommandListener),
+    HKEYS(hkeysCommandDetails, ::MapGetCommandListener),
+    ZMSCORE(zmscoreCommandDetails, ::MapGetCommandListener),
+    ZRANK(zrankCommandDetails, ::MapGetCommandListener),
+    SMEMBERS(smembersCommandDetails, ::MapGetCommandListener),
+    HINCRBY(hincrbyCommandDetails, ::HincrbyCommandListener),
+    HINCRBYFLOAT(hincrbyfloatCommandDetails, ::HincrbyCommandListener),
+    ZINCRBY(zincrbyCommandDetails, ::HincrbyCommandListener),
+    HSTRLEN(hstrlenCommandDetails, ::HstrlenCommandListener),
+    HLEN(hlenCommandDetails, ::MapSizeCommandListener),
+    SCARD(scardCommandDetails, ::MapSizeCommandListener),
+    ZCARD(zcardCommandDetails, ::MapSizeCommandListener),
+    HDEL(hdelCommandDetails, ::MapDelCommandListener),
+    SREM(sremCommandDetails, ::MapDelCommandListener),
+    ZREM(zremCommandDetails, ::MapDelCommandListener),
+    SUNION(sunionCommandDetails, ::SunionCommandListener),
+    SINTER(sinterCommandDetails, ::SinterCommandListener),
+    SUNIONSTORE(sunionstoreCommandDetails, ::SunionstoreCommandListener),
+    SINTERSTORE(sinterstoreCommandDetails, ::SinterstoreCommandListener),
+    ZADD(zaddCommandDetails, ::ZaddCommandListener),
+    ZPOPMAX(zpopmaxCommandDetails, ::ZpopmaxCommandListener),
+    ZPOPMIN(zpopminCommandDetails, ::ZpopminCommandListener),
+    ZRANDMEMBER(zrandmemberCommandDetails, ::ZrandmemberCommandListener),
+    ZCOUNT(zcountCommandDetails, ::ZcountCommandListener),
+    ZLEXCOUNT(zlexcountCommandDetails, ::ZlexcountCommandListener),
+    ZREMRANGEBYSCORE(zremrangebyscoreCommandDetails, ::ZremrangebyscoreCommandListener),
+    ZREMRANGEBYRANK(zremrangebyrankCommandDetails, ::ZremrangebyrankCommandListener),
+    ZREMRANGEBYLEX(zremrangebylexCommandDetails, ::ZremrangebylexCommandListener),
+    ZRANGE(zrangeCommandDetails, ::ZrangeCommandListener),
+    ZRANGESTORE(zrangestoreCommandDetails, ::ZrangestoreCommandListener),
+    ZREVRANGE(zrevrangeCommandDetails, ::ZrevrangeCommandListener),
+    ZRANGEBYSCORE(zrangebyscoreCommandDetails, ::ZrangebyscoreCommandListener),
+    ZREVRANGEBYSCORE(zrevrangebyscoreCommandDetails, ::ZrevrangebyscoreCommandListener),
+    ZRANGEBYLEX(zrangebylexCommandDetails, ::ZrangebylexCommandListener),
+    ZREVRANGEBYLEX(zrevrangebylexCommandDetails, ::ZrevrangebylexCommandListener),
 
-    SCAN(scanCommand, ::ScanCommandListener),
-    HSCAN(hscanCommand, ::HscanCommandListener),
-    SSCAN(sscanCommand, ::SscanCommandListener),
-    ZSCAN(zscanCommand, ::ZscanCommandListener),
+    SCAN(scanCommandDetails, ::ScanCommandListener),
+    HSCAN(hscanCommandDetails, ::HscanCommandListener),
+    SSCAN(sscanCommandDetails, ::SscanCommandListener),
+    ZSCAN(zscanCommandDetails, ::ZscanCommandListener),
 
-    FLUSHDB(flushdbCommand, ::FlushCommandHandler),
-    FLUSHALL(flushallCommand, ::FlushCommandHandler),
-    DBSIZE(dbsizeCommand, ::DbsizeCommandHandler),
+    FLUSHDB(flushdbCommandDetails, ::FlushCommandHandler),
+    FLUSHALL(flushallCommandDetails, ::FlushCommandHandler),
+    DBSIZE(dbsizeCommandDetails, ::DbsizeCommandHandler),
 
-    PING(pingCommand, ::PingCommandHandler),
-    ECHO(echoCommand, ::EchoCommandHandler),
-    LOLWUT(lolwutCommand, ::LolwutCommandHandler),
-    TIME(timeCommand, ::TimeCommandHandler),
+    PING(pingCommandDetails, ::PingCommandHandler),
+    ECHO(echoCommandDetails, ::EchoCommandHandler),
+    LOLWUT(lolwutCommandDetails, ::LolwutCommandHandler),
+    TIME(timeCommandDetails, ::TimeCommandHandler),
     QUIT(null, ::MockCommandHandler),
-    RESET(resetCommand, ::MockCommandHandler),
-    SAVE(saveCommand, ::MockCommandHandler),
-    BGSAVE(bgsaveCommand, ::MockCommandHandler),
-    AUTH(authCommand, ::AuthCommandHandler),
+    RESET(resetCommandDetails, ::MockCommandHandler),
+    SAVE(saveCommandDetails, ::MockCommandHandler),
+    BGSAVE(bgsaveCommandDetails, ::MockCommandHandler),
+    AUTH(authCommandDetails, ::AuthCommandHandler),
 
-    MULTI(multiCommand, ::MultiCommandHandler),
-    DISCARD(discardCommand, ::DiscardCommandHandler),
-    EXEC(execCommand, ::ExecCommandHandler),
+    MULTI(multiCommandDetails, ::MultiCommandHandler),
+    DISCARD(discardCommandDetails, ::DiscardCommandHandler),
+    EXEC(execCommandDetails, ::ExecCommandHandler),
 
-    COMMAND(commandCommand, ::CommandCommandHandler);
+    COMMAND(commandCommandDetails, ::CommandCommandHandler);
 
     companion object {
         private val log = KotlinLogging.logger {}
@@ -268,4 +268,149 @@ enum class RedisCommand(
             list.forEach { it.details!!.write(ctx) }
         }
     }
+}
+
+object CommandsDetails {
+
+    val getCommandDetails = RedisCommandDetails("get", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val mgetCommandDetails = RedisCommandDetails("mget", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
+    val getsetCommandDetails = RedisCommandDetails("getset", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val setCommandDetails = RedisCommandDetails("set", -3, arrayListOf("write", "denyoom"), 1, 1, 1)
+    val setexCommandDetails = RedisCommandDetails("setex", 4, arrayListOf("write", "denyoom"), 1, 1, 1)
+    val psetexCommandDetails = RedisCommandDetails("psetex", 4, arrayListOf("write", "denyoom"), 1, 1, 1)
+    val setnxCommandDetails = RedisCommandDetails("setnx", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val msetCommandDetails = RedisCommandDetails("mset", -3, arrayListOf("write", "denyoom"), 1, -1, 2)
+    val msetnxCommandDetails = RedisCommandDetails("msetnx", -3, arrayListOf("write", "denyoom"), 1, -1, 2)
+    val existsCommandDetails = RedisCommandDetails("exists", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
+    val expireCommandDetails = RedisCommandDetails("expire", 3, arrayListOf("write", "fast"), 1, 1, 1)
+    val pexpireCommandDetails = RedisCommandDetails("pexpire", 3, arrayListOf("write", "fast"), 1, 1, 1)
+    val expireatCommandDetails = RedisCommandDetails("expireat", 3, arrayListOf("write", "fast"), 1, 1, 1)
+    val pexpireatCommandDetails = RedisCommandDetails("pexpireat", 3, arrayListOf("write", "fast"), 1, 1, 1)
+    val persistCommandDetails = RedisCommandDetails("persist", 2, arrayListOf("write", "fast"), 1, 1, 1)
+    val appendCommandDetails = RedisCommandDetails("append", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val incrCommandDetails = RedisCommandDetails("incr", 2, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val incrbyCommandDetails = RedisCommandDetails("incrby", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val incrbyfloatCommandDetails =
+        RedisCommandDetails("incrbyfloat", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val decrCommandDetails = RedisCommandDetails("decr", 2, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val decrbyCommandDetails = RedisCommandDetails("decrby", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val strlenCommandDetails = RedisCommandDetails("strlen", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val ttlCommandDetails = RedisCommandDetails("ttl", 2, arrayListOf("readonly", "random", "fast"), 1, 1, 1)
+    val pttlCommandDetails = RedisCommandDetails("pttl", 2, arrayListOf("readonly", "random", "fast"), 1, 1, 1)
+    val delCommandDetails = RedisCommandDetails("del", -2, arrayListOf("write"), 1, -1, 1)
+    val unlinkCommandDetails = RedisCommandDetails("unlink", -2, arrayListOf("write", "fast"), 1, -1, 1)
+    val randomkeyCommandDetails = RedisCommandDetails("randomkey", 1, arrayListOf("readonly", "random"), 0, 0, 0)
+    val touchCommandDetails = RedisCommandDetails("touch", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
+    val typeCommandDetails = RedisCommandDetails("type", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+
+    val lpushCommandDetails = RedisCommandDetails("lpush", -3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val lpushxCommandDetails = RedisCommandDetails("lpushx", -3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val rpushCommandDetails = RedisCommandDetails("rpush", -3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val rpushxCommandDetails = RedisCommandDetails("rpushx", -3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val lindexCommandDetails = RedisCommandDetails("lindex", 3, arrayListOf("readonly"), 1, 1, 1)
+    val llenCommandDetails = RedisCommandDetails("llen", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val lpopCommandDetails = RedisCommandDetails("lpop", -2, arrayListOf("write", "fast"), 1, 1, 1)
+    val rpopCommandDetails = RedisCommandDetails("rpop", -2, arrayListOf("write", "fast"), 1, 1, 1)
+    val lrangeCommandDetails = RedisCommandDetails("lrange", 4, arrayListOf("readonly"), 1, 1, 1)
+
+    val hsetCommandDetails = RedisCommandDetails("hset", -4, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val hsetnxCommandDetails = RedisCommandDetails("hsetnx", 4, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val hmsetCommandDetails = RedisCommandDetails("hmset", -4, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val saddCommandDetails = RedisCommandDetails("sadd", -3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val hexistsCommandDetails = RedisCommandDetails("hexists", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val sismemberCommandDetails = RedisCommandDetails("sismember", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val hgetCommandDetails = RedisCommandDetails("hget", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val hmgetCommandDetails = RedisCommandDetails("hmget", -3, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val hgetallCommandDetails = RedisCommandDetails("hgetall", 2, arrayListOf("readonly", "random"), 1, 1, 1)
+    val hvalsCommandDetails = RedisCommandDetails("hvals", 2, arrayListOf("readonly", "sort_for_script"), 1, 1, 1)
+    val hkeysCommandDetails = RedisCommandDetails("hkeys", 2, arrayListOf("readonly", "sort_for_script"), 1, 1, 1)
+    val smembersCommandDetails = RedisCommandDetails("smembers", 2, arrayListOf("readonly", "sort_for_script"), 1, 1, 1)
+    val hincrbyCommandDetails = RedisCommandDetails("hincrby", 4, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val hincrbyfloatCommandDetails =
+        RedisCommandDetails("hincrbyfloat", 4, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val hstrlenCommandDetails = RedisCommandDetails("hstrlen", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val hlenCommandDetails = RedisCommandDetails("hlen", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val scardCommandDetails = RedisCommandDetails("scard", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val zcardCommandDetails = RedisCommandDetails("zcard", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val hdelCommandDetails = RedisCommandDetails("hdel", -3, arrayListOf("write", "fast"), 1, 1, 1)
+    val sremCommandDetails = RedisCommandDetails("srem", -3, arrayListOf("write", "fast"), 1, 1, 1)
+    val zremCommandDetails = RedisCommandDetails("zrem", -3, arrayListOf("write", "fast"), 1, 1, 1)
+    val sunionCommandDetails = RedisCommandDetails("sunion", -2, arrayListOf("readonly", "sort_for_script"), 1, -1, 1)
+    val sinterCommandDetails = RedisCommandDetails("sinter", -2, arrayListOf("readonly", "sort_for_script"), 1, -1, 1)
+    val sunionstoreCommandDetails = RedisCommandDetails("sunionstore", -3, arrayListOf("write", "denyoom"), 1, -1, 1)
+    val sinterstoreCommandDetails = RedisCommandDetails("sinterstore", -3, arrayListOf("write", "denyoom"), 1, -1, 1)
+    val zmscoreCommandDetails = RedisCommandDetails("zmscore", -3, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val zrankCommandDetails = RedisCommandDetails("zrank", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val zincrbyCommandDetails = RedisCommandDetails("zincrby", 4, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val zaddCommandDetails = RedisCommandDetails("zadd", -4, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val zpopmaxCommandDetails = RedisCommandDetails("zpopmax", -2, arrayListOf("write", "fast"), 1, 1, 1)
+    val zpopminCommandDetails = RedisCommandDetails("zpopmin", -2, arrayListOf("write", "fast"), 1, 1, 1)
+    val zrandmemberCommandDetails = RedisCommandDetails("zrandmember", -2, arrayListOf("readonly", "random"), 1, 1, 1)
+    val zcountCommandDetails = RedisCommandDetails("zcount", 4, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val zlexcountCommandDetails = RedisCommandDetails("zlexcount", 4, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val zremrangebyscoreCommandDetails = RedisCommandDetails("zremrangebyscore", 4, arrayListOf("write"), 1, 1, 1)
+    val zremrangebyrankCommandDetails = RedisCommandDetails("zremrangebyrank", 4, arrayListOf("write"), 1, 1, 1)
+    val zremrangebylexCommandDetails = RedisCommandDetails("zremrangebylex", 4, arrayListOf("write"), 1, 1, 1)
+    val zrangeCommandDetails = RedisCommandDetails("zrange", -4, arrayListOf("readonly"), 1, 1, 1)
+    val zrangestoreCommandDetails = RedisCommandDetails("zrangestore", -5, arrayListOf("write", "denyoom"), 1, 2, 1)
+    val zrevrangeCommandDetails = RedisCommandDetails("zrevrange", -4, arrayListOf("readonly"), 1, 1, 1)
+    val zrangebyscoreCommandDetails = RedisCommandDetails("zrangebyscore", -4, arrayListOf("readonly"), 1, 1, 1)
+    val zrevrangebyscoreCommandDetails = RedisCommandDetails("zrevrangebyscore", -4, arrayListOf("readonly"), 1, 1, 1)
+    val zrangebylexCommandDetails = RedisCommandDetails("zrangebylex", -4, arrayListOf("readonly"), 1, 1, 1)
+    val zrevrangebylexCommandDetails = RedisCommandDetails("zrevrangebylex", -4, arrayListOf("readonly"), 1, 1, 1)
+
+    val scanCommandDetails = RedisCommandDetails("scan", -2, arrayListOf("readonly", "random"), 0, 0, 0)
+    val hscanCommandDetails = RedisCommandDetails("hscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
+    val sscanCommandDetails = RedisCommandDetails("sscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
+    val zscanCommandDetails = RedisCommandDetails("zscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
+
+    val flushdbCommandDetails = RedisCommandDetails("flushdb", -1, arrayListOf("write"), 0, 0, 0)
+    val flushallCommandDetails = RedisCommandDetails("flushall", -1, arrayListOf("write"), 0, 0, 0)
+    val dbsizeCommandDetails = RedisCommandDetails("dbsize", 1, arrayListOf("readonly", "fast"), 0, 0, 0)
+
+    val pingCommandDetails = RedisCommandDetails("ping", -1, arrayListOf("stale", "fast"), 0, 0, 0)
+    val echoCommandDetails = RedisCommandDetails("echo", 2, arrayListOf("fast"), 0, 0, 0)
+    val lolwutCommandDetails = RedisCommandDetails("lolwut", -1, arrayListOf("readonly", "fast"), 0, 0, 0)
+    val timeCommandDetails = RedisCommandDetails("time", 1, arrayListOf("random", "loading", "stale", "fast"), 0, 0, 0)
+    val resetCommandDetails =
+        RedisCommandDetails("reset", 1, arrayListOf("noscript", "loading", "stale", "fast"), 0, 0, 0)
+    val saveCommandDetails = RedisCommandDetails("save", 1, arrayListOf("admin", "noscript"), 0, 0, 0)
+    val bgsaveCommandDetails = RedisCommandDetails("bgsave", -1, arrayListOf("admin", "noscript"), 0, 0, 0)
+    val commandCommandDetails = RedisCommandDetails("command", -1, arrayListOf("random", "loading", "stale"), 0, 0, 0)
+
+    val authCommandDetails = RedisCommandDetails(
+        "auth",
+        -2,
+        arrayListOf("noscript", "loading", "stale", "skip_monitor", "skip_slowlog", "fast", "no_auth"),
+        0,
+        0,
+        0
+    )
+
+    val multiCommandDetails = RedisCommandDetails(
+        "multi",
+        1,
+        arrayListOf("noscript", "loading", "stale", "fast"),
+        0,
+        0,
+        0
+    )
+
+    val discardCommandDetails = RedisCommandDetails(
+        "discard",
+        1,
+        arrayListOf("noscript", "loading", "stale", "fast"),
+        0,
+        0,
+        0
+    )
+
+    val execCommandDetails = RedisCommandDetails(
+        "exec",
+        1,
+        arrayListOf("noscript", "loading", "stale", "skip_monitor", "skip_slowlog"),
+        0,
+        0,
+        0
+    )
 }
