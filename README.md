@@ -146,8 +146,9 @@ Operation | Description
 
 ## Known Limitations
  * A partial but growing list of Redis commands. See [Redis Command Coverage](#redis-command-coverage).
+ * By default, an Aerospike namespace does not allow for TTLs. Read [more](https://discuss.aerospike.com/t/faq-what-are-expiration-eviction-and-stop-writes/2311) on how to set up expiration and eviction support.
  * Like Redis Cluster, Skyhook supports a single Redis 'database 0', which maps to a single namespace and set in the Aerospike Database.
- * Will not try try to implement the cluster operations sub-commands of `CLUSTER`, `CLIENT`, `CONFIG`,  `MEMORY`, `MONITOR`, `LATENCY`.
+ * Will not try to implement the cluster operations sub-commands of `CLUSTER`, `CLIENT`, `CONFIG`,  `MEMORY`, `MONITOR`, `LATENCY`.
  * No support for Pub/Sub commands.
  * No support for Lua scripts.
 
