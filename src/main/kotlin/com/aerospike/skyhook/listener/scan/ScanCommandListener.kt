@@ -83,7 +83,7 @@ class ScanCommandListener(
                     Exp.`val`(it.str)
                 )
             },
-            scanCommand.TYPE?.let {
+            scanCommand.MATCH?.let {
                 Exp.regexCompare(
                     scanCommand.MATCH,
                     RegexFlag.ICASE or RegexFlag.NEWLINE,
