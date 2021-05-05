@@ -7,7 +7,6 @@ import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapPolicy
 import com.aerospike.client.listener.RecordArrayListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.IntersectMerge
 import com.aerospike.skyhook.util.Merge
@@ -16,9 +15,8 @@ import com.aerospike.skyhook.util.UnionMerge
 import io.netty.channel.ChannelHandlerContext
 
 abstract class SstoreBaseCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordArrayListener, Merge {
+) : BaseListener(ctx), RecordArrayListener, Merge {
 
     @Volatile
     private lateinit var key: Key
@@ -27,7 +25,7 @@ abstract class SstoreBaseCommandListener(
         require(cmd.argCount >= 3) { argValidationErrorMsg(cmd) }
 
         key = createKey(cmd.key)
-        aeroCtx.client.get(
+        client.get(
             null, this, null,
             getKeys(cmd).toTypedArray()
         )
@@ -40,7 +38,7 @@ abstract class SstoreBaseCommandListener(
 
     override fun onSuccess(keys: Array<out Key>?, records: Array<Record?>?) {
         if (records == null) {
-            writeLong(ctx, 0L)
+            writeLong(0L)
         } else {
             val values = merge(records.filterNotNull()
                 .map { it.getMap(aeroCtx.bin) }.map { it.keys })
@@ -52,21 +50,19 @@ abstract class SstoreBaseCommandListener(
                     Typed.getValue(it.toString().toByteArray()) to Value.getAsNull()
                 }.toMap()
             )
-            aeroCtx.client.operate(
+            client.operate(
                 defaultWritePolicy, key, setTypeOp(), operation
             )
-            writeLong(ctx, values.size)
+            writeLong(values.size)
         }
-        ctx.flush()
+        flushCtxTransactionAware()
     }
 }
 
 class SinterstoreCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : SstoreBaseCommandListener(aeroCtx, ctx), IntersectMerge
+) : SstoreBaseCommandListener(ctx), IntersectMerge
 
 class SunionstoreCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : SstoreBaseCommandListener(aeroCtx, ctx), UnionMerge
+) : SstoreBaseCommandListener(ctx), UnionMerge

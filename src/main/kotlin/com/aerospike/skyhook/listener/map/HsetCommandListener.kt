@@ -7,15 +7,13 @@ import com.aerospike.client.cdt.MapPolicy
 import com.aerospike.client.cdt.MapWriteFlags
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class HsetnxCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
@@ -27,24 +25,24 @@ class HsetnxCommandListener(
             Typed.getValue(cmd.args[2]),
             Typed.getValue(cmd.args[3])
         )
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy,
             key, hashTypeOp(), operation
         )
     }
 
     override fun writeError(e: AerospikeException?) {
-        writeLong(ctx, 0L)
+        writeLong(0L)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
-            ctx.flush()
+            writeNullString()
+            flushCtxTransactionAware()
         } else {
             try {
-                writeLong(ctx, 1L)
-                ctx.flush()
+                writeLong(1L)
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }
@@ -53,9 +51,8 @@ class HsetnxCommandListener(
 }
 
 open class HsetCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : SaddCommandListener(aeroCtx, ctx) {
+) : SaddCommandListener(ctx) {
 
     override val typeOperation: Operation = hashTypeOp()
     override val mapPolicy = MapPolicy()
@@ -74,20 +71,19 @@ open class HsetCommandListener(
 }
 
 class HmsetCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : HsetCommandListener(aeroCtx, ctx) {
+) : HsetCommandListener(ctx) {
 
     override fun setSize(key: Key) {}
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString(ctx)
-            ctx.flush()
+            writeNullString()
+            flushCtxTransactionAware()
         } else {
             try {
-                writeOK(ctx)
-                ctx.flush()
+                writeOK()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

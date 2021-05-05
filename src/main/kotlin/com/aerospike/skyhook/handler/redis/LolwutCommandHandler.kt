@@ -8,13 +8,13 @@ import com.aerospike.skyhook.util.SystemUtils
 import io.netty.channel.ChannelHandlerContext
 
 class LolwutCommandHandler(
-    private val ctx: ChannelHandlerContext
-) : NettyResponseWriter(), CommandHandler {
+    ctx: ChannelHandlerContext
+) : NettyResponseWriter(ctx), CommandHandler {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount <= 3) { BaseListener.argValidationErrorMsg(cmd) }
 
-        writeSimpleString(ctx, "Skyhook ver. ${SystemUtils.version}\n")
-        ctx.flush()
+        writeSimpleString("Skyhook ver. ${SystemUtils.version}\n")
+        flushCtxTransactionAware()
     }
 }

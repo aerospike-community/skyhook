@@ -42,6 +42,7 @@ echo "GET key1\r\n" | nc localhost 6379
 Operation | Description
 ----------|------------
 [APPEND](https://redis.io/commands/append) *key value* | If key already exists and is a string, this command appends the value at the end of the string. If key does not exist it is created and set as an empty string.
+[AUTH](https://redis.io/commands/auth) *[username] password* | The AUTH command authenticates the current connection.
 [BGSAVE](https://redis.io/commands/bgsave) | Returns OK.
 [COMMAND](https://redis.io/commands/command) | Returns Array reply of details about all Redis commands.
 [COMMAND COUNT](https://redis.io/commands/command-count) | Returns Integer reply of number of total commands in this Redis server.
@@ -50,7 +51,9 @@ Operation | Description
 [DECR](https://redis.io/commands/decr) *key* | Decrements the number stored at key by one.
 [DECRBY](https://redis.io/commands/decrby) *key decrement* | Decrements the number stored at key by decrement.
 [DEL](https://redis.io/commands/del) *key* | Removes the specified key.
+[DISCARD](https://redis.io/commands/discard) | Flushes all previously queued commands in a [transaction](https://redis.io/topics/transactions) and restores the connection state to normal.
 [ECHO](https://redis.io/commands/echo) *message* | Returns message.
+[EXEC](https://redis.io/commands/exec) | Executes all previously queued commands in a [transaction](https://redis.io/topics/transactions) and restores the connection state to normal.
 [EXISTS](https://redis.io/commands/exists) *key [key ...]* | Returns if key exists.
 [EXPIRE](https://redis.io/commands/expire) *key seconds* | Set a timeout on key. After the timeout has expired, the key will automatically be deleted.
 [EXPIREAT](https://redis.io/commands/expireat) *key timestamp* | EXPIREAT has the same effect and semantic as EXPIRE, but instead of specifying the number of seconds representing the TTL (time to live), it takes an absolute Unix timestamp (seconds since January 1, 1970).
@@ -86,6 +89,7 @@ Operation | Description
 [MGET](https://redis.io/commands/mget) *key [key ...]* | Returns the values of all specified keys.
 [MSET](https://redis.io/commands/mset) *key value [key value ...]* | Sets the given keys to their respective values.
 [MSETNX](https://redis.io/commands/msetnx) *key value [key value ...]* | Sets the given keys to their respective values. MSETNX will not perform any operation at all even if just a single key already exists.
+[MULTI](https://redis.io/commands/multi) | Marks the start of a [transaction](https://redis.io/topics/transactions) block. Subsequent commands will be queued for execution using EXEC.
 [PERSIST](https://redis.io/commands/persist) *key* | Remove the existing timeout on key, turning the key from volatile (a key with an expire set) to persistent.
 [PEXPIRE](https://redis.io/commands/pexpire) *key milliseconds* | This command works exactly like EXPIRE but the time to live of the key is specified in milliseconds instead of seconds.
 [PEXPIREAT](https://redis.io/commands/pexpireat) *key milliseconds-timestamp* | PEXPIREAT has the same effect and semantic as EXPIREAT, but the Unix time at which the key will expire is specified in milliseconds instead of seconds.
@@ -146,8 +150,9 @@ Operation | Description
 
 ## Known Limitations
  * A partial but growing list of Redis commands. See [Redis Command Coverage](#redis-command-coverage).
+ * By default, an Aerospike namespace does not allow for TTLs. Read [more](https://discuss.aerospike.com/t/faq-what-are-expiration-eviction-and-stop-writes/2311) on how to set up expiration and eviction support.
  * Like Redis Cluster, Skyhook supports a single Redis 'database 0', which maps to a single namespace and set in the Aerospike Database.
- * Will not try try to implement the cluster operations sub-commands of `CLUSTER`, `CLIENT`, `CONFIG`,  `MEMORY`, `MONITOR`, `LATENCY`.
+ * Will not try to implement the cluster operations sub-commands of `CLUSTER`, `CLIENT`, `CONFIG`,  `MEMORY`, `MONITOR`, `LATENCY`.
  * No support for Pub/Sub commands.
  * No support for Lua scripts.
 
@@ -200,7 +205,9 @@ Now the server is listening to the `config.redisPort` (default: 6379) and is rea
 | hostList | The host list to seed the Aerospike cluster. | localhost:3000 |
 | namespase | The Aerospike namespace. | test |
 | set | The Aerospike set name. | redis |
-| bin | The Aerospike bin name to set values. | b |
+| clientPolicy | The Aerospike Java client [ClientPolicy](https://docs.aerospike.com/apidocs/java/com/aerospike/client/policy/ClientPolicy.html) configuration properties. | ClientPolicyConfig |
+| bin | The Aerospike value bin name. | b |
+| typeBin | The Aerospike value [type](https://redis.io/topics/data-types) bin name. | t |
 | redisPort | The server port to bind to. | 6379 |
 | workerThreads<sup>[1](#worker-threads)</sup> | The Netty worker group size. | number of available cores |
 | bossThreads | The Netty acceptor group size. | 2 |
@@ -213,4 +220,3 @@ Licensed under an Apache 2.0 License.
 This is an active open source project. You can contribute to it by trying
 Skyhook, providing feedback, reporting bugs, and implementing more Redis
 commands.
-

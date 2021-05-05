@@ -7,14 +7,16 @@ import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.handler.CommandHandler
 import com.aerospike.skyhook.handler.NettyResponseWriter
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.aeroCtxAttrKey
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.authDetailsAttrKey
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.clientPoolAttrKey
 import io.netty.channel.ChannelHandlerContext
 import mu.KotlinLogging
 import java.io.IOException
 
 abstract class BaseListener(
-    protected val aeroCtx: AerospikeContext,
-    protected val ctx: ChannelHandlerContext
-) : NettyResponseWriter(), CommandHandler {
+    ctx: ChannelHandlerContext
+) : NettyResponseWriter(ctx), CommandHandler {
 
     companion object {
 
@@ -79,24 +81,33 @@ abstract class BaseListener(
         return Operation.put(Bin(aeroCtx.typeBin, ValueType.STREAM.str))
     }
 
+    protected val aeroCtx: AerospikeContext by lazy {
+        ctx.channel().attr(aeroCtxAttrKey).get()
+    }
+
+    protected val client: IAerospikeClient by lazy {
+        ctx.channel().attr(clientPoolAttrKey).get().getClient(
+            ctx.channel().attr(authDetailsAttrKey).get()
+        )
+    }
+
     @Throws(IOException::class)
     protected open fun writeResponse(mapped: Any?) {
-        writeObject(ctx, mapped)
+        writeObject(mapped)
     }
 
     @Throws(IOException::class)
     protected open fun writeError(e: AerospikeException?) {
-        writeErrorString(ctx, "internal error")
+        writeErrorString("Internal error")
     }
 
     open fun onFailure(exception: AerospikeException?) {
         try {
             log.debug { exception }
             writeError(exception)
-            ctx.flush()
+            flushCtxTransactionAware()
         } catch (e: IOException) {
-            ctx.close()
-            log.error(e) { "Exception at onFailure" }
+            closeCtx(e)
         }
     }
 
@@ -106,10 +117,5 @@ abstract class BaseListener(
 
     protected fun createKey(key: ByteArray): Key {
         return createKey(Value.get(String(key)))
-    }
-
-    protected fun closeCtx(e: Exception?) {
-        log.error(e) { "${this.javaClass.simpleName} error" }
-        ctx.close()
     }
 }

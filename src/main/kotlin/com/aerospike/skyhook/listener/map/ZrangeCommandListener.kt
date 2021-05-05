@@ -8,15 +8,13 @@ import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Intervals
 import io.netty.channel.ChannelHandlerContext
 
 open class ZrangeCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     protected data class LimitArgument(
         val offset: Int,
@@ -88,7 +86,7 @@ open class ZrangeCommandListener(
         rangeCommand = RangeCommand(cmd, 4)
         validateAndSet()
 
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy,
             key, getMapOperation()
         )
@@ -137,11 +135,11 @@ open class ZrangeCommandListener(
     override fun onSuccess(key: Key?, record: Record?) {
         try {
             if (record == null) {
-                writeEmptyList(ctx)
+                writeEmptyList()
             } else {
                 writeResponse(record.bins[aeroCtx.bin])
             }
-            ctx.flush()
+            flushCtxTransactionAware()
         } catch (e: Exception) {
             closeCtx(e)
         }
@@ -179,7 +177,7 @@ open class ZrangeCommandListener(
                 l.subList(it.offset, it.offset + it.count)
             } ?: l
         }.also {
-            writeArrayHeader(ctx, it.size * rangeCommand.factor)
+            writeArrayHeader(it.size * rangeCommand.factor)
         }
     }
 
@@ -191,9 +189,8 @@ open class ZrangeCommandListener(
 }
 
 class ZrevrangeCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZrangeCommandListener(aeroCtx, ctx) {
+) : ZrangeCommandListener(ctx) {
 
     override fun validateAndSet() {
         validateCommon()
@@ -204,9 +201,8 @@ class ZrevrangeCommandListener(
 }
 
 open class ZrangebyscoreCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZrangeCommandListener(aeroCtx, ctx) {
+) : ZrangeCommandListener(ctx) {
 
     override fun validateAndSet() {
         validateCommon()
@@ -216,9 +212,8 @@ open class ZrangebyscoreCommandListener(
 }
 
 class ZrevrangebyscoreCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZrangebyscoreCommandListener(aeroCtx, ctx) {
+) : ZrangebyscoreCommandListener(ctx) {
 
     override fun validateAndSet() {
         super.validateAndSet()
@@ -228,9 +223,8 @@ class ZrevrangebyscoreCommandListener(
 }
 
 open class ZrangebylexCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZrangeCommandListener(aeroCtx, ctx) {
+) : ZrangeCommandListener(ctx) {
 
     override fun validateAndSet() {
         validateCommon()
@@ -241,9 +235,8 @@ open class ZrangebylexCommandListener(
 }
 
 class ZrevrangebylexCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZrangebylexCommandListener(aeroCtx, ctx) {
+) : ZrangebylexCommandListener(ctx) {
 
     override fun validateAndSet() {
         super.validateAndSet()

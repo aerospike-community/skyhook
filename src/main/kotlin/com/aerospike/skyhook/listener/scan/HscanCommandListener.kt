@@ -7,14 +7,12 @@ import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
 open class HscanCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     @Volatile
     protected lateinit var scanCommand: ScanCommand
@@ -24,7 +22,7 @@ open class HscanCommandListener(
 
         val key = createKey(cmd.key)
         scanCommand = ScanCommand(cmd, 3)
-        aeroCtx.client.operate(
+        client.operate(
             null, this, null,
             key, getOperation()
         )
@@ -42,23 +40,23 @@ open class HscanCommandListener(
     override fun onSuccess(key: Key?, record: Record?) {
         try {
             if (record == null) {
-                writeArrayHeader(ctx, 2)
-                writeSimpleString(ctx, ScanCommand.zeroCursor)
-                writeEmptyList(ctx)
+                writeArrayHeader(2)
+                writeSimpleString(ScanCommand.zeroCursor)
+                writeEmptyList()
             } else {
                 val asList = record.bins[aeroCtx.bin] as List<*>
-                writeArrayHeader(ctx, 2)
-                writeSimpleString(ctx, getNextCursor(asList.size))
+                writeArrayHeader(2)
+                writeSimpleString(getNextCursor(asList.size))
                 writeElementsArray(asList)
             }
-            ctx.flush()
+            flushCtxTransactionAware()
         } catch (e: Exception) {
             closeCtx(e)
         }
     }
 
     protected open fun writeElementsArray(list: List<*>) {
-        writeObjectListStr(ctx, list
+        writeObjectListStr(list
             .map { it as Map.Entry<*, *> }
             .map { it.toPair().toList() }.flatten()
         )

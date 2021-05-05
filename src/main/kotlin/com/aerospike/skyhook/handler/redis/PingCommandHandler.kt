@@ -7,8 +7,8 @@ import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
 class PingCommandHandler(
-    private val ctx: ChannelHandlerContext
-) : NettyResponseWriter(), CommandHandler {
+    ctx: ChannelHandlerContext
+) : NettyResponseWriter(ctx), CommandHandler {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount < 3) { BaseListener.argValidationErrorMsg(cmd) }
@@ -19,7 +19,7 @@ class PingCommandHandler(
             "PONG"
         }
 
-        writeSimpleString(ctx, responseString)
-        ctx.flush()
+        writeSimpleString(responseString)
+        flushCtxTransactionAware()
     }
 }

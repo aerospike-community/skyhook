@@ -7,15 +7,13 @@ import com.aerospike.client.cdt.ListOperation
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class ListPopCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2 || cmd.argCount == 3) {
@@ -23,7 +21,7 @@ class ListPopCommandListener(
         }
 
         val key = createKey(cmd.key)
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy,
             key, getListOperation(cmd)
         )
@@ -46,12 +44,12 @@ class ListPopCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullArray(ctx)
-            ctx.flush()
+            writeNullArray()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(record.bins[aeroCtx.bin])
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

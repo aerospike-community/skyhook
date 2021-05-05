@@ -7,15 +7,13 @@ import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 import java.util.*
 
 abstract class ZpopCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     protected var count: Int = 0
 
@@ -26,9 +24,9 @@ abstract class ZpopCommandListener(
 
         val key = createKey(cmd.key)
         setCount(cmd)
-        val record = aeroCtx.client.get(defaultWritePolicy, key).bins[aeroCtx.bin]
+        val record = client.get(defaultWritePolicy, key).bins[aeroCtx.bin]
 
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy, key,
             MapOperation.removeByKeyList(aeroCtx.bin, getKeysToPop(record), MapReturnType.KEY_VALUE)
         )
@@ -49,12 +47,12 @@ abstract class ZpopCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeEmptyList(ctx)
-            ctx.flush()
+            writeEmptyList()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(marshalOutput(record.bins[aeroCtx.bin]))
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }
@@ -71,9 +69,8 @@ abstract class ZpopCommandListener(
 }
 
 class ZpopmaxCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZpopCommandListener(aeroCtx, ctx) {
+) : ZpopCommandListener(ctx) {
 
     override fun take(sorted: List<Any>): List<Any> {
         return sorted.takeLast(count)
@@ -85,9 +82,8 @@ class ZpopmaxCommandListener(
 }
 
 class ZpopminCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZpopCommandListener(aeroCtx, ctx) {
+) : ZpopCommandListener(ctx) {
 
     override fun take(sorted: List<Any>): List<Any> {
         return sorted.take(count)

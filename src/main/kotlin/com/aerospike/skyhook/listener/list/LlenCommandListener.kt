@@ -5,21 +5,19 @@ import com.aerospike.client.Record
 import com.aerospike.client.cdt.ListOperation
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
 class LlenCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
         val operation = ListOperation.size(aeroCtx.bin)
-        aeroCtx.client.operate(
+        client.operate(
             null, this, null,
             key, operation
         )
@@ -27,12 +25,12 @@ class LlenCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeEmptyList(ctx)
-            ctx.flush()
+            writeEmptyList()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(record.bins[aeroCtx.bin])
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

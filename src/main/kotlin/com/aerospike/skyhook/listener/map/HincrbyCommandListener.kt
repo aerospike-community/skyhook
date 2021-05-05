@@ -8,15 +8,13 @@ import com.aerospike.client.cdt.MapPolicy
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class HincrbyCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     @Volatile
     private lateinit var command: RedisCommand
@@ -30,7 +28,7 @@ class HincrbyCommandListener(
             MapPolicy(), aeroCtx.bin,
             getMapKey(cmd), getIncrValue(cmd)
         )
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy,
             key, operation
         )
@@ -52,15 +50,15 @@ class HincrbyCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeErrorString(ctx, "failed to create a record")
-            ctx.flush()
+            writeErrorString("Failed to create a record")
+            flushCtxTransactionAware()
         } else {
             try {
                 when (command) {
                     RedisCommand.ZINCRBY -> writeResponse(record.getLong(aeroCtx.bin).toString())
                     else -> writeResponse(record.bins[aeroCtx.bin])
                 }
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

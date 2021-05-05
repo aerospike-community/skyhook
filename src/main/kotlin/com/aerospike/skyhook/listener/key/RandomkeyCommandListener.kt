@@ -5,14 +5,12 @@ import com.aerospike.client.Record
 import com.aerospike.client.listener.RecordSequenceListener
 import com.aerospike.client.policy.ScanPolicy
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
 class RandomkeyCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordSequenceListener {
+) : BaseListener(ctx), RecordSequenceListener {
 
     private var isEmpty: Boolean = true
 
@@ -23,7 +21,7 @@ class RandomkeyCommandListener(
         scanPolicy.maxRecords = 1
         scanPolicy.includeBinData = false
 
-        aeroCtx.client.scanAll(
+        client.scanAll(
             null, this, scanPolicy,
             aeroCtx.namespace, aeroCtx.set
         )
@@ -37,7 +35,7 @@ class RandomkeyCommandListener(
     }
 
     override fun onSuccess() {
-        if (isEmpty) writeNullString(ctx)
-        ctx.flush()
+        if (isEmpty) writeNullString()
+        flushCtxTransactionAware()
     }
 }

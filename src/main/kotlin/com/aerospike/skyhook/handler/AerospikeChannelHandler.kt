@@ -1,6 +1,8 @@
 package com.aerospike.skyhook.handler
 
+import com.aerospike.client.AerospikeException
 import com.aerospike.skyhook.command.RequestCommand
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.transactionAttrKey
 import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
@@ -10,14 +12,11 @@ import io.netty.util.CharsetUtil
 import io.netty.util.ReferenceCountUtil
 import mu.KotlinLogging
 import java.util.*
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 @ChannelHandler.Sharable
-class AerospikeChannelHandler @Inject constructor(
-    private val nettyAerospikeHandler: NettyAerospikeHandler
-) : ChannelInboundHandlerAdapter() {
+class AerospikeChannelHandler() : ChannelInboundHandlerAdapter() {
 
     companion object {
         private val log = KotlinLogging.logger(this::class.java.name)
@@ -38,7 +37,7 @@ class AerospikeChannelHandler @Inject constructor(
                     }
 
                     val cmd = RequestCommand(arguments)
-                    nettyAerospikeHandler.handleCommand(cmd, ctx)
+                    handleCommand(cmd, ctx)
                 }
 
                 is AbstractStringRedisMessage -> {
@@ -46,13 +45,41 @@ class AerospikeChannelHandler @Inject constructor(
                         (msg.content().split(" ")
                             .map { it.encodeToByteArray() }).toList()
                     )
-                    nettyAerospikeHandler.handleCommand(cmd, ctx)
+                    handleCommand(cmd, ctx)
                 }
 
                 else -> log.warn { "Unsupported message type ${msg?.javaClass?.simpleName}" }
             }
+        } catch (e: UnsupportedOperationException) {
+            ctx.write(ErrorRedisMessage(e.message))
+            ctx.flush()
         } finally {
             ReferenceCountUtil.release(msg)
+        }
+    }
+
+    /**
+     * Handle the input command. Listeners are responsible to send the response
+     * to the client.
+     */
+    private fun handleCommand(cmd: RequestCommand, ctx: ChannelHandlerContext) {
+        try {
+            val state = ctx.channel().attr(transactionAttrKey).get()
+            if (state.inTransaction && !cmd.transactional) {
+                state.commands.addLast(cmd)
+                ctx.write(SimpleStringRedisMessage("QUEUED"))
+                ctx.flush()
+            } else {
+                cmd.command.newHandler(ctx).handle(cmd)
+            }
+        } catch (e: Exception) {
+            val msg = when (e) {
+                is AerospikeException -> "Internal error"
+                else -> e.message
+            }
+            log.warn(e) {}
+            ctx.write(ErrorRedisMessage(msg))
+            ctx.flush()
         }
     }
 

@@ -7,14 +7,12 @@ import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapPolicy
 import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class ZrangestoreCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : ZrangeCommandListener(aeroCtx, ctx) {
+) : ZrangeCommandListener(ctx) {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount >= 4) { argValidationErrorMsg(cmd) }
@@ -24,7 +22,7 @@ class ZrangestoreCommandListener(
         rangeCommand = RangeCommand(cmd, 5)
         validateAndSet()
 
-        val record = aeroCtx.client.operate(
+        val record = client.operate(
             defaultWritePolicy, sourceKey, getMapOperation()
         )
 
@@ -37,7 +35,7 @@ class ZrangestoreCommandListener(
                         Value.get(it.value)
             }.toMap()
         )
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy, destKey, putOperation
         )
     }
@@ -49,11 +47,11 @@ class ZrangestoreCommandListener(
     override fun onSuccess(key: Key?, record: Record?) {
         try {
             if (record == null) {
-                writeLong(ctx, 0L)
+                writeLong(0L)
             } else {
-                writeLong(ctx, record.getLong(aeroCtx.bin))
+                writeLong(record.getLong(aeroCtx.bin))
             }
-            ctx.flush()
+            flushCtxTransactionAware()
         } catch (e: Exception) {
             closeCtx(e)
         }

@@ -10,15 +10,13 @@ import com.aerospike.client.cdt.MapPolicy
 import com.aerospike.client.cdt.MapWriteFlags
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class ZaddCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     private class ZaddCommand(val cmd: RequestCommand) {
         var XX: Boolean = false
@@ -91,10 +89,10 @@ class ZaddCommandListener(
         zaddCommand = ZaddCommand(cmd)
 
         val getSize = MapOperation.size(aeroCtx.bin)
-        size = aeroCtx.client.operate(defaultWritePolicy, key, getSize)
+        size = client.operate(defaultWritePolicy, key, getSize)
             ?.getLong(aeroCtx.bin) ?: 0L
 
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy,
             key, zsetTypeOp(), getMapOperation()
         )
@@ -138,17 +136,17 @@ class ZaddCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeLong(ctx, 0L)
-            ctx.flush()
+            writeLong(0L)
+            flushCtxTransactionAware()
         } else {
             try {
                 if (zaddCommand.INCR) {
                     writeResponse(record.getString(aeroCtx.bin))
                 } else {
                     val added = record.getLong(aeroCtx.bin) - size
-                    writeLong(ctx, added)
+                    writeLong(added)
                 }
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

@@ -2,43 +2,48 @@ package com.aerospike.skyhook.handler
 
 import com.aerospike.client.Value
 import com.aerospike.client.Value.*
+import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer
+import com.aerospike.skyhook.util.notify
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.redis.*
 import java.io.IOException
 
-open class NettyResponseWriter {
+open class NettyResponseWriter(
+    protected val ctx: ChannelHandlerContext
+) {
 
     companion object {
         private val pool: RedisMessagePool = FixedRedisMessagePool.INSTANCE
     }
 
     @Throws(IOException::class)
-    fun writeObject(ctx: ChannelHandlerContext, value: Any?) {
+    fun writeObject(value: Any?) {
         when (value) {
             null -> {
-                writeNullString(ctx)
+                writeNullString()
             }
             is List<*> -> {
-                writeObjectList(ctx, value as List<*>?)
+                writeObjectList(value as List<*>?)
             }
             is Set<*> -> {
-                writeObjectList(ctx, value.toList())
+                writeObjectList(value.toList())
             }
             is ByteArray -> {
-                writeByteArray(ctx, value as ByteArray?)
+                writeByteArray(value as ByteArray?)
             }
             is String -> {
-                writeBulkString(ctx, value as String?)
+                writeBulkString(value as String?)
             }
             is Long -> {
-                writeLong(ctx, value as Long?)
+                writeLong(value as Long?)
             }
             is Int -> {
-                writeLong(ctx, value as Int?)
+                writeLong(value as Int?)
             }
             is Double -> {
-                writeFloat(ctx, value as Double?)
+                writeFloat(value as Double?)
             }
             else -> {
                 throw IllegalArgumentException("Unsupported value type")
@@ -47,34 +52,34 @@ open class NettyResponseWriter {
     }
 
     @Throws(IOException::class)
-    fun writeObjectASBulkString(ctx: ChannelHandlerContext, value: Any?) {
+    fun writeObjectASBulkString(value: Any?) {
         when (value) {
             null -> {
-                writeNullString(ctx)
+                writeNullString()
             }
             is ByteArray -> {
-                writeByteArray(ctx, value as ByteArray?)
+                writeByteArray(value as ByteArray?)
             }
             is String -> {
-                writeBulkString(ctx, value as String?)
+                writeBulkString(value as String?)
             }
             is Long, is Int -> {
-                writeBulkString(ctx, value.toString())
+                writeBulkString(value.toString())
             }
             is Double -> {
-                writeBulkString(ctx, value.toString())
+                writeBulkString(value.toString())
             }
             is Value -> {
-                writeObjectASBulkString(ctx, value.getObject())
+                writeObjectASBulkString(value.getObject())
             }
             else -> {
-                writeNullString(ctx)
+                writeNullString()
             }
         }
     }
 
     @Throws(IOException::class)
-    fun writeArrayHeader(ctx: ChannelHandlerContext, length: Long) {
+    fun writeArrayHeader(length: Long) {
         ctx.write(ArrayHeaderRedisMessage(length))
     }
 
@@ -82,39 +87,39 @@ open class NettyResponseWriter {
      * Writes a zero length list: "*0\r\n".
      */
     @Throws(IOException::class)
-    fun writeEmptyList(ctx: ChannelHandlerContext) {
-        writeArrayHeader(ctx, 0)
+    fun writeEmptyList() {
+        writeArrayHeader(0)
     }
 
     /**
      * Like WriteObjectList but every item is written as a bulkstring.
      */
     @Throws(IOException::class)
-    fun writeObjectListStr(ctx: ChannelHandlerContext, objectCollection: Collection<*>?) {
+    fun writeObjectListStr(objectCollection: Collection<*>?) {
         if (objectCollection == null) {
-            writeNullArray(ctx)
+            writeNullArray()
             return
         }
-        writeArrayHeader(ctx, objectCollection.size.toLong())
+        writeArrayHeader(objectCollection.size.toLong())
         for (listItem in objectCollection) {
-            writeObjectASBulkString(ctx, listItem)
+            writeObjectASBulkString(listItem)
         }
     }
 
     @Throws(IOException::class)
-    fun writeObjectList(ctx: ChannelHandlerContext, objectList: List<*>?) {
+    fun writeObjectList(objectList: List<*>?) {
         if (objectList == null) {
-            writeNullArray(ctx)
+            writeNullArray()
             return
         }
-        writeArrayHeader(ctx, objectList.size.toLong())
+        writeArrayHeader(objectList.size.toLong())
         for (listItem in objectList) {
-            writeObject(ctx, listItem)
+            writeObject(listItem)
         }
     }
 
     @Throws(IOException::class)
-    fun writeBulkString(ctx: ChannelHandlerContext, stringValue: String?) {
+    fun writeBulkString(stringValue: String?) {
         if (stringValue == null) {
             ctx.write(FullBulkStringRedisMessage.NULL_INSTANCE)
             return
@@ -125,32 +130,32 @@ open class NettyResponseWriter {
     }
 
     @Throws(IOException::class)
-    fun writeSimpleString(ctx: ChannelHandlerContext, sString: String?) {
+    fun writeSimpleString(sString: String?) {
         val simpleStringRedisMessage = pool.getSimpleString(sString)
             ?: SimpleStringRedisMessage(sString)
         ctx.write(simpleStringRedisMessage)
     }
 
     @Throws(IOException::class)
-    fun writeErrorString(ctx: ChannelHandlerContext, eString: String?) {
+    fun writeErrorString(eString: String?) {
         val errorRedisMessage = pool.getError(eString) ?: ErrorRedisMessage(eString)
         ctx.write(errorRedisMessage)
     }
 
     @Throws(IOException::class)
-    fun writeOK(ctx: ChannelHandlerContext) {
-        writeSimpleString(ctx, "OK")
+    fun writeOK() {
+        writeSimpleString("OK")
     }
 
     @Throws(IOException::class)
-    fun writeLongStr(ctx: ChannelHandlerContext, longValue: Long) {
+    fun writeLongStr(longValue: Long) {
         val longBytes = pool.getByteBufOfInteger(longValue)
             ?: String.format(":%d\r\n", longValue).toByteArray()
         ctx.write(FullBulkStringRedisMessage(Unpooled.wrappedBuffer(longBytes)))
     }
 
     @Throws(IOException::class)
-    fun writeFloat(ctx: ChannelHandlerContext, floatValue: Double?) {
+    fun writeFloat(floatValue: Double?) {
         val floatString = String.format("%f", floatValue)
         ctx.write(
             FullBulkStringRedisMessage(
@@ -160,22 +165,22 @@ open class NettyResponseWriter {
     }
 
     @Throws(IOException::class)
-    fun writeByteArray(ctx: ChannelHandlerContext, asByteArray: ByteArray?) {
+    fun writeByteArray(asByteArray: ByteArray?) {
         ctx.write(FullBulkStringRedisMessage(Unpooled.wrappedBuffer(asByteArray)))
     }
 
     @Throws(IOException::class)
-    fun writeNullArray(ctx: ChannelHandlerContext) {
+    fun writeNullArray() {
         ctx.write(ArrayRedisMessage.NULL_INSTANCE)
     }
 
     @Throws(IOException::class)
-    fun writeNullString(ctx: ChannelHandlerContext) {
+    fun writeNullString() {
         ctx.write(FullBulkStringRedisMessage.NULL_INSTANCE)
     }
 
     @Throws(IOException::class)
-    fun writeBytesValue(ctx: ChannelHandlerContext, bytesValue: BytesValue) {
+    fun writeBytesValue(bytesValue: BytesValue) {
         ctx.write(
             FullBulkStringRedisMessage(
                 Unpooled.wrappedBuffer(bytesValue.getObject() as ByteArray)
@@ -184,7 +189,7 @@ open class NettyResponseWriter {
     }
 
     @Throws(IOException::class)
-    fun writeBulkStringValue(ctx: ChannelHandlerContext, inputString: StringValue?) {
+    fun writeBulkStringValue(inputString: StringValue?) {
         if (inputString == null) {
             ctx.write(FullBulkStringRedisMessage.NULL_INSTANCE)
             return
@@ -199,7 +204,7 @@ open class NettyResponseWriter {
     }
 
     @Throws(IOException::class)
-    fun writeLong(ctx: ChannelHandlerContext, longValue: Long?) {
+    fun writeLong(longValue: Long?) {
         if (longValue == null) {
             ctx.write(FullBulkStringRedisMessage.NULL_INSTANCE)
             return
@@ -210,18 +215,30 @@ open class NettyResponseWriter {
     }
 
     @Throws(IOException::class)
-    fun writeLong(ctx: ChannelHandlerContext, longValue: Int?) {
-        writeLong(ctx, longValue?.toLong())
+    fun writeLong(longValue: Int?) {
+        writeLong(longValue?.toLong())
     }
 
     @Throws(IOException::class)
-    fun writeLongValue(ctx: ChannelHandlerContext, longValue: LongValue) {
+    fun writeLongValue(longValue: LongValue) {
         val integerRedisMessage = pool.getInteger((longValue.getObject() as Long))
             ?: IntegerRedisMessage((longValue.getObject() as Long))
         ctx.write(integerRedisMessage)
     }
 
-    fun flush(ctx: ChannelHandlerContext) {
+    fun flushCtx() {
         ctx.flush()
+    }
+
+    fun flushCtxTransactionAware() {
+        if (ctx.channel().attr(AerospikeChannelInitializer.transactionAttrKey).get().inTransaction) {
+            synchronized(ctx) { ctx.notify() }
+        }
+        ctx.flush()
+    }
+
+    fun closeCtx(e: Exception?) {
+        BaseListener.log.error(e) { "${this.javaClass.simpleName} error" }
+        ctx.close()
     }
 }

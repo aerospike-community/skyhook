@@ -9,8 +9,8 @@ import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 class TimeCommandHandler(
-    private val ctx: ChannelHandlerContext
-) : NettyResponseWriter(), CommandHandler {
+    ctx: ChannelHandlerContext
+) : NettyResponseWriter(ctx), CommandHandler {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 1) { BaseListener.argValidationErrorMsg(cmd) }
@@ -19,7 +19,7 @@ class TimeCommandHandler(
         val seconds = now.epochSecond
         val microseconds = TimeUnit.NANOSECONDS.toMicros(now.nano.toLong())
 
-        writeObjectListStr(ctx, arrayListOf(seconds, microseconds))
-        ctx.flush()
+        writeObjectListStr(arrayListOf(seconds, microseconds))
+        flushCtxTransactionAware()
     }
 }

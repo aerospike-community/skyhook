@@ -6,15 +6,13 @@ import com.aerospike.client.cdt.ListOperation
 import com.aerospike.client.cdt.ListReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class LrangeCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
@@ -32,7 +30,7 @@ class LrangeCommandListener(
             aeroCtx.bin, from,
             count, ListReturnType.VALUE
         )
-        aeroCtx.client.operate(
+        client.operate(
             null, this, defaultWritePolicy,
             key, operation
         )
@@ -40,12 +38,12 @@ class LrangeCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeEmptyList(ctx)
-            ctx.flush()
+            writeEmptyList()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(record.bins[aeroCtx.bin])
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }

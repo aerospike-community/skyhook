@@ -11,15 +11,13 @@ import com.aerospike.client.query.KeyRecord
 import com.aerospike.client.query.PartitionFilter
 import com.aerospike.client.query.RegexFlag
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.listener.scan.ScanCommand.Companion.zeroCursor
 import io.netty.channel.ChannelHandlerContext
 
 class ScanCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx) {
+) : BaseListener(ctx) {
 
     private lateinit var scanCommand: ScanCommand
     private var currentPartition = 0
@@ -38,10 +36,10 @@ class ScanCommandListener(
     }
 
     private fun writeScanResponse() {
-        writeArrayHeader(ctx, 2)
-        writeSimpleString(ctx, getNextCursor())
-        writeObjectListStr(ctx, recordSet.map { it.key.userKey.`object` as String })
-        ctx.flush()
+        writeArrayHeader(2)
+        writeSimpleString(getNextCursor())
+        writeObjectListStr(recordSet.map { it.key.userKey.`object` as String })
+        flushCtxTransactionAware()
     }
 
     private fun getNextCursor(): String {
@@ -56,7 +54,7 @@ class ScanCommandListener(
         val scanPolicy = buildScanPolicy()
         var filter = getPartitionFilter()
         while (isScanRequired()) {
-            aeroCtx.client.scanPartitions(
+            client.scanPartitions(
                 scanPolicy, filter, aeroCtx.namespace, aeroCtx.set,
                 callback, aeroCtx.bin
             )

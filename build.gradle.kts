@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.aerospike"
-version = "0.7.0"
+version = "0.8.0"
 
 repositories {
     mavenCentral()
@@ -35,7 +35,7 @@ extra["logbackVersion"] = "1.2.3"
 extra["jacksonVersion"] = "2.12.2"
 
 dependencies {
-    implementation("com.aerospike:aerospike-client:5.0.5")
+    implementation("com.aerospike:aerospike-client:5.1.0")
     implementation("io.netty:netty-all:${project.extra["nettyVersion"]}")
     implementation("io.netty:netty-codec-redis:${project.extra["nettyVersion"]}")
     implementation("com.google.inject:guice:5.0.1")
@@ -49,6 +49,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.extra["jacksonVersion"]}")
+    implementation("com.google.guava:guava:30.1.1-jre")
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")

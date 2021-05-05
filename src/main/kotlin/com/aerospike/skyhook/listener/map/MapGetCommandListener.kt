@@ -9,15 +9,13 @@ import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
-import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
 class MapGetCommandListener(
-    aeroCtx: AerospikeContext,
     ctx: ChannelHandlerContext
-) : BaseListener(aeroCtx, ctx), RecordListener {
+) : BaseListener(ctx), RecordListener {
 
     @Volatile
     private lateinit var command: RedisCommand
@@ -26,7 +24,7 @@ class MapGetCommandListener(
         command = cmd.command
         val key = createKey(cmd.key)
 
-        aeroCtx.client.operate(
+        client.operate(
             null, this, null,
             key, getOperation(cmd)
         )
@@ -99,11 +97,11 @@ class MapGetCommandListener(
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
             writeNull()
-            ctx.flush()
+            flushCtxTransactionAware()
         } else {
             try {
                 writeResponse(marshalOutput(record.bins[aeroCtx.bin]))
-                ctx.flush()
+                flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }
@@ -116,8 +114,8 @@ class MapGetCommandListener(
             RedisCommand.HVALS,
             RedisCommand.HKEYS,
             RedisCommand.SMEMBERS ->
-                writeEmptyList(ctx)
-            else -> writeNullString(ctx)
+                writeEmptyList()
+            else -> writeNullString()
         }
     }
 
