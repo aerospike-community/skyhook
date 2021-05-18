@@ -85,7 +85,7 @@ class ScanCommandListener(
             },
             scanCommand.MATCH?.let {
                 Exp.regexCompare(
-                    scanCommand.MATCH,
+                    it,
                     RegexFlag.ICASE or RegexFlag.NEWLINE,
                     Exp.key(Exp.Type.STRING)
                 )
