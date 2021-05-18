@@ -35,7 +35,7 @@ extra["logbackVersion"] = "1.2.3"
 extra["jacksonVersion"] = "2.12.2"
 
 dependencies {
-    implementation("com.aerospike:aerospike-client:5.1.0")
+    implementation("com.aerospike:aerospike-client:5.1.2")
     implementation("io.netty:netty-all:${project.extra["nettyVersion"]}")
     implementation("io.netty:netty-codec-redis:${project.extra["nettyVersion"]}")
     implementation("com.google.inject:guice:5.0.1")
