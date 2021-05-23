@@ -198,6 +198,8 @@ If no configuration file is specified, the default settings will be applied.
 
 Now the server is listening to the `config.redisPort` (default: 6379) and is ready to serve.
 
+If you wish to deploy Skyhook as a cluster of nodes, you can find some example configurations [here](docs/scaling-out.md).
+
 #### Configuration Properties
 
 | Property name | Description | Default value |
