@@ -200,6 +200,23 @@ Now the server is listening to the `config.redisPort` (default: 6379) and is rea
 
 If you wish to deploy Skyhook as a cluster of nodes, you can find some example configurations [here](docs/scaling-out.md).
 
+### Running on Docker
+Build an image:
+```sh
+docker build -t skyhook .
+```
+
+Run as a Docker container:
+```sh
+docker run -d --name=skyhook -p 6379:6379 skyhook 
+```
+
+The image uses the repository configuration file by default.
+[Bind mount](https://docs.docker.com/storage/bind-mounts/) a custom file to configure the server:
+```sh
+docker run -d --name=skyhook -v "$(pwd)"/config/server.yml:/app/server.yml -p 6379:6379 skyhook
+```
+
 #### Configuration Properties
 
 | Property name | Description | Default value |
