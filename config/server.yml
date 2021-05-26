@@ -1,6 +1,6 @@
 ---
 # The server configuration
-hostList: localhost:3300
+hostList: localhost:3000
 namespase: test
 set: redis
 bin: b
