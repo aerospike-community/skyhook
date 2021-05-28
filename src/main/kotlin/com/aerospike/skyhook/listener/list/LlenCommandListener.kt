@@ -18,7 +18,7 @@ class LlenCommandListener(
         val key = createKey(cmd.key)
         val operation = ListOperation.size(aeroCtx.bin)
         client.operate(
-            null, this, null,
+            null, this, defaultWritePolicy,
             key, operation
         )
     }

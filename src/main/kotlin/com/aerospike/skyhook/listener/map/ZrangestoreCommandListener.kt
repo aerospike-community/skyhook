@@ -36,7 +36,8 @@ class ZrangestoreCommandListener(
             }.toMap()
         )
         client.operate(
-            null, this, defaultWritePolicy, destKey, putOperation
+            null, this, defaultWritePolicy,
+            destKey, putOperation, *systemOps()
         )
     }
 

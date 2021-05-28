@@ -2,6 +2,7 @@ package com.aerospike.skyhook.listener.key
 
 import com.aerospike.client.BatchRead
 import com.aerospike.client.listener.BatchListListener
+import com.aerospike.client.policy.BatchPolicy
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
@@ -16,7 +17,7 @@ class MgetCommandListener(
         val keys = cmd.args.drop(1)
             .map { createKey(it) }
             .map { BatchRead(it, true) }
-        client.get(null, this, null, keys)
+        client.get(null, this, BatchPolicy(defaultWritePolicy), keys)
     }
 
     override fun onSuccess(records: MutableList<BatchRead>?) {

@@ -25,7 +25,7 @@ class HstrlenCommandListener(
             MapReturnType.VALUE
         )
         client.operate(
-            null, this, null, key, operation
+            null, this, defaultWritePolicy, key, operation
         )
     }
 

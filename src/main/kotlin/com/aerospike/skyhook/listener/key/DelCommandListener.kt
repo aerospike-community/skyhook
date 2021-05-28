@@ -14,7 +14,7 @@ class DelCommandListener(
         require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
-        client.delete(null, this, null, key)
+        client.delete(null, this, defaultWritePolicy, key)
     }
 
     override fun onSuccess(key: Key?, existed: Boolean) {

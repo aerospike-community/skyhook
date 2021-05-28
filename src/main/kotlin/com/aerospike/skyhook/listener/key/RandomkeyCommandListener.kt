@@ -17,7 +17,7 @@ class RandomkeyCommandListener(
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 1) { argValidationErrorMsg(cmd) }
 
-        val scanPolicy = ScanPolicy()
+        val scanPolicy = ScanPolicy(defaultWritePolicy)
         scanPolicy.maxRecords = 1
         scanPolicy.includeBinData = false
 

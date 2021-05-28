@@ -3,6 +3,7 @@ package com.aerospike.skyhook.listener.map
 import com.aerospike.client.Key
 import com.aerospike.client.Record
 import com.aerospike.client.listener.RecordArrayListener
+import com.aerospike.client.policy.BatchPolicy
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.IntersectMerge
@@ -18,7 +19,7 @@ abstract class SmergeBaseCommandListener(
         require(cmd.argCount >= 2) { argValidationErrorMsg(cmd) }
 
         client.get(
-            null, this, null,
+            null, this, BatchPolicy(defaultWritePolicy),
             getKeys(cmd).toTypedArray()
         )
     }

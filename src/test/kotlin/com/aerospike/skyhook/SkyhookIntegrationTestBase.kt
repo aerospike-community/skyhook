@@ -62,7 +62,8 @@ abstract class SkyhookIntegrationTestBase {
                 config.namespase,
                 config.set,
                 config.bin,
-                config.typeBin
+                config.typeBin,
+                config.transactionIdBin
             )
         )
 

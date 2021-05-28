@@ -19,7 +19,7 @@ open class ZcountCommandListener(
 
         val key = createKey(cmd.key)
         client.operate(
-            null, this, null,
+            null, this, defaultWritePolicy,
             key, getOperation(cmd)
         )
     }

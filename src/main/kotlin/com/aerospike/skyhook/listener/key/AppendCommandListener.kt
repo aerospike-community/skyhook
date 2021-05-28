@@ -4,6 +4,7 @@ import com.aerospike.client.*
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.listener.ValueType
 import io.netty.channel.ChannelHandlerContext
 
 class AppendCommandListener(
@@ -15,7 +16,7 @@ class AppendCommandListener(
 
         val key = createKey(cmd.key)
         val ops = arrayOf(
-            stringTypeOp(),
+            *systemOps(ValueType.STRING),
             Operation.append(Bin(aeroCtx.bin, Value.StringValue(String(cmd.args[2])))),
             Operation.get(aeroCtx.bin)
         )

@@ -19,7 +19,7 @@ class MapSizeCommandListener(
         val operation = MapOperation.size(aeroCtx.bin)
 
         client.operate(
-            null, this, null,
+            null, this, defaultWritePolicy,
             key, operation
         )
     }

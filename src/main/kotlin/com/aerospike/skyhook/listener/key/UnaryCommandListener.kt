@@ -8,6 +8,7 @@ import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
@@ -22,7 +23,7 @@ abstract class UnaryCommandListener(
 
         val key = createKey(cmd.key)
         val ops = arrayOf(
-            stringTypeOp(),
+            *systemOps(ValueType.STRING),
             getUnaryOperation(cmd),
             Operation.get(aeroCtx.bin)
         )

@@ -8,6 +8,7 @@ import com.aerospike.client.cdt.MapPolicy
 import com.aerospike.client.listener.RecordArrayListener
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.IntersectMerge
 import com.aerospike.skyhook.util.Merge
 import com.aerospike.skyhook.util.Typed
@@ -51,7 +52,7 @@ abstract class SstoreBaseCommandListener(
                 }.toMap()
             )
             client.operate(
-                defaultWritePolicy, key, setTypeOp(), operation
+                defaultWritePolicy, key, *systemOps(ValueType.SET), operation
             )
             writeLong(values.size)
         }

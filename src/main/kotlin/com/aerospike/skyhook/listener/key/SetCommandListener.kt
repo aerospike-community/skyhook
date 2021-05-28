@@ -10,6 +10,7 @@ import com.aerospike.client.policy.WritePolicy
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
@@ -28,7 +29,7 @@ class SetCommandListener(
         val params = parse(cmd)
         client.put(
             null, this, params.writePolicy, key,
-            Bin(aeroCtx.bin, params.value), stringTypeBin()
+            Bin(aeroCtx.bin, params.value), *systemBins(ValueType.STRING)
         )
     }
 

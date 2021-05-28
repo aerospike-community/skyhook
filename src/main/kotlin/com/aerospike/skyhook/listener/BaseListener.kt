@@ -1,15 +1,18 @@
 package com.aerospike.skyhook.listener
 
 import com.aerospike.client.*
+import com.aerospike.client.exp.Exp
 import com.aerospike.client.policy.RecordExistsAction
 import com.aerospike.client.policy.WritePolicy
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.config.AerospikeContext
 import com.aerospike.skyhook.handler.CommandHandler
 import com.aerospike.skyhook.handler.NettyResponseWriter
+import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer
 import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.aeroCtxAttrKey
 import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.authDetailsAttrKey
 import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.clientPoolAttrKey
+import com.aerospike.skyhook.util.TransactionState
 import io.netty.channel.ChannelHandlerContext
 import mu.KotlinLogging
 import java.io.IOException
@@ -28,57 +31,70 @@ abstract class BaseListener(
             return "${cmd.command} arguments"
         }
 
-        @JvmStatic
-        internal val updateOnlyPolicy = run {
-            val updateOnlyPolicy = getWritePolicy()
-            updateOnlyPolicy.recordExistsAction = RecordExistsAction.UPDATE_ONLY
-            updateOnlyPolicy
-        }
-
-        @JvmStatic
-        internal val createOnlyPolicy = run {
-            val updateOnlyPolicy = getWritePolicy()
-            updateOnlyPolicy.recordExistsAction = RecordExistsAction.CREATE_ONLY
-            updateOnlyPolicy
-        }
-
-        @JvmStatic
-        internal val defaultWritePolicy: WritePolicy = getWritePolicy()
-
-        @JvmStatic
-        internal fun getWritePolicy(): WritePolicy {
-            val writePolicy = WritePolicy()
-            writePolicy.sendKey = true
-            return writePolicy
-        }
+        const val transactionTimeoutMillis = 1000L
     }
 
-    protected fun stringTypeBin(): Bin {
-        return Bin(aeroCtx.typeBin, ValueType.STRING.str)
+    protected val updateOnlyPolicy by lazy {
+        val updateOnlyPolicy = getWritePolicy()
+        updateOnlyPolicy.recordExistsAction = RecordExistsAction.UPDATE_ONLY
+        updateOnlyPolicy
     }
 
-    protected fun stringTypeOp(): Operation {
-        return Operation.put(stringTypeBin())
+    protected val createOnlyPolicy by lazy {
+        val updateOnlyPolicy = getWritePolicy()
+        updateOnlyPolicy.recordExistsAction = RecordExistsAction.CREATE_ONLY
+        updateOnlyPolicy
     }
 
-    protected fun listTypeOp(): Operation {
-        return Operation.put(Bin(aeroCtx.typeBin, ValueType.LIST.str))
+    protected val defaultWritePolicy: WritePolicy by lazy {
+        getWritePolicy()
     }
 
-    protected fun setTypeOp(): Operation {
-        return Operation.put(Bin(aeroCtx.typeBin, ValueType.SET.str))
+    protected val transactionState: TransactionState by lazy {
+        ctx.channel().attr(AerospikeChannelInitializer.transactionAttrKey).get()
     }
 
-    protected fun zsetTypeOp(): Operation {
-        return Operation.put(Bin(aeroCtx.typeBin, ValueType.ZSET.str))
+    protected fun getWritePolicy(): WritePolicy {
+        val writePolicy = WritePolicy()
+        writePolicy.sendKey = true
+
+        // transaction awareness
+        writePolicy.filterExp = Exp.build(
+            Exp.or(
+                Exp.not(Exp.binExists(aeroCtx.transactionIdBin)),
+                Exp.and(
+                    Exp.binExists(aeroCtx.transactionIdBin),
+                    Exp.or(
+                        Exp.gt(Exp.sinceUpdate(), Exp.`val`(transactionTimeoutMillis)),
+                        Exp.eq(
+                            Exp.bin(aeroCtx.transactionIdBin, Exp.Type.STRING),
+                            Exp.`val`(transactionState.transactionId ?: "")
+                        )
+                    )
+                )
+            )
+        )
+        return writePolicy
     }
 
-    protected fun hashTypeOp(): Operation {
-        return Operation.put(Bin(aeroCtx.typeBin, ValueType.HASH.str))
+    protected fun systemBins(): Array<Bin> {
+        return listOfNotNull(transactionState.transactionId?.let {
+            Bin(aeroCtx.transactionIdBin, it)
+        }).toTypedArray()
     }
 
-    protected fun streamTypeOp(): Operation {
-        return Operation.put(Bin(aeroCtx.typeBin, ValueType.STREAM.str))
+    protected fun systemBins(type: ValueType): Array<Bin> {
+        return systemBins() + Bin(aeroCtx.typeBin, type.str)
+    }
+
+    protected fun systemOps(): Array<Operation> {
+        return systemBins().map {
+            Operation.put(it)
+        }.toTypedArray()
+    }
+
+    protected fun systemOps(type: ValueType): Array<Operation> {
+        return systemOps() + Operation.put(Bin(aeroCtx.typeBin, type.str))
     }
 
     protected val aeroCtx: AerospikeContext by lazy {
@@ -112,7 +128,11 @@ abstract class BaseListener(
     }
 
     protected fun createKey(key: Value): Key {
-        return Key(aeroCtx.namespace, aeroCtx.set, key)
+        val aeroKey = Key(aeroCtx.namespace, aeroCtx.set, key)
+        if (transactionState.inTransaction) {
+            transactionState.keys.add(aeroKey)
+        }
+        return aeroKey
     }
 
     protected fun createKey(key: ByteArray): Key {

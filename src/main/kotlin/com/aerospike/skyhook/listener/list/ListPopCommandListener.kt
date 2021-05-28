@@ -23,7 +23,7 @@ class ListPopCommandListener(
         val key = createKey(cmd.key)
         client.operate(
             null, this, defaultWritePolicy,
-            key, getListOperation(cmd)
+            key, getListOperation(cmd), *systemOps()
         )
     }
 

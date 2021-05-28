@@ -20,7 +20,7 @@ class TtlCommandListener(
 
         val key = createKey(cmd.key)
         if (cmd.command == RedisCommand.PTTL) m = 1000L
-        client.getHeader(null, this, null, key)
+        client.getHeader(null, this, defaultWritePolicy, key)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {

@@ -15,7 +15,7 @@ class GetCommandListener(
         require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
-        client.get(null, this, null, key)
+        client.get(null, this, defaultWritePolicy, key)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
