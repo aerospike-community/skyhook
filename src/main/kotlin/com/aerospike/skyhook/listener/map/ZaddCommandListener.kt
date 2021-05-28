@@ -11,6 +11,7 @@ import com.aerospike.client.cdt.MapWriteFlags
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
@@ -94,7 +95,7 @@ class ZaddCommandListener(
 
         client.operate(
             null, this, defaultWritePolicy,
-            key, zsetTypeOp(), getMapOperation()
+            key, *systemOps(ValueType.ZSET), getMapOperation()
         )
     }
 

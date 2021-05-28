@@ -33,6 +33,11 @@ data class ServerConfiguration(
     val typeBin: String = "t",
 
     /**
+     * The Aerospike transaction id bin name.
+     */
+    val transactionIdBin: String = "tid",
+
+    /**
      * The server port to bind to.
      */
     val redisPort: Int = 6379,

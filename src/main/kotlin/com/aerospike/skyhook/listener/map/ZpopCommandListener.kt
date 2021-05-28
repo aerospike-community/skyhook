@@ -28,7 +28,8 @@ abstract class ZpopCommandListener(
 
         client.operate(
             null, this, defaultWritePolicy, key,
-            MapOperation.removeByKeyList(aeroCtx.bin, getKeysToPop(record), MapReturnType.KEY_VALUE)
+            MapOperation.removeByKeyList(aeroCtx.bin, getKeysToPop(record), MapReturnType.KEY_VALUE),
+            *systemOps()
         )
     }
 

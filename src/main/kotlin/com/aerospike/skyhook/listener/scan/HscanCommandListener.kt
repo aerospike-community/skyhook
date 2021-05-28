@@ -23,7 +23,7 @@ open class HscanCommandListener(
         val key = createKey(cmd.key)
         scanCommand = ScanCommand(cmd, 3)
         client.operate(
-            null, this, null,
+            null, this, defaultWritePolicy,
             key, getOperation()
         )
     }

@@ -8,6 +8,7 @@ import com.aerospike.client.cdt.MapWriteFlags
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
@@ -27,7 +28,7 @@ class HsetnxCommandListener(
         )
         client.operate(
             null, this, defaultWritePolicy,
-            key, hashTypeOp(), operation
+            key, *systemOps(ValueType.HASH), operation
         )
     }
 
@@ -54,7 +55,7 @@ open class HsetCommandListener(
     ctx: ChannelHandlerContext
 ) : SaddCommandListener(ctx) {
 
-    override val typeOperation: Operation = hashTypeOp()
+    override val systemOps: Array<Operation> = systemOps(ValueType.HASH)
     override val mapPolicy = MapPolicy()
 
     override fun validate(cmd: RequestCommand) {

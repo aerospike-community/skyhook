@@ -24,7 +24,8 @@ class MapDelCommandListener(
             getValues(cmd), MapReturnType.COUNT
         )
         client.operate(
-            null, this, null, key, operation
+            null, this, defaultWritePolicy,
+            key, operation, *systemOps()
         )
     }
 

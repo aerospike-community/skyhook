@@ -7,6 +7,7 @@ import com.aerospike.client.listener.WriteListener
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
@@ -38,7 +39,7 @@ class MsetCommandListener(
         values.forEach { (k, v) ->
             client.put(
                 null, this, defaultWritePolicy, k,
-                Bin(aeroCtx.bin, v), stringTypeBin()
+                Bin(aeroCtx.bin, v), *systemBins(ValueType.STRING)
             )
         }
     }

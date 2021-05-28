@@ -1,6 +1,7 @@
 package com.aerospike.skyhook.handler
 
 import com.aerospike.client.AerospikeException
+import com.aerospike.client.ResultCode
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer.Companion.transactionAttrKey
 import io.netty.channel.ChannelHandler
@@ -74,7 +75,12 @@ class AerospikeChannelHandler() : ChannelInboundHandlerAdapter() {
             }
         } catch (e: Exception) {
             val msg = when (e) {
-                is AerospikeException -> "Internal error"
+                is AerospikeException -> {
+                    if (e.resultCode == ResultCode.FILTERED_OUT)
+                        "Transaction error"
+                    else
+                        "Internal error"
+                }
                 else -> e.message
             }
             log.warn(e) {}

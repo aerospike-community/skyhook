@@ -10,6 +10,7 @@ import com.aerospike.client.policy.WritePolicy
 import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
@@ -26,7 +27,7 @@ class ListPushCommandListener(
         val opPolicy = getOpWritePolicy(cmd)
         client.operate(
             null, this, opPolicy.writePolicy,
-            key, listTypeOp(), opPolicy.op
+            key, *systemOps(ValueType.LIST), opPolicy.op
         )
     }
 

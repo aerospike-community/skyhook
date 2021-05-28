@@ -45,7 +45,8 @@ class AerospikeChannelInitializer @Inject constructor(
                 config.namespase,
                 config.set,
                 config.bin,
-                config.typeBin
+                config.typeBin,
+                config.transactionIdBin
             )
         )
 

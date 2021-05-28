@@ -30,7 +30,7 @@ class HincrbyCommandListener(
         )
         client.operate(
             null, this, defaultWritePolicy,
-            key, operation
+            key, operation, *systemOps()
         )
     }
 

@@ -8,6 +8,7 @@ import com.aerospike.client.cdt.MapWriteFlags
 import com.aerospike.client.listener.RecordListener
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
@@ -17,7 +18,7 @@ open class SaddCommandListener(
 
     @Volatile
     protected open var size: Long = 0L
-    protected open val typeOperation: Operation = setTypeOp()
+    protected open val systemOps: Array<Operation> = systemOps(ValueType.SET)
     protected open val mapPolicy = MapPolicy(MapOrder.UNORDERED, MapWriteFlags.CREATE_ONLY)
 
     override fun handle(cmd: RequestCommand) {
@@ -33,7 +34,7 @@ open class SaddCommandListener(
         )
         client.operate(
             null, this, defaultWritePolicy,
-            key, typeOperation, operation
+            key, *systemOps, operation
         )
     }
 

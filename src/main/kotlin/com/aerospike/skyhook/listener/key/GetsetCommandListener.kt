@@ -18,7 +18,8 @@ class GetsetCommandListener(
         val value = Typed.getValue(cmd.args[2])
         val ops = arrayOf(
             Operation.get(aeroCtx.bin),
-            Operation.put(Bin(aeroCtx.bin, value))
+            Operation.put(Bin(aeroCtx.bin, value)),
+            *systemOps()
         )
 
         client.operate(null, this, updateOnlyPolicy, key, *ops)

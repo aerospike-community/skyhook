@@ -21,4 +21,9 @@ data class AerospikeContext(
      * The Aerospike bin name to set value type.
      */
     val typeBin: String,
+
+    /**
+     * The Aerospike transaction id bin name.
+     */
+    val transactionIdBin: String,
 )

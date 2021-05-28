@@ -25,7 +25,7 @@ class MapGetCommandListener(
         val key = createKey(cmd.key)
 
         client.operate(
-            null, this, null,
+            null, this, defaultWritePolicy,
             key, getOperation(cmd)
         )
     }
