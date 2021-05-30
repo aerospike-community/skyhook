@@ -36,6 +36,36 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
+    fun testSetex() {
+        setup(1)
+        writeCommand("${RedisCommand.SETEX.name} key1 -10 val11")
+        assert(readError().isNotEmpty())
+        writeCommand("${RedisCommand.SETEX.name} key1 abc val11")
+        assert(readError().isNotEmpty())
+        writeCommand("${RedisCommand.SETEX.name} key11 10 val11")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.SETEX.name} key1 10 val11")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.TTL.name} key1")
+        assertTrue(readLong() in 9..10)
+    }
+
+    @Test
+    fun testPsetex() {
+        setup(1)
+        writeCommand("${RedisCommand.PSETEX.name} key1 -10 val11")
+        assert(readError().isNotEmpty())
+        writeCommand("${RedisCommand.PSETEX.name} key1 abc val11")
+        assert(readError().isNotEmpty())
+        writeCommand("${RedisCommand.PSETEX.name} key11 10000 val11")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.PSETEX.name} key1 10000 val11")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.TTL.name} key1")
+        assertTrue(readLong() in 9..10)
+    }
+
+    @Test
     fun testMsetnx() {
         setup(1)
         writeCommand("${RedisCommand.MSETNX.name} key1 val11 key4 val4")
@@ -61,6 +91,51 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals("val1", readFullBulkString())
         writeCommand("${RedisCommand.GETSET.name} key4 val4")
         assertEquals(nullString, readFullBulkString())
+    }
+
+    @Test
+    fun testExpire() {
+        setup(1)
+        writeCommand("${RedisCommand.EXPIRE.name} key11 10")
+        assertEquals(0, readLong())
+        writeCommand("${RedisCommand.EXPIRE.name} key1 10")
+        assertEquals(1, readLong())
+        writeCommand("${RedisCommand.TTL.name} key1")
+        assertTrue(readLong() in 9..10)
+        writeCommand("${RedisCommand.EXPIRE.name} key1 -10")
+        assertEquals(1, readLong())
+        writeCommand("${RedisCommand.EXISTS.name} key1")
+        assertEquals(0, readLong())
+    }
+
+    @Test
+    fun testPexpire() {
+        setup(1)
+        writeCommand("${RedisCommand.PEXPIRE.name} key11 10")
+        assertEquals(0, readLong())
+        writeCommand("${RedisCommand.PEXPIRE.name} key1 10000")
+        assertEquals(1, readLong())
+        writeCommand("${RedisCommand.PTTL.name} key1")
+        assertTrue(readLong() in 9000..10000)
+        writeCommand("${RedisCommand.PEXPIRE.name} key1 -10")
+        assertEquals(1, readLong())
+        writeCommand("${RedisCommand.EXISTS.name} key1")
+        assertEquals(0, readLong())
+    }
+
+    @Test
+    fun testPersist() {
+        setup(1)
+        writeCommand("${RedisCommand.PERSIST.name} key11")
+        assertEquals(0, readLong())
+        writeCommand("${RedisCommand.EXPIRE.name} key1 10")
+        assertEquals(1, readLong())
+        writeCommand("${RedisCommand.TTL.name} key1")
+        assertTrue(readLong() in 9..10)
+        writeCommand("${RedisCommand.PERSIST.name} key1")
+        assertEquals(1, readLong())
+        writeCommand("${RedisCommand.TTL.name} key1")
+        assertEquals(-1, readLong())
     }
 
     @Test

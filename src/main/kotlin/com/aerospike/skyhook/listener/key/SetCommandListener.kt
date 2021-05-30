@@ -13,6 +13,7 @@ import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
+import java.lang.Integer.max
 
 class SetCommandListener(
     ctx: ChannelHandlerContext
@@ -71,13 +72,17 @@ class SetCommandListener(
             RedisCommand.SETEX -> {
                 require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
 
-                writePolicy.expiration = Typed.getInteger(cmd.args[2])
+                val expSeconds = Typed.getInteger(cmd.args[2])
+                require(expSeconds > 0) { "invalid expiration" }
+                writePolicy.expiration = expSeconds
                 Params(writePolicy, Typed.getValue(cmd.args[3]))
             }
             RedisCommand.PSETEX -> {
                 require(cmd.argCount == 4) { argValidationErrorMsg(cmd) }
 
-                writePolicy.expiration = Typed.getInteger(cmd.args[2]) / 1000
+                val expMillis = Typed.getInteger(cmd.args[2])
+                require(expMillis > 0) { "invalid expiration" }
+                writePolicy.expiration = max(expMillis / 1000, 1)
                 Params(writePolicy, Typed.getValue(cmd.args[3]))
             }
             else -> {
