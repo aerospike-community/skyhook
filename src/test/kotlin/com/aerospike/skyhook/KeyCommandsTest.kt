@@ -25,6 +25,40 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
+    fun testSet() {
+        writeCommand("${RedisCommand.SET.name} key1 val1")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.SET.name} key1 val2 GET")
+        assertEquals("val1", readFullBulkString())
+        writeCommand("${RedisCommand.SET.name} key1 val2 NX GET")
+        assert(readError().isNotEmpty())
+        writeCommand("${RedisCommand.SET.name} key1 val2 NX XX")
+        assert(readError().isNotEmpty())
+        writeCommand("${RedisCommand.SET.name} key1 val3 XX GET")
+        assertEquals("val2", readFullBulkString())
+        writeCommand("${RedisCommand.SET.name} key2 val2 NX")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.SET.name} key2 val2 NX")
+        assert(readError().isNotEmpty())
+        writeCommand("${RedisCommand.SET.name} key2 val2 EX 10 PX 10000")
+        assert(readError().isNotEmpty())
+        writeCommand("${RedisCommand.SET.name} key2 val2 EX 10")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.TTL.name} key2")
+        assertTrue(readLong() in 9..10)
+        writeCommand("${RedisCommand.SET.name} key2 val2 PX 10000")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.PTTL.name} key2")
+        assertTrue(readLong() in 9000..10000)
+        writeCommand("${RedisCommand.SET.name} key3 val3 GET")
+        assertEquals(nullString, readFullBulkString())
+        writeCommand("${RedisCommand.SET.name} key4 val4 XX")
+        assertEquals(nullString, readFullBulkString())
+        writeCommand("${RedisCommand.GET.name} key4")
+        assertEquals(nullString, readFullBulkString())
+    }
+
+    @Test
     fun testSetnx() {
         setup(1)
         writeCommand("${RedisCommand.SETNX.name} key1 val11")
