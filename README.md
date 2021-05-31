@@ -106,9 +106,9 @@ Operation | Description
 [SAVE](https://redis.io/commands/save) | Returns OK.
 [SCAN](https://redis.io/commands/scan) *cursor [MATCH pattern] [COUNT count] [TYPE type]* | The SCAN command and the closely related commands SSCAN, HSCAN and ZSCAN are used in order to incrementally iterate over a collection of elements.
 [SCARD](https://redis.io/commands/scard) *key* | Returns the set cardinality (number of elements) of the set stored at key.
+[SET](https://redis.io/commands/set) *key value [EX seconds/PX milliseconds/EXAT timestamp/PXAT milliseconds-timestamp/KEEPTTL] [NX/XX] [GET]* | Set key to hold the string value. If key already holds a value, it is overwritten, regardless of its type.
 [SETEX](https://redis.io/commands/setex) *key seconds value* | Set key to hold the string value and set key to timeout after a given number of seconds.
 [SETNX](https://redis.io/commands/setnx) *key value* | Set key to hold string value if key does not exist.
-[SET](https://redis.io/commands/set) *key value* | Set key to hold the string value. If key already holds a value, it is overwritten, regardless of its type.
 [SINTER](https://redis.io/commands/sinter) *key [key ...]* | Returns the members of the set resulting from the intersection of all the given sets.
 [SINTERSTORE](https://redis.io/commands/sinterstore) *destination key [key ...]* | This command is equal to SINTER, but instead of returning the resulting set, it is stored in destination.
 [SISMEMBER](https://redis.io/commands/sismember) *key member* | Returns if member is a member of the set stored at key.
