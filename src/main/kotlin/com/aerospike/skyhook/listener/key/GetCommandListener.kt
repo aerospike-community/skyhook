@@ -24,7 +24,13 @@ class GetCommandListener(
             flushCtxTransactionAware()
         } else {
             try {
-                writeResponse(record.bins[aeroCtx.bin])
+                val value = record.bins[aeroCtx.bin]
+                writeResponse(
+                    when (value) {
+                        is Long -> value.toString()
+                        else -> value
+                    }
+                )
                 flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
