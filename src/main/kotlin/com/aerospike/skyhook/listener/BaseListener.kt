@@ -117,6 +117,19 @@ abstract class BaseListener(
         writeErrorString("Internal error")
     }
 
+    protected fun writeNumeric(doubleVal: Double, toFloat: Boolean = false) {
+        val intVal = doubleVal.toInt()
+        if (doubleVal == intVal.toDouble()) {
+            if (toFloat) {
+                writeBulkString(intVal.toString())
+            } else {
+                writeLong(intVal)
+            }
+        } else {
+            writeFloat(doubleVal)
+        }
+    }
+
     open fun onFailure(exception: AerospikeException?) {
         try {
             log.debug { exception }

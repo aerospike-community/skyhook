@@ -16,11 +16,15 @@ abstract class UnaryCommandListener(
     ctx: ChannelHandlerContext
 ) : BaseListener(ctx), RecordListener {
 
+    @Volatile
+    private lateinit var command: RedisCommand
+
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2 || cmd.argCount == 3) {
             argValidationErrorMsg(cmd)
         }
 
+        command = cmd.command
         val key = createKey(cmd.key)
         val ops = arrayOf(
             *systemOps(ValueType.STRING),
@@ -39,7 +43,10 @@ abstract class UnaryCommandListener(
             flushCtxTransactionAware()
         } else {
             try {
-                writeObject(record.bins[aeroCtx.bin])
+                writeNumeric(
+                    record.getDouble(aeroCtx.bin),
+                    command == RedisCommand.INCRBYFLOAT
+                )
                 flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
@@ -57,12 +64,9 @@ class IncrCommandListener(
     override fun getUnaryOperation(cmd: RequestCommand): Operation {
         return when (cmd.command) {
             RedisCommand.INCR -> {
-                Operation.add(Bin(aeroCtx.bin, 1))
+                Operation.add(Bin(aeroCtx.bin, 1.0))
             }
-            RedisCommand.INCRBY -> {
-                Operation.add(Bin(aeroCtx.bin, Typed.getInteger(cmd.args[2])))
-            }
-            RedisCommand.INCRBYFLOAT -> {
+            RedisCommand.INCRBY, RedisCommand.INCRBYFLOAT -> {
                 Operation.add(Bin(aeroCtx.bin, Typed.getDouble(cmd.args[2])))
             }
             else -> {
@@ -79,10 +83,10 @@ class DecrCommandListener(
     override fun getUnaryOperation(cmd: RequestCommand): Operation {
         return when (cmd.command) {
             RedisCommand.DECR -> {
-                Operation.add(Bin(aeroCtx.bin, -1))
+                Operation.add(Bin(aeroCtx.bin, -1.0))
             }
             RedisCommand.DECRBY -> {
-                Operation.add(Bin(aeroCtx.bin, -Typed.getInteger(cmd.args[2])))
+                Operation.add(Bin(aeroCtx.bin, -Typed.getDouble(cmd.args[2])))
             }
             else -> {
                 throw IllegalArgumentException(cmd.command.toString())
