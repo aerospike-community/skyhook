@@ -156,7 +156,16 @@ open class NettyResponseWriter(
 
     @Throws(IOException::class)
     fun writeFloat(floatValue: Double?) {
-        val floatString = String.format("%f", floatValue)
+        if (floatValue == null) {
+            ctx.write(FullBulkStringRedisMessage.NULL_INSTANCE)
+            return
+        }
+        val intValue = floatValue.toInt()
+        val floatString = if (intValue.toDouble() == floatValue) {
+            intValue.toString()
+        } else {
+            floatValue.toString()
+        }
         ctx.write(
             FullBulkStringRedisMessage(
                 Unpooled.wrappedBuffer(floatString.toByteArray())
