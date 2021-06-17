@@ -220,6 +220,14 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals(ok, readString())
         writeCommand("${RedisCommand.INCRBYFLOAT.name} key2 7.7")
         assertEquals("18.2", readFullBulkString())
+        writeCommand("${RedisCommand.INCRBY.name} key2 5")
+        assertEquals("23.2", readFullBulkString())
+        writeCommand("${RedisCommand.INCR.name} key2")
+        assertEquals("24.2", readFullBulkString())
+        writeCommand("${RedisCommand.INCRBYFLOAT.name} key2 0.8")
+        assertEquals("25", readFullBulkString())
+        writeCommand("${RedisCommand.INCRBY.name} key2 5")
+        assertEquals(30, readLong())
     }
 
     @Test
