@@ -1,7 +1,7 @@
 ---
 # The server configuration
 hostList: localhost:3000
-namespase: test
+namespace: test
 set: redis
 bin: b
 redisPort: 6379

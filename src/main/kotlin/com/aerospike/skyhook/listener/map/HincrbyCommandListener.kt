@@ -55,8 +55,8 @@ class HincrbyCommandListener(
         } else {
             try {
                 when (command) {
-                    RedisCommand.ZINCRBY -> writeResponse(record.getLong(aeroCtx.bin).toString())
-                    else -> writeResponse(record.bins[aeroCtx.bin])
+                    RedisCommand.ZINCRBY -> writeBulkString(record.getLong(aeroCtx.bin).toString())
+                    else -> writeNumeric(record.getDouble(aeroCtx.bin))
                 }
                 flushCtxTransactionAware()
             } catch (e: Exception) {
