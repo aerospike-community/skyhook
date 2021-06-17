@@ -30,12 +30,12 @@ tasks.withType<Jar> {
 }
 
 // Common dependency versions.
-extra["nettyVersion"] = "4.1.60.Final"
+extra["nettyVersion"] = "4.1.65.Final"
 extra["logbackVersion"] = "1.2.3"
 extra["jacksonVersion"] = "2.12.2"
 
 dependencies {
-    implementation("com.aerospike:aerospike-client:5.1.2")
+    implementation("com.aerospike:aerospike-client:5.1.3")
     implementation("io.netty:netty-all:${project.extra["nettyVersion"]}")
     implementation("io.netty:netty-codec-redis:${project.extra["nettyVersion"]}")
     implementation("com.google.inject:guice:5.0.1")
