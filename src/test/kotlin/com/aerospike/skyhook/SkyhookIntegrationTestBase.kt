@@ -59,7 +59,7 @@ abstract class SkyhookIntegrationTestBase {
     init {
         channel.attr(aeroCtxAttrKey).set(
             AerospikeContext(
-                config.namespase,
+                config.namespace,
                 config.set,
                 config.bin,
                 config.typeBin,
@@ -72,7 +72,7 @@ abstract class SkyhookIntegrationTestBase {
     }
 
     protected fun aeroKey(key: Any): Key {
-        return Key(config.namespase, config.set, Value.get(key))
+        return Key(config.namespace, config.set, Value.get(key))
     }
 
     protected fun aeroBin(bin: Any): Bin {

@@ -42,7 +42,7 @@ class AerospikeChannelInitializer @Inject constructor(
 
         ch.attr(aeroCtxAttrKey).set(
             AerospikeContext(
-                config.namespase,
+                config.namespace,
                 config.set,
                 config.bin,
                 config.typeBin,

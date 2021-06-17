@@ -10,7 +10,7 @@ data class ServerConfiguration(
     /**
      * The Aerospike namespace.
      */
-    val namespase: String = "test",
+    val namespace: String = "test",
 
     /**
      * The Aerospike set name.

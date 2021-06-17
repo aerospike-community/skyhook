@@ -222,7 +222,7 @@ docker run -d --name=skyhook -v "$(pwd)"/config/server.yml:/app/server.yml -p 63
 | Property name | Description | Default value |
 | ------------- | ----------- | ------------- |
 | hostList | The host list to seed the Aerospike cluster. | localhost:3000 |
-| namespase | The Aerospike namespace. | test |
+| namespace | The Aerospike namespace. | test |
 | set | The Aerospike set name. | redis |
 | clientPolicy | The Aerospike Java client [ClientPolicy](https://docs.aerospike.com/apidocs/java/com/aerospike/client/policy/ClientPolicy.html) configuration properties. | ClientPolicyConfig |
 | bin | The Aerospike value bin name. | b |
