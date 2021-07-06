@@ -55,7 +55,7 @@ abstract class BaseListener(
     }
 
     protected fun getWritePolicy(): WritePolicy {
-        val writePolicy = WritePolicy()
+        val writePolicy = WritePolicy(client.writePolicyDefault)
         writePolicy.sendKey = true
 
         // transaction awareness
