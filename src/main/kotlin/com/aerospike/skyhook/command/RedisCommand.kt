@@ -36,6 +36,7 @@ import com.aerospike.skyhook.command.CommandsDetails.hvalsCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.incrCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.incrbyCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.incrbyfloatCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.keysCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.lindexCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.llenCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.lolwutCommandDetails
@@ -107,10 +108,7 @@ import com.aerospike.skyhook.handler.redis.*
 import com.aerospike.skyhook.listener.key.*
 import com.aerospike.skyhook.listener.list.*
 import com.aerospike.skyhook.listener.map.*
-import com.aerospike.skyhook.listener.scan.HscanCommandListener
-import com.aerospike.skyhook.listener.scan.ScanCommandListener
-import com.aerospike.skyhook.listener.scan.SscanCommandListener
-import com.aerospike.skyhook.listener.scan.ZscanCommandListener
+import com.aerospike.skyhook.listener.scan.*
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.redis.ArrayHeaderRedisMessage
 import mu.KotlinLogging
@@ -217,6 +215,7 @@ enum class RedisCommand(
     HSCAN(hscanCommandDetails, ::HscanCommandListener),
     SSCAN(sscanCommandDetails, ::SscanCommandListener),
     ZSCAN(zscanCommandDetails, ::ZscanCommandListener),
+    KEYS(keysCommandDetails, ::KeysCommandListener),
 
     FLUSHDB(flushdbCommandDetails, ::FlushCommandHandler),
     FLUSHALL(flushallCommandDetails, ::FlushCommandHandler),
@@ -363,6 +362,7 @@ object CommandsDetails {
     val hscanCommandDetails = RedisCommandDetails("hscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
     val sscanCommandDetails = RedisCommandDetails("sscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
     val zscanCommandDetails = RedisCommandDetails("zscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
+    val keysCommandDetails = RedisCommandDetails("keys", 2, arrayListOf("readonly", "sort_for_script"), 0, 0, 0)
 
     val flushdbCommandDetails = RedisCommandDetails("flushdb", -1, arrayListOf("write"), 0, 0, 0)
     val flushallCommandDetails = RedisCommandDetails("flushall", -1, arrayListOf("write"), 0, 0, 0)
