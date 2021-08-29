@@ -200,6 +200,15 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
+    fun testStrlen() {
+        setup(1)
+        writeCommand("${RedisCommand.STRLEN.name} key1")
+        assertEquals(4, readLong())
+        writeCommand("${RedisCommand.STRLEN.name} key4")
+        assertEquals(0, readLong())
+    }
+
+    @Test
     fun testAppend() {
         setup(1)
         writeCommand("${RedisCommand.APPEND.name} key1 1")
