@@ -79,6 +79,7 @@ Operation | Description
 [INCRBYFLOAT](https://redis.io/commands/incrbyfloat) *key increment* | Increment the string representing a floating point number stored at key by the specified increment.
 [INCRBY](https://redis.io/commands/incrby) *key increment* | Increments the number stored at key by increment.
 [INCR](https://redis.io/commands/incr) *key* | Increments the number stored at key by one.
+[KEYS](https://redis.io/commands/keys) *pattern* | Returns all keys matching pattern.
 [LINDEX](https://redis.io/commands/lindex) *key index* | Returns the element at index index in the list stored at key.
 [LLEN](https://redis.io/commands/llen) *key* | Returns the length of the list stored at key.
 [LOLWUT](https://redis.io/commands/lolwut) *[VERSION version]* | The LOLWUT command displays the Redis version.
