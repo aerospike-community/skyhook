@@ -9,7 +9,7 @@ import io.netty.channel.ChannelHandlerContext
 
 class StrlenCommandListener(
     ctx: ChannelHandlerContext
-) : BaseListener(ctx), RecordListener {
+) : BaseListener(ctx), RecordListener, LengthFetcher {
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
@@ -24,29 +24,23 @@ class StrlenCommandListener(
             flushCtxTransactionAware()
         } else {
             try {
-                writeResponse(getValueStrLen(record.bins[aeroCtx.bin]))
+                writeResponse(valueLength(record.bins[aeroCtx.bin]))
                 flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
             }
         }
     }
+}
 
-    private fun getValueStrLen(value: Any?): Long {
-        if (value == null) {
-            return 0
+interface LengthFetcher {
+
+    fun valueLength(value: Any?): Long {
+        return when (value) {
+            is String -> value.length.toLong()
+            is ByteArray -> value.size.toLong()
+            null -> 0L
+            else -> value.toString().length.toLong()
         }
-        if (value is String) {
-            return value.length.toLong()
-        }
-        if (value is ByteArray) {
-            return value.size.toLong()
-        }
-        if (value is Long) {
-            return value.toString().length.toLong()
-        }
-        return if (value is Double) {
-            ((value as Double?)!!).toString().length.toLong()
-        } else 0
     }
 }
