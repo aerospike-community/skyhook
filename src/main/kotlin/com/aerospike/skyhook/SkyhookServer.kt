@@ -2,11 +2,15 @@ package com.aerospike.skyhook
 
 import com.aerospike.skyhook.config.ServerConfiguration
 import com.aerospike.skyhook.pipeline.AerospikeChannelInitializer
+import com.aerospike.skyhook.util.SystemUtils
 import com.google.inject.name.Named
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelOption
 import io.netty.channel.EventLoopGroup
+import io.netty.channel.epoll.EpollServerDomainSocketChannel
+import io.netty.channel.kqueue.KQueueServerDomainSocketChannel
 import io.netty.channel.socket.ServerSocketChannel
+import io.netty.channel.unix.DomainSocketAddress
 import mu.KotlinLogging
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -75,7 +79,11 @@ class SkyhookServer @Inject constructor(
 
         log.info { "Starting the Server..." }
 
-        bindAndListen()
+        if (config.unixSocket == null) {
+            bindInetSocket()
+        } else {
+            bindUnixSocket()
+        }
 
         log.info { "Started Netty server with config $config" }
         started = true
@@ -93,18 +101,35 @@ class SkyhookServer @Inject constructor(
         started = false
     }
 
-    private fun bindAndListen() {
-        val server = ServerBootstrap()
+    private fun bindInetSocket() {
+        val server = initServerBootstrap()
 
-        // Setup handlers.
-        server.group(bossGroup, workerGroup)
-            .channel(socketChannel.javaClass)
-            .childHandler(channelInitializer)
-            .option(ChannelOption.SO_BACKLOG, 128)
+        server.channel(socketChannel.javaClass)
             .childOption(ChannelOption.SO_KEEPALIVE, true)
             .childOption(ChannelOption.TCP_NODELAY, true)
+            .bind(config.redisPort).sync()
+    }
 
-        server.bind(config.redisPort).sync()
+    private fun bindUnixSocket() {
+        val server = initServerBootstrap()
+
+        val channel = when (SystemUtils.os) {
+            SystemUtils.OS.LINUX -> EpollServerDomainSocketChannel()
+            SystemUtils.OS.MAC -> KQueueServerDomainSocketChannel()
+            else -> throw IllegalArgumentException("Unsupported UNIX Socket")
+        }
+
+        server.channel(channel.javaClass)
+            .bind(DomainSocketAddress(config.unixSocket)).sync()
+    }
+
+    private fun initServerBootstrap(): ServerBootstrap {
+        val server = ServerBootstrap()
+
+        server.group(bossGroup, workerGroup)
+            .childHandler(channelInitializer)
+            .option(ChannelOption.SO_BACKLOG, 128)
+        return server
     }
 
 }
