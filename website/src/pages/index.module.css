@@ -17,9 +17,12 @@
     overflow: hidden;
     background-image: url(../../static/img/hero-bg-right.webp);
     background-color: #17104e;
-    background-repeat: no-repeat;
-    background-size: auto;
+    background-repeat: repeat;
+    background-size: cover;
     background-position: right center;
+  }
+  .contentBody {
+    background-color: #17104e;
   }
   .heroBanner h1{
     font-weight: normal;

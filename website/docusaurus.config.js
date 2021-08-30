@@ -6,15 +6,15 @@ module.exports = {
   title: 'Skyhook',
   tagline: 'Skyhook is a Redis API compatible gateway to Aerospike Database',
   url: 'https://arrowplum.github.io/',
-  baseUrl: '/',
+  baseUrl: '/skyhook/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'aerospike', // Usually your GitHub org/user name.
+  organizationName: 'arrowplum', // Usually your GitHub org/user name.
   projectName: 'skyhook', // Usually your repo name.
   themeConfig: {
     colorMode: {
-        defaultMode: 'dark',
+        defaultMode: 'light',
         disableSwitch: true,
     },
     navbar: {
@@ -45,7 +45,7 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
+              label: 'Introduction',
               to: '/docs/intro',
             },
           ],
@@ -55,15 +55,11 @@ module.exports = {
           items: [
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
+              href: 'https://stackoverflow.com/questions/tagged/aerospike',
             },
             {
               label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
+              href: 'https://twitter.com/aerospikedb',
             },
           ],
         },
@@ -76,12 +72,12 @@ module.exports = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/aerospike/skyhook',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Aerospike`,
     },
     prism: {
       theme: darkCodeTheme,
@@ -101,7 +97,7 @@ module.exports = {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/edit/main/website/blog/',
+            'https://github.com/aerospike/skyhook/edit/main/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

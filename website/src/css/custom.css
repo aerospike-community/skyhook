@@ -39,7 +39,7 @@
     --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-html[data-theme='dark'] {
+/* html[data-theme='dark'] {
       --ifm-color-primary: #4e89e8;  
       --ifm-color-primary-dark: #5a91ea;  
       --ifm-hero-text-color: white;
@@ -48,8 +48,8 @@ html[data-theme='dark'] {
       --ifm-hero-text-color: white;
       --ifm-font-color: black;
       --ifm-font-color-inverse: white;
-        /* any other colors you wish to overwrite */
-}
+} 
+*/
   html{
     font-family: sans-serif;
   }
@@ -97,7 +97,6 @@ html[data-theme='dark'] {
     padding-left: 12% !important;
   }
   .container{
-    max-width: 1200px;
     margin: auto;
     padding: 0;
   }
