@@ -146,6 +146,17 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
+    fun testGetdel() {
+        setup(1)
+        writeCommand("${RedisCommand.GETDEL.name} key1")
+        assertEquals("val1", readFullBulkString())
+        writeCommand("${RedisCommand.GET.name} key1")
+        assertEquals(nullString, readFullBulkString())
+        writeCommand("${RedisCommand.GETDEL.name} key4")
+        assertEquals(nullString, readFullBulkString())
+    }
+
+    @Test
     fun testExpire() {
         setup(1)
         writeCommand("${RedisCommand.EXPIRE.name} key11 10")

@@ -59,8 +59,9 @@ Operation | Description
 [EXPIREAT](https://redis.io/commands/expireat) *key timestamp* | EXPIREAT has the same effect and semantic as EXPIRE, but instead of specifying the number of seconds representing the TTL (time to live), it takes an absolute Unix timestamp (seconds since January 1, 1970).
 [FLUSHALL](https://redis.io/commands/flushall) | Delete all the keys of all the existing databases, not just the currently selected one.
 [FLUSHDB](https://redis.io/commands/flushdb) | Delete all the keys of the currently selected DB.
-[GETSET](https://redis.io/commands/getset) *key value* | Atomically sets key to value and returns the old value stored at key.
 [GET](https://redis.io/commands/get) *key* | Get the value of key.
+[GETDEL](https://redis.io/commands/getdel) *key* | Get the value of key and delete the key.
+[GETSET](https://redis.io/commands/getset) *key value* | Atomically sets key to value and returns the old value stored at key.
 [HDEL](https://redis.io/commands/hdel) *key field [field ...]* | Removes the specified fields from the hash stored at key.
 [HEXISTS](https://redis.io/commands/hexists) *key field* | Returns if field is an existing field in the hash stored at key.
 [HGETALL](https://redis.io/commands/hgetall) *key* | Returns all fields and values of the hash stored at key.

@@ -17,6 +17,7 @@ import com.aerospike.skyhook.command.CommandsDetails.expireatCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.flushallCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.flushdbCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.getCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.getdelCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.getsetCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hdelCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hexistsCommandDetails
@@ -122,6 +123,7 @@ enum class RedisCommand(
     GET(getCommandDetails, ::GetCommandListener),
     MGET(mgetCommandDetails, ::MgetCommandListener),
     GETSET(getsetCommandDetails, ::GetsetCommandListener),
+    GETDEL(getdelCommandDetails, ::GetdelCommandListener),
     SET(setCommandDetails, ::SetCommandListener),
     SETEX(setexCommandDetails, ::SetCommandListener),
     PSETEX(psetexCommandDetails, ::SetCommandListener),
@@ -274,6 +276,7 @@ object CommandsDetails {
     val getCommandDetails = RedisCommandDetails("get", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
     val mgetCommandDetails = RedisCommandDetails("mget", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
     val getsetCommandDetails = RedisCommandDetails("getset", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val getdelCommandDetails = RedisCommandDetails("getdel", 2, arrayListOf("write", "fast"), 1, 1, 1)
     val setCommandDetails = RedisCommandDetails("set", -3, arrayListOf("write", "denyoom"), 1, 1, 1)
     val setexCommandDetails = RedisCommandDetails("setex", 4, arrayListOf("write", "denyoom"), 1, 1, 1)
     val psetexCommandDetails = RedisCommandDetails("psetex", 4, arrayListOf("write", "denyoom"), 1, 1, 1)

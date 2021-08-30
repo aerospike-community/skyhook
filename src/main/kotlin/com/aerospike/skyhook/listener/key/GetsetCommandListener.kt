@@ -7,7 +7,7 @@ import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
-class GetsetCommandListener(
+open class GetsetCommandListener(
     ctx: ChannelHandlerContext
 ) : BaseListener(ctx), RecordListener {
 
@@ -41,5 +41,23 @@ class GetsetCommandListener(
                 closeCtx(e)
             }
         }
+    }
+}
+
+class GetdelCommandListener(
+    ctx: ChannelHandlerContext
+) : GetsetCommandListener(ctx), RecordListener {
+
+    override fun handle(cmd: RequestCommand) {
+        require(cmd.argCount == 2) { argValidationErrorMsg(cmd) }
+
+        val key = createKey(cmd.key)
+        val ops = arrayOf(
+            Operation.get(aeroCtx.bin),
+            Operation.delete(),
+            *systemOps()
+        )
+
+        client.operate(null, this, updateOnlyPolicy, key, *ops)
     }
 }
