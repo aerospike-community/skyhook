@@ -5,14 +5,6 @@
  */
 
 /* You can override the default Infima variables here. */
-/* stylelint-disable docusaurus/copyright-header */
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
-
-/* You can override the default Infima variables here. */
 :root {
     --blue: #3B69E5;
     --indigo: #6610f2;
@@ -45,21 +37,23 @@
     --ifm-code-font-size: 95%;
     --font-family-sans-serif: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  }
+}
+
+html[data-theme='dark'] {
+      --ifm-color-primary: #4e89e8;  
+      --ifm-color-primary-dark: #5a91ea;  
+      --ifm-hero-text-color: white;
+      --ifm-hero-subtitle: white;
+      --ifm-heading-color: white;
+      --ifm-hero-text-color: white;
+      --ifm-font-color: black;
+      --ifm-font-color-inverse: white;
+        /* any other colors you wish to overwrite */
+}
   html{
     font-family: sans-serif;
   }
-  a, .table-of-contents__link, .menu__link{
-    color: #17104e;
-  }
-  a:hover, .navbar__link--active, .table-of-contents__link--active, .menu__link--active, .markdown a{
-    color: #c31618 !important;
-  }
-  .anchorLink, .anchorLink:hover{
-    color: #000 !important;
-    text-decoration: none !important;
-    cursor: default;
-  }
+ 
   h1,h2,h3,h4{
     font-weight: lighter;
   }
@@ -75,14 +69,7 @@
   h4{
     font-size: 1.25rem;
   }
-  .col-4{
-    min-width: 33%;
-    max-width: 100%;
-  }
-  .addReText{
-    width: 350px;
-    padding: 100px;
-  }
+  
   .docusaurus-highlight-code-line {
     background-color: rgb(72, 77, 91);
     display: block;
@@ -125,18 +112,6 @@
   }
   .dataframe thead th {
     text-align: right;
-  }
-  .installVid{
-    width: 80%;
-    aspect-ratio: 16 / 9;
-    margin: auto;
-  }
-  .logoPics{
-    align-items: center;
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    width: 33%;
   }
   .hiddenTabs{
     display: none;
