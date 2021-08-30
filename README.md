@@ -229,6 +229,7 @@ docker run -d --name=skyhook -v "$(pwd)"/config/server.yml:/app/server.yml -p 63
 | bin | The Aerospike value bin name. | b |
 | typeBin | The Aerospike value [type](https://redis.io/topics/data-types) bin name. | t |
 | redisPort | The server port to bind to. | 6379 |
+| unixSocket | The server will bind on unix socket if configured. | |
 | workerThreads<sup>[1](#worker-threads)</sup> | The Netty worker group size. | number of available cores |
 | bossThreads | The Netty acceptor group size. | 2 |
 
