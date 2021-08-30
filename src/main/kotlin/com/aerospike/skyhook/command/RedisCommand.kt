@@ -72,6 +72,7 @@ import com.aerospike.skyhook.command.CommandsDetails.sinterCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sinterstoreCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sismemberCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.smembersCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.smismemberCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.srandmemberCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sremCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sscanCommandDetails
@@ -176,6 +177,7 @@ enum class RedisCommand(
     SADD(saddCommandDetails, ::SaddCommandListener),
     HEXISTS(hexistsCommandDetails, ::HexistsCommandListener),
     SISMEMBER(sismemberCommandDetails, ::HexistsCommandListener),
+    SMISMEMBER(smismemberCommandDetails, ::SmismemberCommandListener),
     HGET(hgetCommandDetails, ::MapGetCommandListener),
     HMGET(hmgetCommandDetails, ::MapGetCommandListener),
     HGETALL(hgetallCommandDetails, ::MapGetCommandListener),
@@ -325,6 +327,7 @@ object CommandsDetails {
     val saddCommandDetails = RedisCommandDetails("sadd", -3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
     val hexistsCommandDetails = RedisCommandDetails("hexists", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
     val sismemberCommandDetails = RedisCommandDetails("sismember", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val smismemberCommandDetails = RedisCommandDetails("smismember", -3, arrayListOf("readonly", "fast"), 1, 1, 1)
     val hgetCommandDetails = RedisCommandDetails("hget", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
     val hmgetCommandDetails = RedisCommandDetails("hmget", -3, arrayListOf("readonly", "fast"), 1, 1, 1)
     val hgetallCommandDetails = RedisCommandDetails("hgetall", 2, arrayListOf("readonly", "random"), 1, 1, 1)

@@ -30,6 +30,23 @@ class SetCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals(1, readLong())
         writeCommand("${RedisCommand.SISMEMBER.name} $_key val2")
         assertEquals(0, readLong())
+        writeCommand("${RedisCommand.SISMEMBER.name} ne val1")
+        assertEquals(0, readLong())
+    }
+
+    @Test
+    fun testSmismember() {
+        setup(1)
+        writeCommand("${RedisCommand.SMISMEMBER.name} $_key val1 val2 val3")
+        val r = readLongArray()
+        assertEquals(1, r[0])
+        assertEquals(0, r[1])
+        assertEquals(0, r[2])
+
+        writeCommand("${RedisCommand.SMISMEMBER.name} ne val1 val2")
+        val r2 = readLongArray()
+        assertEquals(0, r2[0])
+        assertEquals(0, r2[1])
     }
 
     @Test

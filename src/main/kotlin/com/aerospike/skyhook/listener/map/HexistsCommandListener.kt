@@ -2,6 +2,7 @@ package com.aerospike.skyhook.listener.map
 
 import com.aerospike.client.Key
 import com.aerospike.client.Record
+import com.aerospike.client.Value
 import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
@@ -15,7 +16,7 @@ class HexistsCommandListener(
 ) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount >= 3) { argValidationErrorMsg(cmd) }
+        require(cmd.argCount == 3) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
         val operation = MapOperation.getByKey(
@@ -30,15 +31,40 @@ class HexistsCommandListener(
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString()
-            flushCtxTransactionAware()
+            writeLong(0L)
         } else {
-            try {
-                writeResponse(record.bins[aeroCtx.bin])
-                flushCtxTransactionAware()
-            } catch (e: Exception) {
-                closeCtx(e)
-            }
+            writeResponse(record.bins[aeroCtx.bin])
         }
+        flushCtxTransactionAware()
+    }
+}
+
+class SmismemberCommandListener(
+    ctx: ChannelHandlerContext
+) : BaseListener(ctx) {
+
+    override fun handle(cmd: RequestCommand) {
+        require(cmd.argCount >= 3) { argValidationErrorMsg(cmd) }
+
+        val key = createKey(cmd.key)
+        val values = getValues(cmd)
+        writeArrayHeader(values.size.toLong())
+
+        values.forEach { v ->
+            val operation = MapOperation.getByKey(
+                aeroCtx.bin, v, MapReturnType.COUNT
+            )
+            val exists = client.operate(
+                defaultWritePolicy,
+                key, operation
+            )?.getLong(aeroCtx.bin) ?: 0L
+            writeLong(exists)
+        }
+        flushCtxTransactionAware()
+    }
+
+    private fun getValues(cmd: RequestCommand): List<Value> {
+        return cmd.args.drop(2)
+            .map { Typed.getValue(it) }
     }
 }

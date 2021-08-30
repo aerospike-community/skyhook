@@ -70,6 +70,8 @@ class HashCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals(1, readLong())
         writeCommand("${RedisCommand.HEXISTS.name} $_key key2")
         assertEquals(0, readLong())
+        writeCommand("${RedisCommand.HEXISTS.name} ne key1")
+        assertEquals(0, readLong())
     }
 
     @Test
