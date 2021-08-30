@@ -162,4 +162,31 @@ class HashCommandsTest() : SkyhookIntegrationTestBase() {
         writeCommand("${RedisCommand.HGET.name} $_key key1")
         assertEquals(nullString, readFullBulkString())
     }
+
+    @Test
+    fun testHrandfield() {
+        setup()
+        writeCommand("${RedisCommand.HRANDFIELD.name} $_key")
+        val r = readFullBulkString()
+        assertTrue { r.startsWith("key") }
+
+        writeCommand("${RedisCommand.HRANDFIELD.name} $_key 5")
+        val r2 = readStringArray()
+        assertTrue { r2.size == 3 }
+
+        writeCommand("${RedisCommand.HRANDFIELD.name} $_key -5")
+        val r3 = readStringArray()
+        assertTrue { r3.size == 5 }
+
+        writeCommand("${RedisCommand.HRANDFIELD.name} $_key 5 WITHVALUES")
+        val r4 = readStringArray()
+        assertTrue { r4.size == 6 }
+
+        writeCommand("${RedisCommand.HRANDFIELD.name} $_key -5 withvalues")
+        val r5 = readStringArray()
+        assertTrue { r5.size == 10 }
+
+        writeCommand("${RedisCommand.HRANDFIELD.name} ne")
+        assertEquals(nullString, readFullBulkString())
+    }
 }

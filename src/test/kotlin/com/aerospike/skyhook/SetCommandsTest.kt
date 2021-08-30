@@ -100,4 +100,23 @@ class SetCommandsTest() : SkyhookIntegrationTestBase() {
         writeCommand("${RedisCommand.SINTERSTORE.name} inter $_key set2")
         assertEquals(3, readLong())
     }
+
+    @Test
+    fun testSrandmember() {
+        setup()
+        writeCommand("${RedisCommand.SRANDMEMBER.name} $_key")
+        val r = readFullBulkString()
+        assertTrue { r.startsWith("val") }
+
+        writeCommand("${RedisCommand.SRANDMEMBER.name} $_key 5")
+        val r2 = readStringArray()
+        assertTrue { r2.size == 3 }
+
+        writeCommand("${RedisCommand.SRANDMEMBER.name} $_key -5")
+        val r3 = readStringArray()
+        assertTrue { r3.size == 5 }
+
+        writeCommand("${RedisCommand.SRANDMEMBER.name} ne")
+        assertEquals(nullString, readFullBulkString())
+    }
 }

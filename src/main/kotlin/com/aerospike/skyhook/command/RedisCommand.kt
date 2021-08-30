@@ -29,6 +29,7 @@ import com.aerospike.skyhook.command.CommandsDetails.hkeysCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hlenCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hmgetCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hmsetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hrandfieldCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hscanCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hsetCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hsetnxCommandDetails
@@ -71,6 +72,7 @@ import com.aerospike.skyhook.command.CommandsDetails.sinterCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sinterstoreCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sismemberCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.smembersCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.srandmemberCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sremCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sscanCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.strlenCommandDetails
@@ -199,7 +201,9 @@ enum class RedisCommand(
     ZADD(zaddCommandDetails, ::ZaddCommandListener),
     ZPOPMAX(zpopmaxCommandDetails, ::ZpopmaxCommandListener),
     ZPOPMIN(zpopminCommandDetails, ::ZpopminCommandListener),
-    ZRANDMEMBER(zrandmemberCommandDetails, ::ZrandmemberCommandListener),
+    ZRANDMEMBER(zrandmemberCommandDetails, ::RandmemberCommandListener),
+    SRANDMEMBER(srandmemberCommandDetails, ::RandmemberCommandListener),
+    HRANDFIELD(hrandfieldCommandDetails, ::RandmemberCommandListener),
     ZCOUNT(zcountCommandDetails, ::ZcountCommandListener),
     ZLEXCOUNT(zlexcountCommandDetails, ::ZlexcountCommandListener),
     ZREMRANGEBYSCORE(zremrangebyscoreCommandDetails, ::ZremrangebyscoreCommandListener),
@@ -348,6 +352,8 @@ object CommandsDetails {
     val zpopmaxCommandDetails = RedisCommandDetails("zpopmax", -2, arrayListOf("write", "fast"), 1, 1, 1)
     val zpopminCommandDetails = RedisCommandDetails("zpopmin", -2, arrayListOf("write", "fast"), 1, 1, 1)
     val zrandmemberCommandDetails = RedisCommandDetails("zrandmember", -2, arrayListOf("readonly", "random"), 1, 1, 1)
+    val srandmemberCommandDetails = RedisCommandDetails("srandmember", -2, arrayListOf("readonly", "random"), 1, 1, 1)
+    val hrandfieldCommandDetails = RedisCommandDetails("hrandfield", -2, arrayListOf("readonly", "random"), 1, 1, 1)
     val zcountCommandDetails = RedisCommandDetails("zcount", 4, arrayListOf("readonly", "fast"), 1, 1, 1)
     val zlexcountCommandDetails = RedisCommandDetails("zlexcount", 4, arrayListOf("readonly", "fast"), 1, 1, 1)
     val zremrangebyscoreCommandDetails = RedisCommandDetails("zremrangebyscore", 4, arrayListOf("write"), 1, 1, 1)
