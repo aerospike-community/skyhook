@@ -5,17 +5,17 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 module.exports = {
   title: 'Skyhook',
   tagline: 'Skyhook is a Redis API compatible gateway to Aerospike Database',
-  url: 'https://arrowplum.github.io/',
+  url: 'https://aerospike.github.io/',
   baseUrl: '/skyhook/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'arrowplum', // Usually your GitHub org/user name.
+  organizationName: 'aerospike', // Usually your GitHub org/user name.
   projectName: 'skyhook', // Usually your repo name.
   themeConfig: {
     colorMode: {
-        defaultMode: 'light',
-        disableSwitch: true,
+      defaultMode: 'light',
+      disableSwitch: true,
     },
     navbar: {
       title: 'Skyhook',
@@ -30,7 +30,7 @@ module.exports = {
           position: 'left',
           label: 'Docs',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        { to: '/blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/aerospike/skyhook',
           label: 'GitHub',
@@ -96,8 +96,7 @@ module.exports = {
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
-          editUrl:
-            'https://github.com/aerospike/skyhook/edit/main/website/blog/',
+          editUrl: 'https://github.com/aerospike/skyhook/edit/main/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
