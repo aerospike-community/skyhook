@@ -28,8 +28,8 @@ export default function Home(): JSX.Element {
     // <main className={styles.contentBody}>
     <Layout
       wrapperClassName={styles.contentBody}
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
+      title={`${siteConfig.title}`}
+      description="Quickly get your existing Redis applications running on Aerospike with Skyhook. Skyhook is a Redis API-compatible client for the Aerospike Database."
     >
       <HomepageHeader />
       {}
