@@ -72,6 +72,7 @@ Operation | Description
 [HLEN](https://redis.io/commands/hlen) *key* | Returns the number of fields contained in the hash stored at key.
 [HMGET](https://redis.io/commands/hmget) *key field [field ...]* | Returns the values associated with the specified fields in the hash stored at key.
 [HMSET](https://redis.io/commands/hmset) *key field value [field value ...]* | Sets the specified fields to their respective values in the hash stored at key.
+[HRANDFIELD](https://redis.io/commands/hrandfield) *key [count [WITHVALUES]]* | Return a random field from the hash value stored at key.
 [HSCAN](https://redis.io/commands/hscan) *key cursor [MATCH pattern] [COUNT count]* | See SCAN for HSCAN documentation.
 [HSETNX](https://redis.io/commands/hsetnx) *key field value* | Sets field in the hash stored at key to value, only if field does not yet exist.
 [HSET](https://redis.io/commands/hset) *key field value [field value ...]* | Sets field in the hash stored at key to value.
@@ -115,6 +116,8 @@ Operation | Description
 [SINTERSTORE](https://redis.io/commands/sinterstore) *destination key [key ...]* | This command is equal to SINTER, but instead of returning the resulting set, it is stored in destination.
 [SISMEMBER](https://redis.io/commands/sismember) *key member* | Returns if member is a member of the set stored at key.
 [SMEMBERS](https://redis.io/commands/smembers) *key* | Returns all the members of the set value stored at key.
+[SMISMEMBER](https://redis.io/commands/smismember) *key member [member ...]* | Returns whether each member is a member of the set stored at key.
+[SRANDMEMBER](https://redis.io/commands/srandmember) *key [count]* | Return a random element from the set value stored at key.
 [SREM](https://redis.io/commands/srem) *key member [member ...]* | Remove the specified members from the set stored at key.
 [SSCAN](https://redis.io/commands/sscan) *key cursor [MATCH pattern] [COUNT count]* | See SCAN for SSCAN documentation.
 [STRLEN](https://redis.io/commands/strlen) *key* | Returns the length of the string value stored at key. An error is returned when key holds a non-string value.
