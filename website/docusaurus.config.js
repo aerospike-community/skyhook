@@ -8,7 +8,9 @@ module.exports = {
   url: 'https://aerospike.github.io/',
   baseUrl: '/skyhook/',
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenMarkdownLinks: 'throw',
+  // Recommendation is to have this true but build fails if it is 
+  // trailingSlash: true,
   favicon: 'img/favicon.ico',
   organizationName: 'aerospike', // Usually your GitHub org/user name.
   projectName: 'skyhook', // Usually your repo name.
