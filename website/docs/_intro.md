@@ -1,15 +1,36 @@
-# Installation
+# Skyhook
 
-## Prerequisites
+[![Build](https://github.com/aerospike/skyhook/actions/workflows/build.yml/badge.svg)](https://github.com/aerospike/skyhook/actions/workflows/build.yml)
+
+Skyhook is a Redis API-compatible gateway to the [Aerospike](https://www.aerospike.com/) Database. Use Skyhook to quickly get your Redis client applications up and running on an Aerospike cluster.
+
+## Overview
+
+Skyhook is designed as a standalone server application written in Kotlin, which
+accepts Redis protocol commands and projects them to an Aerospike cluster using
+the Aerospike Java client under the hood. It uses [Netty](https://netty.io/) as
+a non-blocking I/O client-server framework.
+
+This project is now in **beta**. If you're an enterprise customer feel free to
+reach out to our support with feedback and feature requests.
+We appreciate feedback from the Aerospike community on
+[issues](https://github.com/aerospike/skyhook/issues)
+related to Skyhook.
+
+[See the installation guide](https://aerospike.github.io/skyhook/docs/installation) for more.
+
+## Installation
+
+### Prerequisites
 
 - Java 8 or later
 - Aerospike Server version 4.9+
 
-## Installing
+### Installing
 
 Skyhook is distributed as a jar file which may be downloaded from https://github.com/aerospike/skyhook/releases/latest.
 
-## Running
+### Running
 
 Usage:
 
@@ -41,34 +62,7 @@ Now the server is listening to the `config.redisPort` (default: 6379) and is rea
 
 If you wish to deploy Skyhook as a cluster of nodes, you can find some example configurations [here](scaling-out).
 
-## Running on Docker
-
-:::warning
-
-This section requires installing docker directly from source. Future updates will include a docker image.
-
-:::
-
-Build an image:
-
-```sh
-docker build -t skyhook .
-```
-
-Run as a Docker container:
-
-```sh
-docker run -d --name=skyhook -p 6379:6379 skyhook
-```
-
-The image uses the repository configuration file by default.
-[Bind mount](https://docs.docker.com/storage/bind-mounts/) a custom file to configure the server:
-
-```sh
-docker run -d --name=skyhook -v "$(pwd)"/config/server.yml:/app/server.yml -p 6379:6379 skyhook
-```
-
-## Configuration Properties
+### Configuration Properties
 
 The default behavior may be customized by setting the following properties in the configuration file:
 
@@ -85,3 +79,11 @@ The default behavior may be customized by setting the following properties in th
 | bossThreads                                  | The Netty acceptor group size.                                                                                                                            | 2                         |
 
 <sup name="worker-threads">1</sup> Used to configure the size of the [Aerospike Java Client EventLoops](https://www.aerospike.com/docs/client/java/usage/async/eventloop.html) as well.
+
+## License
+
+Licensed under an Apache 2.0 License.
+
+This is an active open source project. You can contribute to it by trying
+Skyhook, providing feedback, reporting bugs, and implementing more Redis
+commands.

@@ -1,10 +1,11 @@
 import { Link } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import SkyhookHeroImage from '@site/static/img/skyhook-hero.webp';
+import SkyhookHeroImage from '@site/static/img/hero.jpg';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
 import React from 'react';
 import styles from './index.module.css';
+
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
@@ -15,8 +16,9 @@ function HomepageHeader() {
         <Link to="docs/intro" className={styles.heroLink}>
           <div className="hero__subtitle">{siteConfig.tagline}</div>
 
-          <img src={SkyhookHeroImage} />
+          <img src={SkyhookHeroImage} width="100%"/>
         </Link>
+
       </div>
     </header>
   );
@@ -32,7 +34,6 @@ export default function Home(): JSX.Element {
       description="Use Skyhook to quickly get your existing Redis applications running on Aerospike. Skyhook is a Redis API-compatible client for the Aerospike Database."
     >
       <HomepageHeader />
-      {}
     </Layout>
     // </main>
   );
