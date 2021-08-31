@@ -1,3 +1,9 @@
+---
+slug: introducing-skyhook
+title: Introducing Skyhook
+tags: [skyhook, redis, aerospike]
+---
+
 # Skyhook
 
 [![Build](https://github.com/aerospike/skyhook/actions/workflows/build.yml/badge.svg)](https://github.com/aerospike/skyhook/actions/workflows/build.yml)
@@ -16,8 +22,6 @@ reach out to our support with feedback and feature requests.
 We appreciate feedback from the Aerospike community on
 [issues](https://github.com/aerospike/skyhook/issues)
 related to Skyhook.
-
-[See the installation guide](https://aerospike.github.io/skyhook/docs/installation) for more.
 
 ## Installation
 

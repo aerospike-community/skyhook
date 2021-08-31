@@ -26,12 +26,12 @@ module.exports = {
         src: 'img/logo.png',
       },
       items: [
-        {
-          type: 'doc',
-          docId: 'intro',
-          position: 'left',
-          label: 'Docs',
-        },
+        // {
+        //   type: 'doc',
+        //   docId: 'intro',
+        //   position: 'left',
+        //   label: 'Docs',
+        // },
         { to: '/blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/aerospike/skyhook',
@@ -43,15 +43,15 @@ module.exports = {
     footer: {
       style: 'dark',
       links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Introduction',
-              to: '/docs/intro',
-            },
-          ],
-        },
+        // {
+        //   title: 'Docs',
+        //   items: [
+        //     {
+        //       label: 'Introduction',
+        //       to: '/docs/intro',
+        //     },
+        //   ],
+        // },
         {
           title: 'Community',
           items: [
@@ -92,11 +92,13 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
+          routeBasePath: '/',
           // Please change this to your repo.
           editUrl: 'https://github.com/aerospike/skyhook/edit/main/website/',
         },
         blog: {
           showReadingTime: true,
+          blogSidebarCount: 0,
           // Please change this to your repo.
           editUrl: 'https://github.com/aerospike/skyhook/edit/main/website/blog/',
         },
