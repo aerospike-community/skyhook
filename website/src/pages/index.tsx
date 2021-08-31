@@ -1,10 +1,10 @@
 import { Link } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import SkyhookHeroImage from '@site/static/img/skyhook-hero.webp';
 import Layout from '@theme/Layout';
 import clsx from 'clsx';
 import React from 'react';
 import styles from './index.module.css';
-
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
@@ -15,7 +15,7 @@ function HomepageHeader() {
         <Link to="docs/intro" className={styles.heroLink}>
           <div className="hero__subtitle">{siteConfig.tagline}</div>
 
-          <img src={'../../static/img/skyhook.webp'} />
+          <img src={SkyhookHeroImage} />
         </Link>
       </div>
     </header>
