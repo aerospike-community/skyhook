@@ -1,6 +1,3 @@
----
-slug: /
----
 # Skyhook
 
 [![Build](https://github.com/aerospike/skyhook/actions/workflows/build.yml/badge.svg)](https://github.com/aerospike/skyhook/actions/workflows/build.yml)
