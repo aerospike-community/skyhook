@@ -76,7 +76,7 @@ The default behavior may be customized by setting the following properties in th
 | workerThreads<sup>[1](#worker-threads)</sup> | The Netty worker group size.                                                                                                                              | number of available cores |
 | bossThreads                                  | The Netty acceptor group size.                                                                                                                            | 2                         |
 
-<sup name="worker-threads">1</sup> Used to configure the size of the [Aerospike Java Client EventLoops](https://www.aerospike.com/docs/client/java/usage/async/eventloop.html) as well.
+<sup name="worker-threads">1</sup> Used to configure the size of the <a href="https://www.aerospike.com/docs/client/java/usage/async/eventloop.html">Aerospike Java Client EventLoops</a> as well.
 
 ## License
 
