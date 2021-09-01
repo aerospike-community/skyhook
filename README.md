@@ -1,1 +1,1 @@
-website/docs/0. intro.md
+website/docs/_intro.md
