@@ -30,6 +30,32 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals(ok, readString())
         writeCommand("${RedisCommand.GET.name} key1")
         assertEquals("1.25", readFullBulkString())
+
+        writeCommand("${RedisCommand.GET.name} ne")
+        assertEquals(nullString, readFullBulkString())
+    }
+
+    @Test
+    fun testGetex() {
+        setup(1)
+        writeCommand("${RedisCommand.GETEX.name} key1 EX 10 PX 10000")
+        assert(readError().isNotEmpty())
+
+        writeCommand("${RedisCommand.GETEX.name} key1")
+        assertEquals("val1", readFullBulkString())
+
+        writeCommand("${RedisCommand.GETEX.name} key1 EX 10")
+        assertEquals("val1", readFullBulkString())
+        writeCommand("${RedisCommand.TTL.name} key1")
+        assertTrue(readLong() in 9..10)
+
+        writeCommand("${RedisCommand.GETEX.name} key1 PX 10000")
+        assertEquals("val1", readFullBulkString())
+        writeCommand("${RedisCommand.PTTL.name} key1")
+        assertTrue(readLong() in 9000..10000)
+
+        writeCommand("${RedisCommand.GETEX.name} ne")
+        assertEquals(nullString, readFullBulkString())
     }
 
     @Test
