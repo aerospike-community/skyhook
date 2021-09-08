@@ -5,11 +5,12 @@ on:
     branches: [main, arrowplum/actions-for-build-and-security]
   push:
     branches: [main, arrowplum/actions-for-build-and-security]
+defaults: 
+  run:
+    working-directory: ./website
 
 jobs:
   checks:
-    env: 
-      working-directory: ./website
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
     steps:
@@ -28,8 +29,6 @@ jobs:
           fi
           npm run build
   gh-release:
-    env: 
-      working-directory: ./website
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
