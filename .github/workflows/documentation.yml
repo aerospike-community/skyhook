@@ -2,9 +2,9 @@ name: documentation
 
 on:
   pull_request:
-    branches: [main, arrowplum/actions-for-build-and-security]
+    branches: [main]
   push:
-    branches: [main, arrowplum/actions-for-build-and-security]
+    branches: [main]
 defaults: 
   run:
     working-directory: ./website
