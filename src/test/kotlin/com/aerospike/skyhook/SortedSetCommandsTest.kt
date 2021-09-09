@@ -119,21 +119,28 @@ class SortedSetCommandsTest() : SkyhookIntegrationTestBase() {
     @Test
     fun testZrandmember() {
         setup()
+        writeCommand("${RedisCommand.ZRANDMEMBER.name} $_key")
+        val r = readFullBulkString()
+        assertTrue { r.startsWith("val") }
+
         writeCommand("${RedisCommand.ZRANDMEMBER.name} $_key 5")
-        val r = readStringArray()
-        assertTrue { r.size == 3 }
+        val r2 = readStringArray()
+        assertTrue { r2.size == 3 }
 
         writeCommand("${RedisCommand.ZRANDMEMBER.name} $_key -5")
-        val r2 = readStringArray()
-        assertTrue { r2.size == 5 }
+        val r3 = readStringArray()
+        assertTrue { r3.size == 5 }
 
         writeCommand("${RedisCommand.ZRANDMEMBER.name} $_key 5 WITHSCORES")
-        val r3 = readStringArray()
-        assertTrue { r3.size == 6 }
-
-        writeCommand("${RedisCommand.ZRANDMEMBER.name} $_key -5 WITHSCORES")
         val r4 = readStringArray()
-        assertTrue { r4.size == 10 }
+        assertTrue { r4.size == 6 }
+
+        writeCommand("${RedisCommand.ZRANDMEMBER.name} $_key -5 withscores")
+        val r5 = readStringArray()
+        assertTrue { r5.size == 10 }
+
+        writeCommand("${RedisCommand.ZRANDMEMBER.name} ne")
+        assertEquals(nullString, readFullBulkString())
     }
 
     @Test

@@ -17,6 +17,8 @@ import com.aerospike.skyhook.command.CommandsDetails.expireatCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.flushallCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.flushdbCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.getCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.getdelCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.getexCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.getsetCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hdelCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hexistsCommandDetails
@@ -28,6 +30,7 @@ import com.aerospike.skyhook.command.CommandsDetails.hkeysCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hlenCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hmgetCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hmsetCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.hrandfieldCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hscanCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hsetCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.hsetnxCommandDetails
@@ -36,6 +39,7 @@ import com.aerospike.skyhook.command.CommandsDetails.hvalsCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.incrCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.incrbyCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.incrbyfloatCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.keysCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.lindexCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.llenCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.lolwutCommandDetails
@@ -69,6 +73,8 @@ import com.aerospike.skyhook.command.CommandsDetails.sinterCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sinterstoreCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sismemberCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.smembersCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.smismemberCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.srandmemberCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sremCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.sscanCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.strlenCommandDetails
@@ -107,10 +113,7 @@ import com.aerospike.skyhook.handler.redis.*
 import com.aerospike.skyhook.listener.key.*
 import com.aerospike.skyhook.listener.list.*
 import com.aerospike.skyhook.listener.map.*
-import com.aerospike.skyhook.listener.scan.HscanCommandListener
-import com.aerospike.skyhook.listener.scan.ScanCommandListener
-import com.aerospike.skyhook.listener.scan.SscanCommandListener
-import com.aerospike.skyhook.listener.scan.ZscanCommandListener
+import com.aerospike.skyhook.listener.scan.*
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.redis.ArrayHeaderRedisMessage
 import mu.KotlinLogging
@@ -122,8 +125,10 @@ enum class RedisCommand(
     val newHandler: KFunction1<ChannelHandlerContext, CommandHandler>
 ) {
     GET(getCommandDetails, ::GetCommandListener),
+    GETEX(getexCommandDetails, ::GetexCommandListener),
     MGET(mgetCommandDetails, ::MgetCommandListener),
     GETSET(getsetCommandDetails, ::GetsetCommandListener),
+    GETDEL(getdelCommandDetails, ::GetdelCommandListener),
     SET(setCommandDetails, ::SetCommandListener),
     SETEX(setexCommandDetails, ::SetCommandListener),
     PSETEX(psetexCommandDetails, ::SetCommandListener),
@@ -174,6 +179,7 @@ enum class RedisCommand(
     SADD(saddCommandDetails, ::SaddCommandListener),
     HEXISTS(hexistsCommandDetails, ::HexistsCommandListener),
     SISMEMBER(sismemberCommandDetails, ::HexistsCommandListener),
+    SMISMEMBER(smismemberCommandDetails, ::SmismemberCommandListener),
     HGET(hgetCommandDetails, ::MapGetCommandListener),
     HMGET(hmgetCommandDetails, ::MapGetCommandListener),
     HGETALL(hgetallCommandDetails, ::MapGetCommandListener),
@@ -199,7 +205,9 @@ enum class RedisCommand(
     ZADD(zaddCommandDetails, ::ZaddCommandListener),
     ZPOPMAX(zpopmaxCommandDetails, ::ZpopmaxCommandListener),
     ZPOPMIN(zpopminCommandDetails, ::ZpopminCommandListener),
-    ZRANDMEMBER(zrandmemberCommandDetails, ::ZrandmemberCommandListener),
+    ZRANDMEMBER(zrandmemberCommandDetails, ::RandmemberCommandListener),
+    SRANDMEMBER(srandmemberCommandDetails, ::RandmemberCommandListener),
+    HRANDFIELD(hrandfieldCommandDetails, ::RandmemberCommandListener),
     ZCOUNT(zcountCommandDetails, ::ZcountCommandListener),
     ZLEXCOUNT(zlexcountCommandDetails, ::ZlexcountCommandListener),
     ZREMRANGEBYSCORE(zremrangebyscoreCommandDetails, ::ZremrangebyscoreCommandListener),
@@ -217,6 +225,7 @@ enum class RedisCommand(
     HSCAN(hscanCommandDetails, ::HscanCommandListener),
     SSCAN(sscanCommandDetails, ::SscanCommandListener),
     ZSCAN(zscanCommandDetails, ::ZscanCommandListener),
+    KEYS(keysCommandDetails, ::KeysCommandListener),
 
     FLUSHDB(flushdbCommandDetails, ::FlushCommandHandler),
     FLUSHALL(flushallCommandDetails, ::FlushCommandHandler),
@@ -273,8 +282,10 @@ enum class RedisCommand(
 object CommandsDetails {
 
     val getCommandDetails = RedisCommandDetails("get", 2, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val getexCommandDetails = RedisCommandDetails("getex", -2, arrayListOf("write", "fast"), 1, 1, 1)
     val mgetCommandDetails = RedisCommandDetails("mget", -2, arrayListOf("readonly", "fast"), 1, -1, 1)
     val getsetCommandDetails = RedisCommandDetails("getset", 3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
+    val getdelCommandDetails = RedisCommandDetails("getdel", 2, arrayListOf("write", "fast"), 1, 1, 1)
     val setCommandDetails = RedisCommandDetails("set", -3, arrayListOf("write", "denyoom"), 1, 1, 1)
     val setexCommandDetails = RedisCommandDetails("setex", 4, arrayListOf("write", "denyoom"), 1, 1, 1)
     val psetexCommandDetails = RedisCommandDetails("psetex", 4, arrayListOf("write", "denyoom"), 1, 1, 1)
@@ -319,6 +330,7 @@ object CommandsDetails {
     val saddCommandDetails = RedisCommandDetails("sadd", -3, arrayListOf("write", "denyoom", "fast"), 1, 1, 1)
     val hexistsCommandDetails = RedisCommandDetails("hexists", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
     val sismemberCommandDetails = RedisCommandDetails("sismember", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
+    val smismemberCommandDetails = RedisCommandDetails("smismember", -3, arrayListOf("readonly", "fast"), 1, 1, 1)
     val hgetCommandDetails = RedisCommandDetails("hget", 3, arrayListOf("readonly", "fast"), 1, 1, 1)
     val hmgetCommandDetails = RedisCommandDetails("hmget", -3, arrayListOf("readonly", "fast"), 1, 1, 1)
     val hgetallCommandDetails = RedisCommandDetails("hgetall", 2, arrayListOf("readonly", "random"), 1, 1, 1)
@@ -346,6 +358,8 @@ object CommandsDetails {
     val zpopmaxCommandDetails = RedisCommandDetails("zpopmax", -2, arrayListOf("write", "fast"), 1, 1, 1)
     val zpopminCommandDetails = RedisCommandDetails("zpopmin", -2, arrayListOf("write", "fast"), 1, 1, 1)
     val zrandmemberCommandDetails = RedisCommandDetails("zrandmember", -2, arrayListOf("readonly", "random"), 1, 1, 1)
+    val srandmemberCommandDetails = RedisCommandDetails("srandmember", -2, arrayListOf("readonly", "random"), 1, 1, 1)
+    val hrandfieldCommandDetails = RedisCommandDetails("hrandfield", -2, arrayListOf("readonly", "random"), 1, 1, 1)
     val zcountCommandDetails = RedisCommandDetails("zcount", 4, arrayListOf("readonly", "fast"), 1, 1, 1)
     val zlexcountCommandDetails = RedisCommandDetails("zlexcount", 4, arrayListOf("readonly", "fast"), 1, 1, 1)
     val zremrangebyscoreCommandDetails = RedisCommandDetails("zremrangebyscore", 4, arrayListOf("write"), 1, 1, 1)
@@ -363,6 +377,7 @@ object CommandsDetails {
     val hscanCommandDetails = RedisCommandDetails("hscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
     val sscanCommandDetails = RedisCommandDetails("sscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
     val zscanCommandDetails = RedisCommandDetails("zscan", -3, arrayListOf("readonly", "random"), 1, 1, 1)
+    val keysCommandDetails = RedisCommandDetails("keys", 2, arrayListOf("readonly", "sort_for_script"), 0, 0, 0)
 
     val flushdbCommandDetails = RedisCommandDetails("flushdb", -1, arrayListOf("write"), 0, 0, 0)
     val flushallCommandDetails = RedisCommandDetails("flushall", -1, arrayListOf("write"), 0, 0, 0)
