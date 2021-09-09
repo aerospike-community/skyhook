@@ -78,4 +78,16 @@ class ScanCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals("i", resp.elements[2])
         assertEquals("h", resp.elements[3])
     }
+
+    @Test
+    fun testKeys() {
+        writeCommand("${RedisCommand.MSET.name} k1 v1 k2 v2 k3 v3 k4 v4 k5 v5 k6 v6 k7 v7 k11 v11 k8 v8")
+        assertEquals(ok, readString())
+
+        writeCommand("${RedisCommand.KEYS.name} k1*")
+        Thread.sleep(3000)
+        val r = readStringArray()
+        assertEquals("k11", r[0])
+        assertEquals("k1", r[1])
+    }
 }

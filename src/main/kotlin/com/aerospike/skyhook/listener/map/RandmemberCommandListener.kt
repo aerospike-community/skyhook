@@ -6,19 +6,20 @@ import com.aerospike.client.Record
 import com.aerospike.client.cdt.MapOperation
 import com.aerospike.client.cdt.MapReturnType
 import com.aerospike.client.listener.RecordListener
+import com.aerospike.skyhook.command.RedisCommand
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 import java.util.concurrent.atomic.AtomicInteger
 
-class ZrandmemberCommandListener(
+class RandmemberCommandListener(
     ctx: ChannelHandlerContext
 ) : BaseListener(ctx), RecordListener {
 
     @Volatile
-    private lateinit var zrandmemberCommand: ZrandmemberCommand
+    private lateinit var randCommand: RandCommand
 
-    private class ZrandmemberCommand(val cmd: RequestCommand) {
+    private class RandCommand(val cmd: RequestCommand) {
 
         private val total: AtomicInteger = AtomicInteger()
 
@@ -26,19 +27,27 @@ class ZrandmemberCommandListener(
             if (cmd.argCount == 2) 1 else String(cmd.args[2]).toInt()
         }
 
-        val withScores by lazy {
+        val withModifier by lazy {
             if (cmd.argCount < 4) {
                 false
             } else {
-                require(String(cmd.args[3]) == "WITHSCORES") {
-                    argValidationErrorMsg(cmd)
-                }
+                validateWith()
                 true
             }
         }
 
+        private fun validateWith() {
+            val with = String(cmd.args[3])
+            require(
+                (cmd.command == RedisCommand.ZRANDMEMBER && with.equals("WITHSCORES", true)) ||
+                        (cmd.command == RedisCommand.HRANDFIELD && with.equals("WITHVALUES", true))
+            ) {
+                argValidationErrorMsg(cmd)
+            }
+        }
+
         val step by lazy {
-            if (withScores) 2 else 1
+            if (withModifier) 2 else 1
         }
 
         fun set(size: Int) {
@@ -59,13 +68,18 @@ class ZrandmemberCommandListener(
             argValidationErrorMsg(cmd)
         }
 
-        zrandmemberCommand = ZrandmemberCommand(cmd)
+        randCommand = RandCommand(cmd)
         val key = createKey(cmd.key)
         val indexList = getRandomList(key)
+        if (indexList == null) {
+            writeNullString()
+            flushCtxTransactionAware()
+            return
+        }
 
-        zrandmemberCommand.set(indexList.size)
-        if (zrandmemberCommand.get() > 1) {
-            writeArrayHeader(zrandmemberCommand.get().toLong())
+        randCommand.set(indexList.size)
+        if (randCommand.get() > 1) {
+            writeArrayHeader(randCommand.get().toLong())
         }
         for (i: Int in indexList) {
             client.operate(
@@ -75,17 +89,17 @@ class ZrandmemberCommandListener(
         }
     }
 
-    private fun getRandomList(key: Key): List<Int> {
-        val setSize = getSetSize(key)
-        return if (zrandmemberCommand.count >= 0) {
-            val count = minOf(zrandmemberCommand.count, setSize)
+    private fun getRandomList(key: Key): List<Int>? {
+        val setSize = getSetSize(key) ?: return null
+        return if (randCommand.count >= 0) {
+            val count = minOf(randCommand.count, setSize)
             val mutableSet: MutableSet<Int> = mutableSetOf()
             while (mutableSet.size < count) {
                 mutableSet.add((0 until setSize).random())
             }
             mutableSet.toList()
         } else {
-            val count = kotlin.math.abs(zrandmemberCommand.count)
+            val count = kotlin.math.abs(randCommand.count)
             val mutableList: MutableList<Int> = mutableListOf()
             while (mutableList.size < count) {
                 mutableList.add((0 until setSize).random())
@@ -95,7 +109,7 @@ class ZrandmemberCommandListener(
     }
 
     private fun getMapOperation(i: Int): Operation {
-        val returnType = if (zrandmemberCommand.withScores) {
+        val returnType = if (randCommand.withModifier) {
             MapReturnType.KEY_VALUE
         } else {
             MapReturnType.KEY
@@ -103,11 +117,11 @@ class ZrandmemberCommandListener(
         return MapOperation.getByIndex(aeroCtx.bin, i, returnType)
     }
 
-    private fun getSetSize(key: Key): Int {
+    private fun getSetSize(key: Key): Int? {
         return client.operate(
             defaultWritePolicy, key,
             MapOperation.size(aeroCtx.bin)
-        )?.getInt(aeroCtx.bin) ?: 0
+        )?.getInt(aeroCtx.bin)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
@@ -115,11 +129,11 @@ class ZrandmemberCommandListener(
             if (record == null) {
                 writeNullString()
             } else {
-                synchronized(zrandmemberCommand) {
+                synchronized(randCommand) {
                     writeResponse(record.bins[aeroCtx.bin])
                 }
             }
-            if (zrandmemberCommand.decrementAndGet() == 0) {
+            if (randCommand.decrementAndGet() == 0) {
                 flushCtxTransactionAware()
             }
         } catch (e: Exception) {

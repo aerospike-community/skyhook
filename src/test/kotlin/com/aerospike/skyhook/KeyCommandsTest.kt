@@ -30,6 +30,32 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals(ok, readString())
         writeCommand("${RedisCommand.GET.name} key1")
         assertEquals("1.25", readFullBulkString())
+
+        writeCommand("${RedisCommand.GET.name} ne")
+        assertEquals(nullString, readFullBulkString())
+    }
+
+    @Test
+    fun testGetex() {
+        setup(1)
+        writeCommand("${RedisCommand.GETEX.name} key1 EX 10 PX 10000")
+        assert(readError().isNotEmpty())
+
+        writeCommand("${RedisCommand.GETEX.name} key1")
+        assertEquals("val1", readFullBulkString())
+
+        writeCommand("${RedisCommand.GETEX.name} key1 EX 10")
+        assertEquals("val1", readFullBulkString())
+        writeCommand("${RedisCommand.TTL.name} key1")
+        assertTrue(readLong() in 9..10)
+
+        writeCommand("${RedisCommand.GETEX.name} key1 PX 10000")
+        assertEquals("val1", readFullBulkString())
+        writeCommand("${RedisCommand.PTTL.name} key1")
+        assertTrue(readLong() in 9000..10000)
+
+        writeCommand("${RedisCommand.GETEX.name} ne")
+        assertEquals(nullString, readFullBulkString())
     }
 
     @Test
@@ -146,6 +172,17 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
+    fun testGetdel() {
+        setup(1)
+        writeCommand("${RedisCommand.GETDEL.name} key1")
+        assertEquals("val1", readFullBulkString())
+        writeCommand("${RedisCommand.GET.name} key1")
+        assertEquals(nullString, readFullBulkString())
+        writeCommand("${RedisCommand.GETDEL.name} key4")
+        assertEquals(nullString, readFullBulkString())
+    }
+
+    @Test
     fun testExpire() {
         setup(1)
         writeCommand("${RedisCommand.EXPIRE.name} key11 10")
@@ -196,6 +233,15 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
         writeCommand("${RedisCommand.EXISTS.name} key1")
         assertEquals(1, readLong())
         writeCommand("${RedisCommand.TOUCH.name} key4")
+        assertEquals(0, readLong())
+    }
+
+    @Test
+    fun testStrlen() {
+        setup(1)
+        writeCommand("${RedisCommand.STRLEN.name} key1")
+        assertEquals(4, readLong())
+        writeCommand("${RedisCommand.STRLEN.name} key4")
         assertEquals(0, readLong())
     }
 

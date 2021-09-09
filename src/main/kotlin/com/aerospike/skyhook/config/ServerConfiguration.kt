@@ -43,6 +43,11 @@ data class ServerConfiguration(
     val redisPort: Int = 6379,
 
     /**
+     * The server will bind on unix socket if configured.
+     */
+    val unixSocket: String? = null,
+
+    /**
      * The Netty worker group size.
      */
     val workerThreads: Int = Runtime.getRuntime().availableProcessors(),
