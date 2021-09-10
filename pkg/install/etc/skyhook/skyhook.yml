@@ -1,9 +1,14 @@
 ---
-# The server configuration
+# The Skyhook server configuration
+
 hostList: localhost:3000
 namespace: test
 set: redis
 bin: b
 redisPort: 6379
+
+# Bind on unix socket.
+# unixSocket: "/tmp/skyhook.sock"
+
 workerThreads: 2
 bossThreads: 1
