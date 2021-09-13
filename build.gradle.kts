@@ -5,6 +5,7 @@ plugins {
     application
     kotlin("jvm") version "1.4.31"
     id("com.github.johnrengelman.shadow") version "5.0.0"
+    id("nebula.ospackage") version "8.6.3"
 }
 
 group = "com.aerospike"
@@ -62,4 +63,114 @@ tasks.test {
 
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+val distZip: Zip by tasks
+distZip.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+fun setUpPackaging(
+    packagingTask: com.netflix.gradle.plugins.packaging.SystemPackagingTask,
+    installFolder: String = "install",
+    debFolder: String = "deb"
+) {
+    packagingTask.dependsOn("distZip")
+
+    // Mark configuration file as configuration file.
+    val targetConfigFile =
+        "/etc/${packagingTask.project.name}/${packagingTask.project.name}.yml"
+    packagingTask.configurationFile(targetConfigFile)
+
+    val sourceConfigFile =
+        File("${projectDir}/pkg/$installFolder/$targetConfigFile")
+
+    if (packagingTask is com.netflix.gradle.plugins.rpm.Rpm && sourceConfigFile.isFile) {
+        packagingTask.from(sourceConfigFile) {
+            // For rpm this is the way to mark configuration files.
+            com.netflix.gradle.plugins.packaging.CopySpecEnhancement
+                .setFileType(this,
+                    org.redline_rpm.payload.Directive(
+                        org.redline_rpm.payload.Directive.RPMFILE_CONFIG or org.redline_rpm.payload.Directive
+                            .RPMFILE_NOREPLACE
+                    )
+                )
+            into(
+                sourceConfigFile.parentFile.path.replace(
+                    ".*pkg/$installFolder".toRegex(), ""))
+        }
+    }
+
+    // Package config and other dependent files.
+    val installDir = File(project.projectDir, "pkg/$installFolder")
+    if (installDir.isDirectory) {
+        for (file in installDir.listFiles()!!) {
+            packagingTask.from(file) {
+                into(
+                    file.path.replace(".*pkg/$installFolder".toRegex(), ""))
+                packagingTask.addParentDirs = false
+                fileMode = 0x755
+                if (packagingTask is com.netflix.gradle.plugins.rpm.Rpm) {
+                    // We have config it separately above.
+                    exclude("**/" + sourceConfigFile.name)
+                }
+            }
+        }
+    }
+
+    // Copy installation scripts.
+    val installScriptsDir = File(project.projectDir, "pkg/$debFolder")
+    if (installScriptsDir.isDirectory) {
+        packagingTask.postInstall(
+            packagingTask.project.file(
+                "${projectDir}/pkg/$debFolder/postInstall.sh"))
+        packagingTask.preUninstall(
+            packagingTask.project.file
+                ("${projectDir}/pkg/$debFolder/preUninstall.sh"))
+        packagingTask.postUninstall(
+            packagingTask.project.file(
+                "${projectDir}/pkg/$debFolder/postUninstall.sh"))
+    }
+
+    // Copy the installer.
+    packagingTask.from(project.zipTree(
+        distZip.archiveFile.get().asFile.absolutePath)) {
+        into("/opt/${packagingTask.project.name}/")
+        packagingTask.addParentDirs = false
+        eachFile {
+            path =
+                path.replaceFirst(
+                    "/${packagingTask.project.name}-${packagingTask.project.version}/",
+                    "/"
+                )
+        }
+    }
+}
+
+/**
+ * Create the Debian package.
+ */
+task("deb", com.netflix.gradle.plugins.deb.Deb::class) {
+    // Currently we cannot specify a dependency on any package providing
+    // java 8+ (for e.g java 11). Exact dependency on Java 8 is the only
+    // thing that works. Skip adding a packaging dependency until this
+    // works reliably.
+    // requires("java8-runtime").or("java8-sdk")
+    setUpPackaging(this)
+}
+
+/**
+ * Create the RPM package.
+ */
+task("rpm", com.netflix.gradle.plugins.rpm.Rpm::class) {
+    os = org.redline_rpm.header.Os.LINUX
+    release = "1"
+    user = "root"
+    packageGroup = "root"
+
+    // Currently we cannot specify a dependency on any package providing
+    // java 8+ (for e.g java 11). Exact dependency on Java 8 is the only
+    // thing that works. Skip adding a packaging dependency until this
+    // works reliably.
+    // requires("java", "1.8", Flags.GREATER or Flags.EQUAL).or("java",
+    //    "11", Flags.GREATER or Flags.EQUAL)
+    setUpPackaging(this)
 }

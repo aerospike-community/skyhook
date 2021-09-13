@@ -45,7 +45,7 @@ Redis to Aerospike proxy server
 To run the server:
 
 ```sh
-java -jar skyhook-[version]-all.jar -f config/server.yml
+java -jar skyhook-[version]-all.jar -f config/skyhook.yml
 ```
 
 The configuration file carries all the settings the server needs and is in YAML
