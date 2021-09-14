@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.aerospike"
-version = "0.9.0"
+version = "0.10.0"
 
 repositories {
     mavenCentral()
@@ -36,7 +36,7 @@ extra["logbackVersion"] = "1.2.3"
 extra["jacksonVersion"] = "2.12.2"
 
 dependencies {
-    implementation("com.aerospike:aerospike-client:5.1.3")
+    implementation("com.aerospike:aerospike-client:5.1.7")
     implementation("io.netty:netty-all:${project.extra["nettyVersion"]}")
     implementation("io.netty:netty-codec-redis:${project.extra["nettyVersion"]}")
     implementation("com.google.inject:guice:5.0.1")
