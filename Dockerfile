@@ -11,7 +11,7 @@ EXPOSE 6379
 RUN mkdir /app
 
 COPY --from=build /home/gradle/src/build/libs/*all.jar /app/skyhook.jar
-COPY config/server.yml /app/server.yml
+COPY config/skyhook.yml /app/skyhook.yml
 
 ENTRYPOINT ["java", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap", "-jar", "/app/skyhook.jar"]
-CMD ["-f", "/app/server.yml"]
+CMD ["-f", "/app/skyhook.yml"]
