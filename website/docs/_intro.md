@@ -17,6 +17,10 @@ We appreciate feedback from the Aerospike community on
 [issues](https://github.com/aerospike/skyhook/issues)
 related to Skyhook.
 
+## Documentation
+
+For full documentation please visit the [GitHub Pages site](https://aerospike.github.io/skyhook/).
+
 ## Installation
 
 ### Prerequisites
