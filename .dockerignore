@@ -2,4 +2,5 @@
 .github
 .gradle
 .idea
-build
+build/
+website/
