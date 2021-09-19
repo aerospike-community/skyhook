@@ -64,6 +64,8 @@ Now the server is listening to the `config.redisPort` (default: 6379) and is rea
 
 If you wish to deploy Skyhook as a cluster of nodes, you can find some example configurations [here](https://aerospike.github.io/skyhook/scaling-out).
 
+Linux RPM and DEB packages are also available under the release assets. Check your system information to pick a suitable installation package.
+
 ### Configuration Properties
 
 The default behavior may be customized by setting the following properties in the configuration file:

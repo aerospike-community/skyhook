@@ -8,6 +8,16 @@ This section requires installing docker directly from source. Future updates wil
 
 :::
 
+### Use a prebuilt image
+
+Use the [Skyhook package](https://github.com/aerospike/skyhook/pkgs/container/skyhook) to start a container:
+
+```sh
+docker run -d --name=skyhook -p 6379:6379 ghcr.io/aerospike/skyhook:latest
+```
+
+### Build from source
+
 Build an image:
 
 ```sh
