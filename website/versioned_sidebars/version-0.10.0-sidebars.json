@@ -2,6 +2,7 @@
   "version-0.10.0/docsSidebar": [
     {
       "type": "doc",
+      "label": "Skyhook",
       "id": "version-0.10.0/intro"
     },
     {
