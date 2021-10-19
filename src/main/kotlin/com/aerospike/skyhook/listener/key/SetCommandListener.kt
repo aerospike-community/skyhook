@@ -24,7 +24,7 @@ class SetCommandListener(
             private set
         var PXAT: Long? = null
             private set
-        var KEEPTTL: Boolean = false
+        var KEEPTTL: Boolean? = null
             private set
         var NX: Boolean = false
         var XX: Boolean = false
@@ -62,6 +62,9 @@ class SetCommandListener(
                 require(exp > 0) { "invalid expiration" }
                 policy.expiration = max(exp.toInt() / 1000, 1)
             }
+            KEEPTTL?.let {
+                policy.expiration = -2
+            }
             if (NX) {
                 policy.recordExistsAction = RecordExistsAction.CREATE_ONLY
             } else if (XX) {
@@ -85,7 +88,9 @@ class SetCommandListener(
         }
 
         private fun validate() {
-            require(listOfNotNull(EX, PX, EXAT, PXAT).size <= 1) { "[EX|PX|EXAT|PXAT]" }
+            require(listOfNotNull(EX, PX, EXAT, PXAT, KEEPTTL).size <= 1) {
+                "[EX|PX|EXAT|PXAT|KEEPTTL]"
+            }
             require(!(NX && XX)) { "[NX|XX]" }
             require(!(NX && GET)) { "[NX|GET]" }
         }
