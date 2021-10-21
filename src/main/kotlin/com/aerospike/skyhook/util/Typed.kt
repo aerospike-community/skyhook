@@ -1,6 +1,8 @@
 package com.aerospike.skyhook.util
 
 import com.aerospike.client.Value
+import java.nio.ByteBuffer
+import java.nio.charset.StandardCharsets
 
 object Typed {
 
@@ -8,6 +10,11 @@ object Typed {
         try {
             return Value.DoubleValue(String(wireVal).toDouble())
         } catch (e: NumberFormatException) {
+        }
+        try {
+            StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(wireVal))
+        } catch (ex: CharacterCodingException) {
+            return Value.BytesValue(wireVal)
         }
         return Value.StringValue(wireVal.toString(Charsets.UTF_8))
     }

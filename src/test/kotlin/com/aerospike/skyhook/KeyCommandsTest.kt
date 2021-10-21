@@ -108,6 +108,12 @@ class KeyCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals(nullString, readFullBulkString())
         writeCommand("${RedisCommand.GET.name} key4")
         assertEquals(nullString, readFullBulkString())
+
+        val bytes = byteArrayOf(254.toByte(), 255.toByte())
+        writeCommand("${RedisCommand.SET.name} bin ${String(bytes, Charsets.ISO_8859_1)}")
+        assertEquals(ok, readString())
+        writeCommand("${RedisCommand.GET.name} bin")
+        assertTrue { bytes.contentEquals(readFullBulkStringBytes()) }
     }
 
     @Test

@@ -92,7 +92,7 @@ abstract class SkyhookIntegrationTestBase {
             sb.append("+")
             sb.append("${list[0]}$eol")
         }
-        val byteBuf = buffer().writeBytes(sb.toString().toByteArray())
+        val byteBuf = buffer().writeBytes(sb.toString().toByteArray(Charsets.ISO_8859_1))
         channel.writeInbound(byteBuf)
     }
 
@@ -125,6 +125,11 @@ abstract class SkyhookIntegrationTestBase {
     protected fun readFullBulkString(): String {
         Thread.sleep(sleepMillis)
         return String(channel.readOutbound<FullBulkStringRedisMessage>().content().array())
+    }
+
+    protected fun readFullBulkStringBytes(): ByteArray {
+        Thread.sleep(sleepMillis)
+        return channel.readOutbound<FullBulkStringRedisMessage>().content().array()
     }
 
     protected fun readLong(): Long {
