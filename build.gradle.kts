@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
     application
-    kotlin("jvm") version "1.4.31"
-    id("com.github.johnrengelman.shadow") version "5.0.0"
+    kotlin("jvm") version "1.6.0"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
     id("nebula.ospackage") version "8.6.3"
 }
 
@@ -16,15 +16,15 @@ repositories {
 }
 
 application {
-    mainClassName = "com.aerospike.skyhook.MainKt"
+    mainClass.set("com.aerospike.skyhook.MainKt")
 }
 
 tasks.withType<Jar> {
     manifest {
         attributes(
             mapOf(
-                "Main-Class" to application.mainClassName,
-                "Implementation-Version" to version
+                "Main-Class" to application.mainClass,
+                "Implementation-Version" to archiveVersion
             )
         )
     }
@@ -61,7 +61,7 @@ tasks.test {
     useJUnitPlatform()
 }
 
-tasks.withType<KotlinCompile>() {
+tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 
