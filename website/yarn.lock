@@ -5164,10 +5164,12 @@ eslint-config-airbnb-base@^14.2.1:
     object.assign "^4.1.2"
     object.entries "^1.1.2"
 
-eslint-config-airbnb-typescript@^14.0.0:
-  version "14.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-airbnb-typescript/-/eslint-config-airbnb-typescript-14.0.0.tgz#fc22246973b99f0820e2ad1ab929fdd011dfa039"
-  integrity sha512-d2Nit2ByZARGRYK6tgSNl3nnmGZPyvsgbsKFcmm+nAhvT8VjVpifG5jI4tzObUUPb0sWw0E1oO/0pSpBD/pIuQ==
+eslint-config-airbnb-typescript@^14.0.2:
+  version "14.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-config-airbnb-typescript/-/eslint-config-airbnb-typescript-14.0.2.tgz#4dc1583b9eab671bb011dea7d4ff1fc0d88e6e09"
+  integrity sha512-oaVR63DqpRUiOOeSVxIzhD3FXbqJRH+7Lt9GCMsS9SKgrRW3XpZINN2FO4JEsnaHEGkktumd0AHE9K7KQNuXSQ==
+  dependencies:
+    eslint-config-airbnb-base "^14.2.1"
 
 eslint-config-airbnb@18.2.1:
   version "18.2.1"
@@ -8915,10 +8917,10 @@ remark-parse@8.0.3:
     vfile-location "^3.0.0"
     xtend "^4.0.1"
 
-remark-parse@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/remark-parse/-/remark-parse-10.0.0.tgz#65e2b2b34d8581d36b97f12a2926bb2126961cb4"
-  integrity sha512-07ei47p2Xl7Bqbn9H2VYQYirnAFJPwdMuypdozWsSbnmrkgA2e2sZLZdnDNrrsxR4onmIzH/J6KXqKxCuqHtPQ==
+remark-parse@^10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/remark-parse/-/remark-parse-10.0.1.tgz#6f60ae53edbf0cf38ea223fe643db64d112e0775"
+  integrity sha512-1fUyHr2jLsVOkhbvPRBJ5zTKZZyD6yZzYaWCS6BPBdQ8vEMBCH+9zNCDA6tET/zHCi/jLqjCWtlJZUPk+DbnFw==
   dependencies:
     "@types/mdast" "^3.0.0"
     mdast-util-from-markdown "^1.0.0"
