@@ -19,7 +19,7 @@
     "@docusaurus/core": "^2.0.0-beta.14",
     "@docusaurus/preset-classic": "^2.0.0-beta.14",
     "@mdx-js/react": "^1.6.21",
-    "@svgr/webpack": "^5.5.0",
+    "@svgr/webpack": "^6.1.2",
     "browserslist": "^4.17.0",
     "chokidar": "^3.5.2",
     "clsx": "^1.1.1",
