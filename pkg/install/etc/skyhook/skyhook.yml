@@ -1,5 +1,5 @@
 ---
-# The Skyhook server configuration
+# Skyhook server configuration
 
 hostList: localhost:3000
 namespace: test
@@ -7,8 +7,21 @@ set: redis
 bin: b
 redisPort: 6379
 
+# Aerospike Java Client [com.aerospike.client.policy.ClientPolicy] configuration.
+#clientPolicy:
+#  user: admin
+#  password: pwd@1234
+#  clusterName: cluster1
+#  authMode: EXTERNAL_INSECURE
+#  timeout: 1500
+#  loginTimeout: 3000
+#  asyncMinConnsPerNode: 50
+#  asyncMaxConnsPerNode: 200
+#  failIfNotConnected: true
+#  useServicesAlternate: true
+
 # Bind on unix socket.
-# unixSocket: "/tmp/skyhook.sock"
+#unixSocket: "/tmp/skyhook.sock"
 
 workerThreads: 2
 bossThreads: 1
