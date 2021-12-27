@@ -252,7 +252,7 @@ enum class RedisCommand(
 
         fun getValue(stringValue: String): RedisCommand {
             return try {
-                valueOf(stringValue.toUpperCase(Locale.ENGLISH))
+                valueOf(stringValue.uppercase(Locale.ENGLISH))
             } catch (e: IllegalArgumentException) {
                 val msg = "ERR $stringValue unsupported command"
                 log.warn { msg }

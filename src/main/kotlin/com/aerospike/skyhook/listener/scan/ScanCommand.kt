@@ -3,6 +3,7 @@ package com.aerospike.skyhook.listener.scan
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.RegexUtils
+import java.util.*
 
 class ScanCommand(val cmd: RequestCommand, flagIndex: Int) {
     var MATCH: String? = null
@@ -19,7 +20,7 @@ class ScanCommand(val cmd: RequestCommand, flagIndex: Int) {
 
     private fun setFlag(i: Int) {
         val flagStr = String(cmd.args[i])
-        when (flagStr.toUpperCase()) {
+        when (flagStr.uppercase(Locale.ENGLISH)) {
             "MATCH" -> MATCH = RegexUtils.format(String(cmd.args[i + 1]))
             "COUNT" -> COUNT = String(cmd.args[i + 1]).toLong()
             "TYPE" -> TYPE = ValueType.valueOf(cmd.args[i + 1])

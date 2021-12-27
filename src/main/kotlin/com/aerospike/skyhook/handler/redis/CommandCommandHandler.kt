@@ -18,13 +18,13 @@ class CommandCommandHandler(
         if (cmd.argCount == 1) {
             RedisCommand.writeCommand(ctx)
         } else {
-            when (String(cmd.args[1]).toUpperCase(Locale.ENGLISH)) {
+            when (String(cmd.args[1]).uppercase(Locale.ENGLISH)) {
                 "COUNT" -> {
                     writeLong(RedisCommand.totalCommands)
                 }
                 "INFO" -> {
                     val commands = cmd.args.drop(2).map { String(it) }
-                        .map { it.toLowerCase(Locale.ENGLISH) }
+                        .map { it.lowercase(Locale.ENGLISH) }
                     RedisCommand.writeCommandInfo(ctx, commands)
                 }
                 else -> {

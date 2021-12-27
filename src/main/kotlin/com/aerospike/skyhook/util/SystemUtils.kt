@@ -1,5 +1,7 @@
 package com.aerospike.skyhook.util
 
+import java.util.*
+
 object SystemUtils {
 
     enum class OS {
@@ -7,7 +9,7 @@ object SystemUtils {
     }
 
     val os: OS by lazy {
-        val os = System.getProperty("os.name").toLowerCase()
+        val os = System.getProperty("os.name").lowercase(Locale.ENGLISH)
         when {
             os.contains("nux") -> {
                 OS.LINUX

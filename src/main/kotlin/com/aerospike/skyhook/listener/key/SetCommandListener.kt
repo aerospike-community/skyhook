@@ -75,7 +75,7 @@ class SetCommandListener(
 
         private fun setFlag(i: Int) {
             val flagStr = String(cmd.args[i])
-            when (flagStr.toUpperCase()) {
+            when (flagStr.uppercase(Locale.ENGLISH)) {
                 "EX" -> EX = String(cmd.args[i + 1]).toInt()
                 "PX" -> PX = String(cmd.args[i + 1]).toInt()
                 "EXAT" -> EXAT = String(cmd.args[i + 1]).toLong()
