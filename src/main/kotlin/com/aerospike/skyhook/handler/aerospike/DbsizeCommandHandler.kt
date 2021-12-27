@@ -22,8 +22,7 @@ class DbsizeCommandHandler(
     private fun getTableRecordsNumber(ns: String, set: String?): Long {
         val allRecords = client.nodes
             .map { getSetInfo(ns, set, it) }
-            .map { it["objects"]!!.toInt() }
-            .sum()
+            .sumOf { it["objects"]!!.toInt() }
         val replicationFactor = getNamespaceInfo(ns, client.nodes[0])["effective_replication_factor"]!!.toInt()
         return floor(allRecords.toDouble() / replicationFactor).toLong()
     }
