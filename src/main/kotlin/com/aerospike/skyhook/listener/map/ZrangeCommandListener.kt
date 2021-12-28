@@ -11,6 +11,7 @@ import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.util.Intervals
 import io.netty.channel.ChannelHandlerContext
+import java.util.*
 
 open class ZrangeCommandListener(
     ctx: ChannelHandlerContext
@@ -58,7 +59,7 @@ open class ZrangeCommandListener(
 
         private fun setFlag(i: Int): Int {
             val flagStr = String(cmd.args[i])
-            when (flagStr.toUpperCase()) {
+            when (flagStr.uppercase(Locale.ENGLISH)) {
                 "BYSCORE" -> BYSCORE = true
                 "BYLEX" -> BYLEX = true
                 "REV" -> REV = true

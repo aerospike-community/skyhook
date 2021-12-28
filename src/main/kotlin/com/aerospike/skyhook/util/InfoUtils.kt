@@ -9,8 +9,7 @@ object InfoUtils {
     fun getNamespaceInfo(ns: String, node: Node): Map<String, String> {
         val schemaInfo = Info.request(null, node, "namespace/$ns")
         return schemaInfo.split(";")
-            .map { it.split("=".toRegex(), 2).toPair() }
-            .toMap()
+            .associate { it.split("=".toRegex(), 2).toPair() }
     }
 
     fun getSetInfo(ns: String, set: String?, node: Node): Map<String, String> {
@@ -18,6 +17,6 @@ object InfoUtils {
         val tableInfo = sets.split(";")
             .filter { it.startsWith("ns=$ns:set=$set") }[0]
         return Pattern.compile("\\s*:\\s*").split(tableInfo).toList()
-            .filterNotNull().map { it.split("=".toRegex(), 2).toPair() }.toMap()
+            .filterNotNull().associate { it.split("=".toRegex(), 2).toPair() }
     }
 }

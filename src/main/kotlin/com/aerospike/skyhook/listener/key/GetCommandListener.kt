@@ -9,6 +9,7 @@ import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.listener.ValueType
 import io.netty.channel.ChannelHandlerContext
+import java.util.*
 
 open class GetCommandListener(
     ctx: ChannelHandlerContext
@@ -90,7 +91,7 @@ class GetexCommandListener(
 
         private fun setFlag(i: Int) {
             val flagStr = String(cmd.args[i])
-            when (flagStr.toUpperCase()) {
+            when (flagStr.uppercase(Locale.ENGLISH)) {
                 "EX" -> EX = String(cmd.args[i + 1]).toInt()
                 "PX" -> PX = String(cmd.args[i + 1]).toInt()
                 "EXAT" -> EXAT = String(cmd.args[i + 1]).toLong()

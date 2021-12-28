@@ -1,5 +1,7 @@
 package com.aerospike.skyhook.listener
 
+import java.util.*
+
 /**
  * Redis supported value types.
  */
@@ -12,6 +14,6 @@ enum class ValueType(val str: String) {
     STREAM("stream");
 
     companion object {
-        fun valueOf(ba: ByteArray) = valueOf(String(ba).toUpperCase())
+        fun valueOf(ba: ByteArray) = valueOf(String(ba).uppercase(Locale.ENGLISH))
     }
 }

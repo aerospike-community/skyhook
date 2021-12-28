@@ -1,5 +1,8 @@
 package com.aerospike.skyhook.config
 
+/**
+ * Skyhook server configuration properties.
+ */
 data class ServerConfiguration(
 
     /**
@@ -18,7 +21,7 @@ data class ServerConfiguration(
     val set: String? = "redis",
 
     /**
-     * Aerospike Client Policy configuration properties.
+     * Aerospike Java Client [com.aerospike.client.policy.ClientPolicy] configuration.
      */
     val clientPolicy: ClientPolicyConfig = ClientPolicyConfig(),
 

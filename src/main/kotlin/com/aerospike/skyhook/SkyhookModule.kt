@@ -22,9 +22,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel
 import mu.KotlinLogging
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import javax.inject.Inject
 import javax.inject.Singleton
 
+@Suppress("unused")
 class SkyhookModule(
     private val config: ServerConfiguration
 ) : AbstractModule() {
@@ -93,21 +93,25 @@ class SkyhookModule(
 
     @Provides
     @Singleton
-    @Inject
     fun serverConfiguration(): ServerConfiguration {
         return config
     }
 
     @Provides
     @Singleton
-    @Inject
     fun clientPolicy(): ClientPolicy {
         val clientPolicy = ClientPolicy()
         clientPolicy.eventLoops = getClientEventLoops()
         config.clientPolicy.user?.let { clientPolicy.user = it }
         config.clientPolicy.password?.let { clientPolicy.password = it }
+        config.clientPolicy.clusterName?.let { clientPolicy.clusterName = it }
         config.clientPolicy.authMode?.let { clientPolicy.authMode = it }
         config.clientPolicy.timeout?.let { clientPolicy.timeout = it }
+        config.clientPolicy.loginTimeout?.let { clientPolicy.loginTimeout = it }
+        config.clientPolicy.asyncMinConnsPerNode?.let { clientPolicy.asyncMinConnsPerNode = it }
+        config.clientPolicy.asyncMaxConnsPerNode?.let { clientPolicy.asyncMaxConnsPerNode = it }
+        config.clientPolicy.failIfNotConnected?.let { clientPolicy.failIfNotConnected = it }
+        config.clientPolicy.useServicesAlternate?.let { clientPolicy.useServicesAlternate = it }
         return clientPolicy
     }
 
@@ -121,7 +125,6 @@ class SkyhookModule(
 
     @Provides
     @Singleton
-    @Inject
     fun executorService(): ExecutorService {
         return Executors.newFixedThreadPool(config.workerThreads)
     }

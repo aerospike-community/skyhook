@@ -1,5 +1,7 @@
 package com.aerospike.skyhook.util
 
+import java.util.*
+
 object Intervals {
 
     private const val infHighest = "+inf"
@@ -20,7 +22,7 @@ object Intervals {
     }
 
     private fun score(interval: String, includeShift: Int, excludeShift: Int): Int {
-        return when (interval.toLowerCase()) {
+        return when (interval.lowercase(Locale.ENGLISH)) {
             infHighest -> Int.MAX_VALUE
             infLowest -> Int.MIN_VALUE
             else -> {
@@ -42,7 +44,7 @@ object Intervals {
     }
 
     private fun lex(interval: String, from: Boolean): String {
-        return when (interval.toLowerCase()) {
+        return when (interval.lowercase(Locale.ENGLISH)) {
             lexHighest -> String(byteArrayOf(127))
             lexLowest -> String(byteArrayOf(0))
             else -> {

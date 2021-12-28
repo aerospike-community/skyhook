@@ -14,6 +14,7 @@ import com.aerospike.skyhook.listener.BaseListener
 import com.aerospike.skyhook.listener.ValueType
 import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
+import java.util.*
 
 class ZaddCommandListener(
     ctx: ChannelHandlerContext
@@ -47,7 +48,7 @@ class ZaddCommandListener(
         }
 
         private fun setFlag(flagStr: String): Boolean {
-            when (flagStr.toUpperCase()) {
+            when (flagStr.uppercase(Locale.ENGLISH)) {
                 "XX" -> XX = true
                 "NX" -> NX = true
                 "LT" -> LT = true
