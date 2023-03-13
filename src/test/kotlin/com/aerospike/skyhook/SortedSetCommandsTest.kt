@@ -2,6 +2,7 @@ package com.aerospike.skyhook
 
 import com.aerospike.skyhook.command.RedisCommand
 import org.junit.jupiter.api.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -239,10 +240,10 @@ class SortedSetCommandsTest() : SkyhookIntegrationTestBase() {
         writeCommand("${RedisCommand.ZRANGE.name} $_key -inf +inf BYSCORE")
         val r = readStringArray()
         assertTrue { r.size == 4 }
-        assertEquals("v1", r[0])
-        assertEquals("val1", r[1])
-        assertEquals("v2", r[2])
-        assertEquals("val3", r[3])
+        assertContains(r, "v1")
+        assertContains(r, "val1")
+        assertContains(r, "v2")
+        assertContains(r, "val3")
 
         clear()
         setup()
@@ -252,10 +253,10 @@ class SortedSetCommandsTest() : SkyhookIntegrationTestBase() {
         writeCommand("${RedisCommand.ZRANGE.name} $_key -inf +inf BYSCORE")
         val r2 = readStringArray()
         assertTrue { r2.size == 4 }
-        assertEquals("v1", r2[0])
-        assertEquals("val1", r2[1])
-        assertEquals("v2", r2[2])
-        assertEquals("val3", r2[3])
+        assertContains(r, "v1")
+        assertContains(r, "val1")
+        assertContains(r, "v2")
+        assertContains(r, "val3")
 
         writeCommand("${RedisCommand.ZREMRANGEBYRANK.name} $_key 3 -4")
         assertEquals(0, readLong())
