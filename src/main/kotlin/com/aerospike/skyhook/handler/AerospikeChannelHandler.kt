@@ -12,18 +12,17 @@ import io.netty.handler.codec.redis.*
 import io.netty.util.CharsetUtil
 import io.netty.util.ReferenceCountUtil
 import mu.KotlinLogging
-import java.util.*
 import javax.inject.Singleton
 
 @Singleton
 @ChannelHandler.Sharable
-class AerospikeChannelHandler() : ChannelInboundHandlerAdapter() {
+class AerospikeChannelHandler : ChannelInboundHandlerAdapter() {
 
     companion object {
         private val log = KotlinLogging.logger(this::class.java.name)
     }
 
-    override fun channelRead(ctx: ChannelHandlerContext, msg: Any?) {
+    override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
         try {
             when (msg) {
                 is ArrayRedisMessage -> {
@@ -49,7 +48,7 @@ class AerospikeChannelHandler() : ChannelInboundHandlerAdapter() {
                     handleCommand(cmd, ctx)
                 }
 
-                else -> log.warn { "Unsupported message type ${msg?.javaClass?.simpleName}" }
+                else -> log.warn { "Unsupported message type ${msg.javaClass.simpleName}" }
             }
         } catch (e: UnsupportedOperationException) {
             ctx.write(ErrorRedisMessage(e.message))
@@ -81,6 +80,7 @@ class AerospikeChannelHandler() : ChannelInboundHandlerAdapter() {
                     else
                         "Internal error"
                 }
+
                 else -> e.message
             }
             log.warn(e) {}
@@ -94,23 +94,29 @@ class AerospikeChannelHandler() : ChannelInboundHandlerAdapter() {
             is SimpleStringRedisMessage -> {
                 log.debug { msg.content() }
             }
+
             is ErrorRedisMessage -> {
                 log.debug { msg.content() }
             }
+
             is IntegerRedisMessage -> {
                 log.debug { msg.value() }
             }
+
             is InlineCommandRedisMessage -> {
                 log.debug { msg.content() }
             }
+
             is FullBulkStringRedisMessage -> {
                 log.debug { getString(msg) }
             }
+
             is ArrayRedisMessage -> {
                 for (child in msg.children()) {
                     printAggregatedRedisResponse(child)
                 }
             }
+
             else -> {
                 throw CodecException("unknown message type: $msg")
             }
