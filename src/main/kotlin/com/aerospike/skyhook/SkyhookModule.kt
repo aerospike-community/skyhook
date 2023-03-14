@@ -12,8 +12,10 @@ import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import com.google.inject.name.Names
 import io.netty.channel.EventLoopGroup
+import io.netty.channel.epoll.Epoll
 import io.netty.channel.epoll.EpollEventLoopGroup
 import io.netty.channel.epoll.EpollServerSocketChannel
+import io.netty.channel.kqueue.KQueue
 import io.netty.channel.kqueue.KQueueEventLoopGroup
 import io.netty.channel.kqueue.KQueueServerSocketChannel
 import io.netty.channel.nio.NioEventLoopGroup
@@ -39,9 +41,13 @@ class SkyhookModule(
     }
 
     private fun bindEventLoops() {
-        when (SystemUtils.os) {
-            SystemUtils.OS.LINUX -> bindEpollEventLoops()
-            SystemUtils.OS.MAC -> bindKQueueEventLoops()
+        when {
+            SystemUtils.os == SystemUtils.OS.LINUX && Epoll.isAvailable() ->
+                bindEpollEventLoops()
+
+            SystemUtils.os == SystemUtils.OS.MAC && KQueue.isAvailable() ->
+                bindKQueueEventLoops()
+
             else -> bindNioEventLoops()
         }
     }
@@ -116,9 +122,13 @@ class SkyhookModule(
     }
 
     private fun getClientEventLoops(): EventLoops {
-        return when (SystemUtils.os) {
-            SystemUtils.OS.LINUX -> NettyEventLoops(EpollEventLoopGroup(config.workerThreads))
-            SystemUtils.OS.MAC -> NettyEventLoops(KQueueEventLoopGroup(config.workerThreads))
+        return when {
+            SystemUtils.os == SystemUtils.OS.LINUX && Epoll.isAvailable() ->
+                NettyEventLoops(EpollEventLoopGroup(config.workerThreads))
+
+            SystemUtils.os == SystemUtils.OS.MAC && KQueue.isAvailable() ->
+                NettyEventLoops(KQueueEventLoopGroup(config.workerThreads))
+
             else -> NioEventLoops(config.workerThreads)
         }
     }

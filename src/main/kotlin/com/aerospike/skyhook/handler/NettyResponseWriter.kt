@@ -24,27 +24,35 @@ open class NettyResponseWriter(
             null -> {
                 writeNullString()
             }
+
             is List<*> -> {
                 writeObjectList(value as List<*>?)
             }
+
             is Set<*> -> {
                 writeObjectList(value.toList())
             }
+
             is ByteArray -> {
                 writeByteArray(value as ByteArray?)
             }
+
             is String -> {
                 writeBulkString(value as String?)
             }
+
             is Long -> {
                 writeLong(value as Long?)
             }
+
             is Int -> {
                 writeLong(value as Int?)
             }
+
             is Double -> {
                 writeFloat(value as Double?)
             }
+
             else -> {
                 throw IllegalArgumentException("Unsupported value type")
             }
@@ -57,21 +65,27 @@ open class NettyResponseWriter(
             null -> {
                 writeNullString()
             }
+
             is ByteArray -> {
                 writeByteArray(value as ByteArray?)
             }
+
             is String -> {
                 writeBulkString(value as String?)
             }
+
             is Long, is Int -> {
                 writeBulkString(value.toString())
             }
+
             is Double -> {
                 writeBulkString(value.toString())
             }
+
             is Value -> {
                 writeObjectASBulkString(value.getObject())
             }
+
             else -> {
                 writeNullString()
             }

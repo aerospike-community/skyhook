@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
     application
-    kotlin("jvm") version "1.6.0"
-    id("com.github.johnrengelman.shadow") version "7.1.0"
-    id("nebula.ospackage") version "8.6.3"
+    kotlin("jvm") version "1.8.10"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("nebula.ospackage") version "9.1.1"
 }
 
 group = "com.aerospike"
@@ -30,30 +30,30 @@ tasks.withType<Jar> {
 }
 
 // Common dependency versions.
-extra["nettyVersion"] = "4.1.72.Final"
-extra["logbackVersion"] = "1.2.10"
-extra["jacksonVersion"] = "2.13.1"
+extra["nettyVersion"] = "4.1.89.Final"
+extra["logbackVersion"] = "1.3.5"
+extra["jacksonVersion"] = "2.14.2"
 
 dependencies {
-    implementation("com.aerospike:aerospike-client:5.1.11")
+    implementation("com.aerospike:aerospike-client:6.1.7")
     implementation("io.netty:netty-all:${project.extra["nettyVersion"]}")
     implementation("io.netty:netty-codec-redis:${project.extra["nettyVersion"]}")
-    implementation("com.google.inject:guice:5.0.1")
-    implementation("io.github.microutils:kotlin-logging:2.1.21")
+    implementation("com.google.inject:guice:5.1.0")
+    implementation("io.github.microutils:kotlin-logging:3.0.5")
     implementation("ch.qos.logback:logback-classic:${project.extra["logbackVersion"]}")
     implementation("ch.qos.logback:logback-core:${project.extra["logbackVersion"]}")
-    implementation("info.picocli:picocli:4.6.2")
+    implementation("info.picocli:picocli:4.7.1")
     implementation("commons-io:commons-io:2.11.0")
     implementation("com.fasterxml.jackson.core:jackson-core:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.core:jackson-annotations:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.core:jackson-databind:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.extra["jacksonVersion"]}")
-    implementation("com.google.guava:guava:31.0.1-jre")
+    implementation("com.google.guava:guava:31.1-jre")
 
     testImplementation(kotlin("test-junit5"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 }
 
 tasks.test {
@@ -86,7 +86,8 @@ fun setUpPackaging(
         packagingTask.from(sourceConfigFile) {
             // For rpm this is the way to mark configuration files.
             com.netflix.gradle.plugins.packaging.CopySpecEnhancement
-                .setFileType(this,
+                .setFileType(
+                    this,
                     org.redline_rpm.payload.Directive(
                         org.redline_rpm.payload.Directive.RPMFILE_CONFIG or org.redline_rpm.payload.Directive
                             .RPMFILE_NOREPLACE
@@ -94,7 +95,9 @@ fun setUpPackaging(
                 )
             into(
                 sourceConfigFile.parentFile.path.replace(
-                    ".*pkg/$installFolder".toRegex(), ""))
+                    ".*pkg/$installFolder".toRegex(), ""
+                )
+            )
         }
     }
 
@@ -104,7 +107,8 @@ fun setUpPackaging(
         for (file in installDir.listFiles()!!) {
             packagingTask.from(file) {
                 into(
-                    file.path.replace(".*pkg/$installFolder".toRegex(), ""))
+                    file.path.replace(".*pkg/$installFolder".toRegex(), "")
+                )
                 packagingTask.addParentDirs = false
                 fileMode = 0x755
                 if (packagingTask is com.netflix.gradle.plugins.rpm.Rpm) {
@@ -120,18 +124,26 @@ fun setUpPackaging(
     if (installScriptsDir.isDirectory) {
         packagingTask.postInstall(
             packagingTask.project.file(
-                "${projectDir}/pkg/$debFolder/postInstall.sh"))
+                "${projectDir}/pkg/$debFolder/postInstall.sh"
+            )
+        )
         packagingTask.preUninstall(
             packagingTask.project.file
-                ("${projectDir}/pkg/$debFolder/preUninstall.sh"))
+                ("${projectDir}/pkg/$debFolder/preUninstall.sh")
+        )
         packagingTask.postUninstall(
             packagingTask.project.file(
-                "${projectDir}/pkg/$debFolder/postUninstall.sh"))
+                "${projectDir}/pkg/$debFolder/postUninstall.sh"
+            )
+        )
     }
 
     // Copy the installer.
-    packagingTask.from(project.zipTree(
-        distZip.archiveFile.get().asFile.absolutePath)) {
+    packagingTask.from(
+        project.zipTree(
+            distZip.archiveFile.get().asFile.absolutePath
+        )
+    ) {
         into("/opt/${packagingTask.project.name}/")
         packagingTask.addParentDirs = false
         eachFile {

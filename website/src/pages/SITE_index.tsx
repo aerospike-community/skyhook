@@ -1,4 +1,4 @@
-import { Link } from '@docusaurus/router';
+import { Redirect } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import SkyhookHeroImage from '@site/static/img/hero.jpg';
 import Layout from '@theme/Layout';
@@ -13,11 +13,11 @@ function HomepageHeader() {
       <div className="container">
         <h1 className="hero__title">{siteConfig.title}</h1>
 
-        <Link to="docs/intro" className={styles.heroLink}>
+        <Redirect to="docs/intro" className={styles.heroLink}>
           <div className="hero__subtitle">{siteConfig.tagline}</div>
 
           <img src={SkyhookHeroImage} width="100%"/>
-        </Link>
+        </Redirect>
 
       </div>
     </header>
