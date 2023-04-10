@@ -21,11 +21,23 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
-    internal fun multipleAdd() {
+    fun multipleAdd() {
         writeCommand(RedisCommand.PFADD, "ids 1 2 3")
         assertEquals(1, readLong())
         writeCommand(RedisCommand.PFCOUNT, "ids")
         assertEquals(3, readLong())
+    }
+
+    @Test
+    fun duplicateAdd() {
+        writeCommand(RedisCommand.PFADD, "ids ABC")
+        assertEquals(1, readLong())
+        writeCommand(RedisCommand.PFADD, "ids ABC")
+        assertEquals(0, readLong())
+        writeCommand(RedisCommand.PFADD, "ids ABC ABC")
+        assertEquals(0, readLong())
+        writeCommand(RedisCommand.PFCOUNT, "ids")
+        assertEquals(1, readLong())
     }
 
     @Test
