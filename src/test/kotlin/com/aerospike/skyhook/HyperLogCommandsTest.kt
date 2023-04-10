@@ -14,7 +14,7 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
 
     @Test
     fun simpleAdd() {
-        writeCommand(RedisCommand.PFADD, "ids 1")
+        writeCommand(RedisCommand.PFADD, "ids ABC")
         assertEquals(1, readLong())
         writeCommand(RedisCommand.PFCOUNT, "ids")
         assertEquals(1, readLong())
@@ -55,8 +55,17 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
-    @Ignore("Not implemented")
-    internal fun merge() {
+    fun countNotExisting() {
+        writeCommand(RedisCommand.PFCOUNT, "key")
+        assertEquals(0, readLong())
+        writeCommand(RedisCommand.PFADD, "a 1")
+        assertEquals(1, readLong())
+        writeCommand(RedisCommand.PFCOUNT, "key a")
+        assertEquals(1, readLong())
+    }
+
+    @Test
+    fun merge() {
         writeCommand(RedisCommand.PFADD, "a 1 2")
         assertEquals(1, readLong())
         writeCommand(RedisCommand.PFADD, "b 2 3")

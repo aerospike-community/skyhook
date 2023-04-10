@@ -15,17 +15,32 @@ class PfcountListener(
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount > 1) { argValidationErrorMsg(cmd) }
 
-        val hllValues = cmd.args.drop(1)
-            .map(::createKey)
-            .map { client.get(null, it).getHLLValue(aeroCtx.bin) }
+        if (cmd.args.size == 2) {
+            countSingleKey(createKey(cmd.args[1]))
+        } else {
+            val keys = cmd.args.drop(1).map(::createKey)
+            countMultipleKeys(keys)
+        }
+    }
+
+    private fun countSingleKey(key: Key) {
+        val operation = HLLOperation.getCount(aeroCtx.bin)
+        client.operate(null, this, null, key, operation)
+    }
+
+    private fun countMultipleKeys(
+        keys: List<Key>,
+    ) {
+        val hllValues = keys
+            .mapNotNull { client.get(null, it)?.getHLLValue(aeroCtx.bin) } //TODO: make async
 
         val operation = HLLOperation.getUnionCount(aeroCtx.bin, hllValues)
-        client.operate(null, this, null, createKey(cmd.args[1]), operation)
+        client.operate(null, this, null, keys[1], operation)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeNullString()
+            writeLong(0L)
             flushCtxTransactionAware()
         } else {
             try {

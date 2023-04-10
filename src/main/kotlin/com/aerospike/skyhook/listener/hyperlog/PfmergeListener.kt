@@ -3,6 +3,8 @@ package com.aerospike.skyhook.listener.hyperlog
 import com.aerospike.client.Key
 import com.aerospike.client.Record
 import com.aerospike.client.listener.RecordListener
+import com.aerospike.client.operation.HLLOperation
+import com.aerospike.client.operation.HLLPolicy
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
@@ -13,7 +15,16 @@ class PfmergeListener(
 
     override fun handle(cmd: RequestCommand) {
         require(cmd.argCount > 3) { argValidationErrorMsg(cmd) }
-        //TODO
+
+        val key = createKey(cmd.key)
+
+        val hllValues = cmd.args.drop(2)
+            .map(::createKey)
+            .map { client.get(null, it).getHLLValue(aeroCtx.bin) }// TODO: make async
+
+        val operationPut = HLLOperation.setUnion(HLLPolicy.Default, aeroCtx.bin, hllValues)
+
+        client.operate(null, this, defaultWritePolicy, key, operationPut)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
@@ -22,8 +33,7 @@ class PfmergeListener(
             flushCtxTransactionAware()
         } else {
             try {
-                val value: String = (record.bins[aeroCtx.bin] as String)
-                writeLong(value.length)
+                writeOK()
                 flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
