@@ -57,8 +57,7 @@ class MsetCommandListener(
 
     private fun getValues(cmd: RequestCommand): Map<Key, Value> {
         return cmd.args.drop(1).chunked(2)
-            .map { (it1, it2) -> createKey(it1) to Typed.getValue(it2) }
-            .toMap()
+            .associate { (it1, it2) -> createKey(it1) to Typed.getValue(it2) }
     }
 
     override fun onSuccess(key: Key?) {

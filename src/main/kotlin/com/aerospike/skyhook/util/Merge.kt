@@ -15,7 +15,7 @@ interface IntersectMerge : Merge {
         if (data.isEmpty()) {
             return setOf()
         }
-        return data.reduce { acc, l -> acc.intersect(l.filterNotNull()) }
+        return data.reduce { acc, l -> acc.intersect(l.filterNotNull().toSet()) }
             .filterNotNull().toSet()
     }
 }

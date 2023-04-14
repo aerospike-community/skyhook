@@ -30,10 +30,9 @@ class ZrangestoreCommandListener(
         val putOperation = MapOperation.putItems(
             MapPolicy(),
             aeroCtx.bin,
-            (record.bins[aeroCtx.bin] as List<Map.Entry<Any, Long>>).map {
-                Typed.getValue(it.key.toString().toByteArray()) to
-                        Value.get(it.value)
-            }.toMap()
+            (record.bins[aeroCtx.bin] as List<Map.Entry<Any, Long>>).associate {
+                Typed.getValue(it.key.toString().toByteArray()) to Value.get(it.value)
+            }
         )
         client.operate(
             null, this, defaultWritePolicy,
