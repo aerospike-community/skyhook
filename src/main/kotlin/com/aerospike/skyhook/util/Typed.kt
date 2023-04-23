@@ -6,10 +6,11 @@ import java.nio.charset.StandardCharsets
 
 object Typed {
 
+    @Suppress("kotlin:S108")
     fun getValue(wireVal: ByteArray): Value {
         try {
             return Value.DoubleValue(String(wireVal).toDouble())
-        } catch (e: NumberFormatException) {
+        } catch (ignore: NumberFormatException) {
         }
         try {
             StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(wireVal))

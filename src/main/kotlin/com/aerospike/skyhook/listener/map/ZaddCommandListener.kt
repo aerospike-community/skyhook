@@ -61,12 +61,9 @@ class ZaddCommandListener(
         }
 
         private fun setSortedSetValues(from: Int) {
-            values = cmd.args.drop(from).chunked(2)
-                .map { (it1, it2) ->
-                    Typed.getStringValue(it2) to
-                            Value.LongValue(Typed.getLong(it1))
-                }
-                .toMap()
+            values = cmd.args.drop(from).chunked(2).associate { (it1, it2) ->
+                Typed.getStringValue(it2) to Value.LongValue(Typed.getLong(it1))
+            }
         }
 
         private fun validate() {
@@ -111,6 +108,7 @@ class ZaddCommandListener(
                     zaddCommand.values.values.first()
                 )
             }
+
             else -> {
                 MapOperation.putItems(
                     getMapPolicy(),
@@ -126,9 +124,11 @@ class ZaddCommandListener(
             zaddCommand.XX -> {
                 MapWriteFlags.UPDATE_ONLY
             }
+
             zaddCommand.NX -> {
                 MapWriteFlags.CREATE_ONLY
             }
+
             else -> {
                 MapWriteFlags.DEFAULT
             }

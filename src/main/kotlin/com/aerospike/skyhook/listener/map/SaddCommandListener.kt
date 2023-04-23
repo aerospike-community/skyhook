@@ -49,9 +49,7 @@ open class SaddCommandListener(
     }
 
     protected open fun getValues(cmd: RequestCommand): Map<Value, Value> {
-        return cmd.args.drop(2)
-            .map { Typed.getValue(it) to Value.getAsNull() }
-            .toMap()
+        return cmd.args.drop(2).associate { Typed.getValue(it) to Value.getAsNull() }
     }
 
     override fun writeError(e: AerospikeException?) {

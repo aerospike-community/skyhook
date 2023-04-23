@@ -6,7 +6,6 @@ data class AuthDetails(
     val user: String,
     val password: String
 ) {
-    @Suppress("UnstableApiUsage")
     val hashString: String by lazy {
         Hashing.sha256()
             .hashBytes(toString().encodeToByteArray())
