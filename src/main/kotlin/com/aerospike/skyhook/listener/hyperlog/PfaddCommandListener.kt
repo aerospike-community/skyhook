@@ -7,26 +7,29 @@ import com.aerospike.client.operation.HLLOperation
 import com.aerospike.client.operation.HLLPolicy
 import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
+import com.aerospike.skyhook.util.Typed
 import io.netty.channel.ChannelHandlerContext
 
-class PfmergeListener(
+open class PfaddCommandListener(
     ctx: ChannelHandlerContext
 ) : BaseListener(ctx), RecordListener {
 
     override fun handle(cmd: RequestCommand) {
-        require(cmd.argCount > 3) { argValidationErrorMsg(cmd) }
+        require(cmd.argCount > 2) { argValidationErrorMsg(cmd) }
 
         val key = createKey(cmd.key)
 
-        val hllValues = cmd.args.drop(2)
-            .map(::createKey)
-            .mapNotNull { client.get(null, it)}
-            .map { it.getHLLValue(aeroCtx.bin) }
-
-        val operationPut = HLLOperation.setUnion(HLLPolicy.Default, aeroCtx.bin, hllValues)
-
-        client.operate(null, this, defaultWritePolicy, key, operationPut)
+        val operation = HLLOperation.add(
+            HLLPolicy.Default,
+            aeroCtx.bin,
+            getValues(cmd),
+            16
+        )
+        client.operate(null, this, defaultWritePolicy, key, operation)
     }
+
+    protected open fun getValues(cmd: RequestCommand) =
+        cmd.args.drop(2).map { Typed.getValue(it) }
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
@@ -34,7 +37,8 @@ class PfmergeListener(
             flushCtxTransactionAware()
         } else {
             try {
-                writeOK()
+                val entitiesWritten = record.getLong(aeroCtx.bin)
+                writeLong(if (entitiesWritten > 0) 1L else 0L)
                 flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)

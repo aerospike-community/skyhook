@@ -8,7 +8,7 @@ import com.aerospike.skyhook.command.RequestCommand
 import com.aerospike.skyhook.listener.BaseListener
 import io.netty.channel.ChannelHandlerContext
 
-class PfcountListener(
+class PfcountCommandListener(
     ctx: ChannelHandlerContext
 ) : BaseListener(ctx), RecordListener {
 

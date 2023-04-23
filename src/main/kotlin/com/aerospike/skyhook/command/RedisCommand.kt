@@ -251,9 +251,9 @@ enum class RedisCommand(
 
     COMMAND(commandCommandDetails, ::CommandCommandHandler),
 
-    PFADD(pfaddCommandDetails, ::PfaddListener),
-    PFCOUNT(pfcountCommandDetails, ::PfcountListener),
-    PFMERGE(pfmergeCommandDetails, ::PfmergeListener)
+    PFADD(pfaddCommandDetails, ::PfaddCommandListener),
+    PFCOUNT(pfcountCommandDetails, ::PfcountCommandListener),
+    PFMERGE(pfmergeCommandDetails, ::PfmergeCommandListener)
     ;
 
     companion object {
