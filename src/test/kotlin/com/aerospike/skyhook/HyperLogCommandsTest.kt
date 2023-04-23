@@ -6,11 +6,6 @@ import kotlin.test.assertEquals
 
 class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
 
-    companion object {
-        @JvmStatic
-        protected val ok = "OK"
-    }
-
     @Test
     fun simpleAdd() {
         writeCommand(RedisCommand.PFADD, "ids ABC")
@@ -71,7 +66,7 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
-    fun countNotExisting() {
+    fun countNonExistent() {
         writeCommand(RedisCommand.PFCOUNT, "key")
         assertEquals(0, readLong())
         writeCommand(RedisCommand.PFADD, "a 1")
@@ -83,7 +78,7 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
-    fun countAllNotExisting() {
+    fun countAllNonExistent() {
         writeCommand(RedisCommand.PFCOUNT, "key")
         assertEquals(0, readLong())
         writeCommand(RedisCommand.PFCOUNT, "key key2")
@@ -92,14 +87,14 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
 
     @Test
     fun countMany() {
-        val N = 10L
-        (0 until N).forEach {
+        val n = 10L
+        (0 until n).forEach {
             writeCommand(RedisCommand.PFADD, "key${it} $it")
             assertEquals(1, readLong())
         }
-        val args = (0 until N).joinToString(" ") { "key${it}" }
+        val args = (0 until n).joinToString(" ") { "key${it}" }
         writeCommand(RedisCommand.PFCOUNT, args)
-        assertEquals(N, readLong())
+        assertEquals(n, readLong())
     }
 
     @Test
@@ -115,7 +110,7 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
     }
 
     @Test
-    fun mergeUnexisting() {
+    fun mergeNonExistent() {
         writeCommand(RedisCommand.PFADD, "a 1 2")
         assertEquals(1, readLong())
         writeCommand(RedisCommand.PFMERGE, "m a b")
