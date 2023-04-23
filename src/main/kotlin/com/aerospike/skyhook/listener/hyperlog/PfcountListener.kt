@@ -50,7 +50,7 @@ class PfcountListener(
             writeZero()
         } else {
             try {
-                writeLong(record.bins[aeroCtx.bin] as Long)
+                writeLong(record.getLong(aeroCtx.bin))
                 flushCtxTransactionAware()
             } catch (e: Exception) {
                 closeCtx(e)
