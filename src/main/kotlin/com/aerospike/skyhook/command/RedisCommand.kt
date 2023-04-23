@@ -402,9 +402,9 @@ object CommandsDetails {
     val bgsaveCommandDetails = RedisCommandDetails("bgsave", -1, arrayListOf("admin", "noscript"), 0, 0, 0)
     val commandCommandDetails = RedisCommandDetails("command", -1, arrayListOf("random", "loading", "stale"), 0, 0, 0)
 
-    val pfaddCommandDetails = RedisCommandDetails("pfadd", 0, emptyList(), 0 , 0 ,0)
-    val pfcountCommandDetails = RedisCommandDetails("pfcount", 0, emptyList(), 0 , 0 ,0)
-    val pfmergeCommandDetails = RedisCommandDetails("pfmerge", 0, emptyList(), 0 , 0 ,0)
+    val pfaddCommandDetails = RedisCommandDetails("pfadd", -2, arrayListOf("write", "denyoom", "fast"), 1 , 1 ,1)
+    val pfcountCommandDetails = RedisCommandDetails("pfcount", -2, arrayListOf("readonly", "may_replicate"), 1 , -1 ,1)
+    val pfmergeCommandDetails = RedisCommandDetails("pfmerge", -2, arrayListOf("write", "denyoom"), 1 , -1 ,1)
 
     val authCommandDetails = RedisCommandDetails(
         "auth",
