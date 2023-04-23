@@ -113,4 +113,14 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
         writeCommand(RedisCommand.PFCOUNT, "m")
         assertEquals(3, readLong())
     }
+
+    @Test
+    fun mergeUnexisting() {
+        writeCommand(RedisCommand.PFADD, "a 1 2")
+        assertEquals(1, readLong())
+        writeCommand(RedisCommand.PFMERGE, "m a b")
+        assertEquals(ok, readString())
+        writeCommand(RedisCommand.PFCOUNT, "m")
+        assertEquals(2, readLong())
+    }
 }
