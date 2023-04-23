@@ -25,7 +25,7 @@ class PfcountListener(
 
     private fun countSingleKey(key: Key) {
         val operation = HLLOperation.getCount(aeroCtx.bin)
-        client.operate(null, this, null, key, operation)
+        client.operate(null, this, defaultWritePolicy, key, operation)
     }
 
     private fun countMultipleKeys(
@@ -42,7 +42,7 @@ class PfcountListener(
 
         val operation = HLLOperation.getUnionCount(aeroCtx.bin, hllValuesByKey.values.toList())
 
-        client.operate(null, this, null, hllValuesByKey.keys.first(), operation)
+        client.operate(null, this, defaultWritePolicy, hllValuesByKey.keys.first(), operation)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
