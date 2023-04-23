@@ -20,7 +20,8 @@ class PfmergeListener(
 
         val hllValues = cmd.args.drop(2)
             .map(::createKey)
-            .map { client.get(null, it)?.getHLLValue(aeroCtx.bin) }
+            .map { client.get(null, it)}
+            .mapNotNull { it.getHLLValue(aeroCtx.bin) }
 
         val operationPut = HLLOperation.setUnion(HLLPolicy.Default, aeroCtx.bin, hllValues)
 

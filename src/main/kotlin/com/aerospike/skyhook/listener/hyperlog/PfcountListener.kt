@@ -16,7 +16,8 @@ class PfcountListener(
         require(cmd.argCount > 1) { argValidationErrorMsg(cmd) }
 
         if (cmd.args.size == 2) {
-            countSingleKey(createKey(cmd.args[1]))
+            val key = createKey(cmd.args[1])
+            countSingleKey(key)
         } else {
             val keys = cmd.args.drop(1).map(::createKey)
             countMultipleKeys(keys)
@@ -28,12 +29,11 @@ class PfcountListener(
         client.operate(null, this, defaultWritePolicy, key, operation)
     }
 
-    private fun countMultipleKeys(
-        keys: List<Key>,
-    ) {
-        val hllValuesByKey =
-            keys.associateWith { client.get(null, it)?.getHLLValue(aeroCtx.bin) }
-                .filterValues { it != null }
+    private fun countMultipleKeys(keys: List<Key>) {
+        val hllValuesByKey = keys
+            .associateWith { client.get(null, it) }
+            .filterValues { it != null }
+            .mapValues { it.value.getHLLValue(aeroCtx.bin) }
 
         if (hllValuesByKey.isEmpty()) {
             writeZero()
