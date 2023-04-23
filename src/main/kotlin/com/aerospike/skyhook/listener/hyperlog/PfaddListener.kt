@@ -23,7 +23,7 @@ open class PfaddListener(
             HLLPolicy.Default,
             aeroCtx.bin,
             getValues(cmd),
-            8//TODO: what value to use? Config?
+            16
         )
         client.operate(null, this, defaultWritePolicy, key, operation)
     }

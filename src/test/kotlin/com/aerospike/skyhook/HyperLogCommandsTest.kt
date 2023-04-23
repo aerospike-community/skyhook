@@ -2,7 +2,6 @@ package com.aerospike.skyhook
 
 import com.aerospike.skyhook.command.RedisCommand
 import org.junit.jupiter.api.Test
-import kotlin.test.Ignore
 import kotlin.test.assertEquals
 
 class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
@@ -62,8 +61,13 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals(1, readLong())
         writeCommand(RedisCommand.PFADD, "b 2 3")
         assertEquals(1, readLong())
+
         writeCommand(RedisCommand.PFCOUNT, "a b")
         assertEquals(3, readLong())
+        writeCommand(RedisCommand.PFCOUNT, "a")
+        assertEquals(2, readLong())
+        writeCommand(RedisCommand.PFCOUNT, "b")
+        assertEquals(2, readLong())
     }
 
     @Test
@@ -74,6 +78,28 @@ class HyperLogCommandsTest() : SkyhookIntegrationTestBase() {
         assertEquals(1, readLong())
         writeCommand(RedisCommand.PFCOUNT, "key a")
         assertEquals(1, readLong())
+        writeCommand(RedisCommand.PFCOUNT, "a key")
+        assertEquals(1, readLong())
+    }
+
+    @Test
+    fun countAllNotExisting() {
+        writeCommand(RedisCommand.PFCOUNT, "key")
+        assertEquals(0, readLong())
+        writeCommand(RedisCommand.PFCOUNT, "key key2")
+        assertEquals(0, readLong())
+    }
+
+    @Test
+    fun countMany() {
+        val N = 10L
+        (0 until N).forEach {
+            writeCommand(RedisCommand.PFADD, "key${it} $it")
+            assertEquals(1, readLong())
+        }
+        val args = (0 until N).joinToString(" ") { "key${it}" }
+        writeCommand(RedisCommand.PFCOUNT, args)
+        assertEquals(N, readLong())
     }
 
     @Test

@@ -31,17 +31,23 @@ class PfcountListener(
     private fun countMultipleKeys(
         keys: List<Key>,
     ) {
-        val hllValues = keys
-            .mapNotNull { client.get(null, it)?.getHLLValue(aeroCtx.bin) } //TODO: make async
+        val hllValuesByKey =
+            keys.associateWith { client.get(null, it)?.getHLLValue(aeroCtx.bin) }
+                .filterValues { it != null }
 
-        val operation = HLLOperation.getUnionCount(aeroCtx.bin, hllValues)
-        client.operate(null, this, null, keys[1], operation)
+        if (hllValuesByKey.isEmpty()) {
+            writeZero()
+            return
+        }
+
+        val operation = HLLOperation.getUnionCount(aeroCtx.bin, hllValuesByKey.values.toList())
+
+        client.operate(null, this, null, hllValuesByKey.keys.first(), operation)
     }
 
     override fun onSuccess(key: Key?, record: Record?) {
         if (record == null) {
-            writeLong(0L)
-            flushCtxTransactionAware()
+            writeZero()
         } else {
             try {
                 writeLong(record.bins[aeroCtx.bin] as Long)
@@ -50,5 +56,10 @@ class PfcountListener(
                 closeCtx(e)
             }
         }
+    }
+
+    private fun writeZero() {
+        writeLong(0L)
+        flushCtxTransactionAware()
     }
 }
