@@ -79,12 +79,16 @@ abstract class SkyhookIntegrationTestBase {
         return Bin(config.bin, bin)
     }
 
+    protected fun writeCommand(command: RedisCommand, args: String) {
+        writeCommand(command.name + " " + args)
+    }
+
     protected fun writeCommand(command: String) {
         val sb = StringBuilder()
         val list = command.split(" ")
         if (list.size > 1) {
             sb.append("*${list.size}$eol")
-            command.split(" ").forEach { s ->
+            list.forEach { s ->
                 sb.append("$${s.length}$eol")
                 sb.append("$s$eol")
             }

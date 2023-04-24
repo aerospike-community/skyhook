@@ -54,6 +54,9 @@ import com.aerospike.skyhook.command.CommandsDetails.multiCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.persistCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.pexpireCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.pexpireatCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.pfaddCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.pfcountCommandDetails
+import com.aerospike.skyhook.command.CommandsDetails.pfmergeCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.pingCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.psetexCommandDetails
 import com.aerospike.skyhook.command.CommandsDetails.pttlCommandDetails
@@ -114,6 +117,7 @@ import com.aerospike.skyhook.listener.key.*
 import com.aerospike.skyhook.listener.list.*
 import com.aerospike.skyhook.listener.map.*
 import com.aerospike.skyhook.listener.scan.*
+import com.aerospike.skyhook.listener.hyperlog.*
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.redis.ArrayHeaderRedisMessage
 import mu.KotlinLogging
@@ -245,7 +249,12 @@ enum class RedisCommand(
     DISCARD(discardCommandDetails, ::DiscardCommandHandler),
     EXEC(execCommandDetails, ::ExecCommandHandler),
 
-    COMMAND(commandCommandDetails, ::CommandCommandHandler);
+    COMMAND(commandCommandDetails, ::CommandCommandHandler),
+
+    PFADD(pfaddCommandDetails, ::PfaddCommandListener),
+    PFCOUNT(pfcountCommandDetails, ::PfcountCommandListener),
+    PFMERGE(pfmergeCommandDetails, ::PfmergeCommandListener)
+    ;
 
     companion object {
         private val log = KotlinLogging.logger {}
@@ -392,6 +401,10 @@ object CommandsDetails {
     val saveCommandDetails = RedisCommandDetails("save", 1, arrayListOf("admin", "noscript"), 0, 0, 0)
     val bgsaveCommandDetails = RedisCommandDetails("bgsave", -1, arrayListOf("admin", "noscript"), 0, 0, 0)
     val commandCommandDetails = RedisCommandDetails("command", -1, arrayListOf("random", "loading", "stale"), 0, 0, 0)
+
+    val pfaddCommandDetails = RedisCommandDetails("pfadd", -2, arrayListOf("write", "denyoom", "fast"), 1 , 1 ,1)
+    val pfcountCommandDetails = RedisCommandDetails("pfcount", -2, arrayListOf("readonly", "may_replicate"), 1 , -1 ,1)
+    val pfmergeCommandDetails = RedisCommandDetails("pfmerge", -2, arrayListOf("write", "denyoom"), 1 , -1 ,1)
 
     val authCommandDetails = RedisCommandDetails(
         "auth",
