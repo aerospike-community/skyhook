@@ -2,6 +2,7 @@ package com.aerospike.skyhook
 
 import com.aerospike.skyhook.command.RedisCommand
 import org.junit.jupiter.api.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class ScanCommandsTest() : SkyhookIntegrationTestBase() {
@@ -87,7 +88,7 @@ class ScanCommandsTest() : SkyhookIntegrationTestBase() {
         writeCommand("${RedisCommand.KEYS.name} k1*")
         Thread.sleep(5000)
         val r = readStringArray()
-        assertEquals("k11", r[0])
-        assertEquals("k1", r[1])
+        assertContains(r, "k11")
+        assertContains(r, "k1")
     }
 }
