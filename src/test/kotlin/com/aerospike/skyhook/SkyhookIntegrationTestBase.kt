@@ -39,7 +39,7 @@ abstract class SkyhookIntegrationTestBase {
         @JvmStatic
         protected val nullString = ""
         private const val eol = "\r\n"
-        private const val sleepMillis = 50L
+        private const val sleepMillis = 100L
     }
 
     @AfterEach
@@ -76,7 +76,7 @@ abstract class SkyhookIntegrationTestBase {
     }
 
     protected fun aeroBin(bin: Any): Bin {
-        return Bin(config.bin, bin)
+        return Bin(config.bin, Value.get(bin))
     }
 
     protected fun writeCommand(command: RedisCommand, args: String) {

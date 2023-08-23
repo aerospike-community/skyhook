@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
     application
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.9.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("nebula.ospackage") version "9.1.1"
 }
@@ -30,30 +30,31 @@ tasks.withType<Jar> {
 }
 
 // Common dependency versions.
-extra["nettyVersion"] = "4.1.89.Final"
-extra["logbackVersion"] = "1.3.5"
-extra["jacksonVersion"] = "2.14.2"
+extra["nettyVersion"] = "4.1.96.Final"
+extra["logbackVersion"] = "1.3.11" // latest for JDK 8
+extra["jacksonVersion"] = "2.15.2"
+extra["junitVersion"] = "5.10.0"
 
 dependencies {
-    implementation("com.aerospike:aerospike-client:6.1.7")
+    implementation("com.aerospike:aerospike-client:7.1.0")
     implementation("io.netty:netty-all:${project.extra["nettyVersion"]}")
     implementation("io.netty:netty-codec-redis:${project.extra["nettyVersion"]}")
     implementation("com.google.inject:guice:5.1.0")
     implementation("io.github.microutils:kotlin-logging:3.0.5")
     implementation("ch.qos.logback:logback-classic:${project.extra["logbackVersion"]}")
     implementation("ch.qos.logback:logback-core:${project.extra["logbackVersion"]}")
-    implementation("info.picocli:picocli:4.7.1")
-    implementation("commons-io:commons-io:2.11.0")
+    implementation("info.picocli:picocli:4.7.4")
+    implementation("commons-io:commons-io:2.13.0")
     implementation("com.fasterxml.jackson.core:jackson-core:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.core:jackson-annotations:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.core:jackson-databind:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${project.extra["jacksonVersion"]}")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${project.extra["jacksonVersion"]}")
-    implementation("com.google.guava:guava:31.1-jre")
+    implementation("com.google.guava:guava:32.1.2-jre")
 
     testImplementation(kotlin("test-junit5"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${project.extra["junitVersion"]}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${project.extra["junitVersion"]}")
 }
 
 tasks.test {
