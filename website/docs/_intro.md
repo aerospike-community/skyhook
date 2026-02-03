@@ -2,20 +2,16 @@
 
 [![Build](https://github.com/aerospike/skyhook/actions/workflows/build.yml/badge.svg)](https://github.com/aerospike/skyhook/actions/workflows/build.yml)
 
-Skyhook is a Redis API-compatible gateway to the [Aerospike](https://www.aerospike.com/) Database. Use Skyhook to quickly get your Redis client applications up and running on an Aerospike cluster.
+Skyhook was a Redis API-compatible gateway to the [Aerospike](https://www.aerospike.com/) Database. Skyhook was built to quickly get your Redis client applications up and running on an Aerospike cluster.
 
 ## Overview
 
-Skyhook is designed as a standalone server application written in Kotlin, which
+Skyhook was designed as a standalone server application written in Kotlin, which
 accepts Redis protocol commands and projects them to an Aerospike cluster using
 the Aerospike Java client under the hood. It uses [Netty](https://netty.io/) as
 a non-blocking I/O client-server framework.
 
-This project is now in **beta**. If you're an enterprise customer feel free to
-reach out to our support with feedback and feature requests.
-We appreciate feedback from the Aerospike community on
-[issues](https://github.com/aerospike/skyhook/issues)
-related to Skyhook.
+This project is now dormant, and the code is up for grabs. Have at it!
 
 ## Documentation
 
@@ -89,6 +85,4 @@ The default behavior may be customized by setting the following properties in th
 
 Licensed under an Apache 2.0 License.
 
-This is an active open source project. You can contribute to it by trying
-Skyhook, providing feedback, reporting bugs, and implementing more Redis
 commands.
